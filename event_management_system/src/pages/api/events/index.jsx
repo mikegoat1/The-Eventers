@@ -1,4 +1,4 @@
-import { getAllEvents, createEvent } from '../../../controllers/eventController';
+import { getAllEvents,  s } from '../../../controllers/eventController';
 
 export default function handler(req, res) {
   if (req.method === 'GET') {
@@ -10,3 +10,5 @@ export default function handler(req, res) {
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+
+// I need to question why am I 405 error coding in this situation.?
