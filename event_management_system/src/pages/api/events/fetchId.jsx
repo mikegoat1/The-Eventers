@@ -1,4 +1,4 @@
-
+import  { getEventById, updateEvent, deleteEvent } from '../../../controllers/eventController';
 
 export default function handlerID( req, res) {
     const { id } = req.id;
