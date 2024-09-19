@@ -7,6 +7,8 @@ router.post('/logout', (req, res) => {
 
     if( username === 'admin' && password === 'password') {
         res.status(200).json({ message: 'Logout successful' });
+        localStorage.removeItem('token');
+        window.location.href = '/';
     } else {
         res.status(401).json({ message: 'Invalid credentials' });
     }
