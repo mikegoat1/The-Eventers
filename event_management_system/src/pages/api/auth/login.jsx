@@ -1,17 +1,38 @@
-const express = require('express');
-const router = express.Router();
+import bcrypt from "bcrypt";
+import connetectToDatabase from "@/lib/mongoose";
+import User from "@/models/user";
+import { body, validationResult } from "express-validator";
 
-// POST /api/auth/login
-router.post('/login', (req, res) => {
-    const { username, password } = req.body;
+const handler = async (req, res) => {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+  await body("username").isString().trim().escape().run(req);
+  await body("password").isString().trim().escape().run(req);
 
-    // TODO: Implement your login logic here
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: "Invalid input" });
+  }
+  const { username, password } = req.body;
 
-    if (username === 'admin' && password === 'password') {
-        res.status(200).json({ message: 'Login successful' });
-    } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+  try {
+    await connetectToDatabase();
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
-});
-
-module.exports = router;
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    console.log("%c Login successful","color:green");
+    res.status(200).json({ message: "Login successful" });
+  } catch (error) {
+    console.warn(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+module.exports = handler;
