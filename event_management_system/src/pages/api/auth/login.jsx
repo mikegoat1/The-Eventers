@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import connetectToDatabase from "@/lib/mongoose";
+import connectToDatabase from "@/lib/mongoose";
 import User from "@/models/user";
 import { body, validationResult } from "express-validator";
 
@@ -18,7 +18,7 @@ const handler = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    await connetectToDatabase();
+    await connectToDatabase();
 
     const user = await User.findOne({ username });
     if (!user) {

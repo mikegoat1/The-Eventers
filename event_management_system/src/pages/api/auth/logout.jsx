@@ -1,16 +1,11 @@
-const express = require('express');
-const router = express.Router();
 
-// POST /api/auth/logout
-router.post('/logout', (req, res) => {
-    const { username, password } = req.body;
-
-    if( username === 'admin' && password === 'password') {
-        res.status(200).json({ message: 'Logout successful' });
-        localStorage.removeItem('token');
-        window.location.href = '/';
-    } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+const handler =  (req, res) => {
+    if (req.method !== 'POST') {
+        res.setHeader('Allow', ['POST']);
+        return res.status(405).json({ message: 'Method Not Allowed' });
     }
-});
-    module.exports = router;
+    console.log('%c Logout successful', 'color:green');
+    res.status(200).json({ message: 'Logout successful' });
+};
+
+    module.exports = handler;

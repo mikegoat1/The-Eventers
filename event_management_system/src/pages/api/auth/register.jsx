@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import connetectToDatabase from '@/lib/mongoose';
+import connectToDatabase from '@/lib/mongoose';
 import User from '@/models/user';
 
 
@@ -12,7 +12,7 @@ const  handler = async (req, res) => {
     const { username, password } = req.body;
 
     try{
-        await connetectToDatabase();
+        await connectToDatabase();
 
         let user = await User.findOne({ username });
         if(user) {
