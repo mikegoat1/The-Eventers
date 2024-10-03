@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import connectToDatabase from '@/lib/mongoose';
-import User from '@/models/user';
+import User from '@/models/User';
 
 
 const  handler = async (req, res) => {

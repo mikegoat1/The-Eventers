@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import connectToDatabase from "@/lib/mongoose";
-import User from "@/models/user";
+import User from "@/models/User";
 import { body, validationResult } from "express-validator";
 
 const handler = async (req, res) => {
