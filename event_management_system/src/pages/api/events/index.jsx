@@ -1,4 +1,4 @@
-import { getAllEvents,   } from '../../../controllers/eventController';
+import { getAllEvents } from '@controllers/eventController';
 
 export default function handler(req, res) {
   if (req.method === 'GET') {

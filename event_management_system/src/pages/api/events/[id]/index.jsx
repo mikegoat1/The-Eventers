@@ -1,9 +1,8 @@
-import  { getEventById, updateEvent, deleteEvent } from '../../../controllers/eventController';
+import  { getEventById, updateEvent, deleteEvent } from '@/controllers/eventController';
 
 export default function handlerID( req, res) {
-    const { id } = req.id;
+    const { id } = req.query;
     if( req.method === 'GET') {
-        // You didn't set this up yet, ref controller. Keep in mind Mikey.
         return getEventById(req, res, id);
     }
     else if( req.method === 'PUT') {
@@ -16,5 +15,4 @@ export default function handlerID( req, res) {
         res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-    res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
 }
