@@ -4,8 +4,7 @@ import {
   deleteEvent,
 } from "@/controllers/eventController";
 
-export default function handlerID(req, res) {
-  const { id } = req.query;
+export default function handlerID({ query: { id } }, res) {
   try {
     if (req.method === "GET") {
       return getEventById(req, res, id);
@@ -19,6 +18,6 @@ export default function handlerID(req, res) {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 }
