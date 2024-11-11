@@ -2,9 +2,11 @@ import {
   getEventById,
   updateEvent,
   deleteEvent,
-} from "@/controllers/eventController";
+} from "../../../../controllers/eventControllers";
 
-export default function handlerID({ query: { id } }, res) {
+const allowedMethods = ["GET", "PUT", "DELETE"];
+
+export const eventHandlerId = ({ query: { id } }, res) => {
   try {
     if (req.method === "GET") {
       return getEventById(req, res, id);
@@ -13,7 +15,7 @@ export default function handlerID({ query: { id } }, res) {
     } else if (req.method === "DELETE") {
       return deleteEvent(req, res, id);
     } else {
-      res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
+      res.setHeader("Allow", allowedMethods);
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {

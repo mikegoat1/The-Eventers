@@ -1,4 +1,4 @@
-import { getAllEvents, createEvent } from "@controllers/eventController";
+import { getAllEvents, createEvent } from "../../../controllers/eventControllers";
 
 const allowedMethods = ["GET", "POST"];
 
