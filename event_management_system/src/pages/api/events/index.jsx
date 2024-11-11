@@ -1,12 +1,14 @@
-import { getAllEvents } from '@controllers/eventController';
+import { getAllEvents, createEvent } from "@controllers/eventController";
 
-export default function handler(req, res) {
-  if (req.method === 'GET') {
+const allowedMethods = ["GET", "POST"];
+
+export const eventHandler = (req, res) => {
+  if (req.method === "GET") {
     return getAllEvents(req, res);
-  } else if (req.method === 'POST') {
+  } else if (req.method === "POST") {
     return createEvent(req, res);
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
+    res.setHeader("Allow", allowedMethods);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-}
+};

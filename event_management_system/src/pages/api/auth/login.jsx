@@ -3,13 +3,16 @@ import connectToDatabase from "@/lib/mongoose";
 import User from "@/models/User";
 import { body, validationResult } from "express-validator";
 
+const validate = [
+  body("username").isString().trim().escape(),
+  body("password").isString().trim().escape(),
+];
+
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  await body("username").isString().trim().escape().run(req);
-  await body("password").isString().trim().escape().run(req);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -36,4 +39,5 @@ const handler = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-module.exports = handler;
+
+module.exports = [validate, handler];

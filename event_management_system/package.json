@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -18,6 +19,7 @@
     "mongoose": "^8.5.3",
     "morgan": "^1.10.0",
     "next": "14.2.6",
+    "node-mocks-http": "^1.16.1",
     "react": "^18",
     "react-dom": "^18"
   },
