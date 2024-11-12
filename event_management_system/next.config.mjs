@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    webpack: (config, { isServer }) => {
+      // Disable Webpack's default caching to troubleshoot caching issues
+      config.cache = true;
 
-export default nextConfig;
+      return config;
+    },
+  };
+
+  export default nextConfig;

@@ -22,19 +22,15 @@ async function connectToDatabase() {
   }
 
   if (!cached.promise) {
-    const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      bufferCommands: false,
-      bufferMaxEntries: 0,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+    }).then((mongoose) => {
       return mongoose;
+    }).catch((error) => {
+      console.error('Error connecting to MongoDB:', error);
+      throw error;
     });
   }
+
   cached.conn = await cached.promise;
   return cached.conn;
 }

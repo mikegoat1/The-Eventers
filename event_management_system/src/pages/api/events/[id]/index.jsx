@@ -6,7 +6,7 @@ import {
 
 const allowedMethods = ["GET", "PUT", "DELETE"];
 
-export const eventHandlerId = (req, res) => {
+ const eventHandlerId = (req, res) => {
     const { query: { id } } = req;
   try {
     if (req.method === "GET") {
@@ -24,3 +24,5 @@ export const eventHandlerId = (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 }
+
+export default eventHandlerId;

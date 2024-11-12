@@ -11,6 +11,7 @@ export const getAllEvents = async (req, res) => {
     const events = await Event.find({});
     res.status(200).json(events);
   } catch (error) {
+    console.error("Error fetching events:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
