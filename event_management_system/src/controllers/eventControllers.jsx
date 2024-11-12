@@ -37,16 +37,18 @@ export const updateEvent = async (req, res, id) => {
     res.setHeader("Allow", ["PUT"]);
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  const { title, description, date } = req.body;
+  const {name, date, location, description, attendees } = req.body;
   try {
     await connectToDatabase();
     const event = await Event.findById(id);
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
-    event.title = title;
+    event.name = name;
     event.description = description;
     event.date = date;
+    event.location = location;
+    event.attendees = attendees;
     await event.save();
     res.status(200).json({ message: "Event updated" });
   } catch (error) {
@@ -59,11 +61,11 @@ export const createEvent = async (req, res) => {
     res.setHeader("Allow", ["POST"]);
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  const { title, description, date } = req.body;
+  const {name, date, location, description, attendees } = req.body;
 
   try {
     await connectToDatabase();
-    const event = new Event({ title, description, date });
+    const event = new Event({name, date, location, description, attendees });
     await event.save();
     res.status(200).json({ message: "Event created" });
   } catch (error) {
