@@ -45,4 +45,4 @@ const loginHandler = async (req, res) => {
   }
 };
 
-export default [validate, handler];
+export default [validate, loginHandler];

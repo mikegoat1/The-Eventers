@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
-import connectToDatabase from '@/lib/mongoose';
-import User from '@/models/User';
+import connectToDatabase from "../../../lib/mongoose";
+import User from "../../../models/User";
 
 
-const  handler = async (req, res) => {
+const  registerHandler = async (req, res) => {
     if (req.method !== 'POST') {
         res.setHeader('Allow', ['POST']);
         return res.status(405).json({ message: 'Method Not Allowed' });
@@ -29,4 +29,4 @@ const  handler = async (req, res) => {
     }
 }
 
-module.exports = handler;
+export default registerHandler;
