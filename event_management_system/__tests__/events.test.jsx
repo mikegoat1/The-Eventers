@@ -1,5 +1,5 @@
-import { eventHandler } from "../src/pages/api/events/index";
-import { eventHandlerId } from "../src/pages/api/events/[id]";
+import eventHandler from "../src/pages/api/events/index";
+import eventHandlerId from "../src/pages/api/events/[id]";
 import {
   getAllEvents,
   createEvent,
@@ -41,7 +41,7 @@ describe("API Route: /api/events", () => {
 
     expect(res._getStatusCode()).toBe(405);
     expect(res._getHeaders().allow).toEqual(["GET", "POST"]);
-    expect(res._getData()).toBe("Method DELETE Not Allowed");
+    expect(res._getData()).toBe("Method DELETE Not Allowed on ");
   });
 
   describe("API Route: /api/events/[id]", () => {
@@ -91,4 +91,4 @@ describe("API Route: /api/events", () => {
       expect(res._getData()).toBe("Method POST Not Allowed");
     });
   });
- });
+});

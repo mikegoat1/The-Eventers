@@ -1,4 +1,8 @@
-module.exports = {
-    User: require('./userModel'),
-    Event: require('./eventModel'),
+/* Exporting User and Event models */
+import User from './User';
+import Event from './Event';
+
+export {
+  User,
+  Event
 };

@@ -1,5 +1,5 @@
 import connectToDatabase from "../lib/mongoose";
-import Event from "../models/Event";
+import { Event } from "../models/index";
 
 export const getAllEvents = async (req, res) => {
   if (req.method !== "GET") {

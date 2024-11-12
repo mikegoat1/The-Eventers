@@ -1,14 +1,19 @@
 import bcrypt from "bcrypt";
-import connectToDatabase from "@/lib/mongoose";
-import User from "@/models/User";
 import { body, validationResult } from "express-validator";
 
+import connectToDatabase from "../../../lib/mongoose";
+import User from "../../../models/User";
+
 const validate = [
-  body("username").isString().trim().escape(),
-  body("password").isString().trim().escape(),
+  body("username")
+    .isString().withMessage("Username must be a string")
+    .trim().escape().withMessage("Username must be trimmed and escaped"),
+  body("password")
+    .isString().withMessage("Password must be a string")
+    .trim().escape().withMessage("Password must be trimmed and escaped"),
 ];
 
-const handler = async (req, res) => {
+const loginHandler = async (req, res) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
     return res.status(405).json({ message: "Method Not Allowed" });
@@ -40,4 +45,4 @@ const handler = async (req, res) => {
   }
 };
 
-module.exports = [validate, handler];
+export default [validate, handler];
