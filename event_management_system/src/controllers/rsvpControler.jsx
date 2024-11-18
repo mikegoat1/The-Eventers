@@ -1,4 +1,4 @@
-import connectToDatabase from "@/lib/mongoose";
+import connectToDatabase from "../lib/mongoose";
 import Rsvp from "../models/Rsvp";
 
 export const createRsvp = async (req, res) => {
