@@ -2,7 +2,7 @@ import {
   createRsvp,
   updateRsvp,
   deleteRsvp,
-} from '../../../controllers/rsvpControler';
+} from '../../../controllers/rsvpController';
 
 const allowedMethods = ['POST', 'PUT', 'DELETE'];
 
