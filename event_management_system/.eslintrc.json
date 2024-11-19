@@ -1,13 +1,41 @@
 {
   "extends": [
-    "airbnb",
-    "prettier",
-    "prettier/react"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@next/next/recommended",
+    "prettier"
   ],
-  "plugins": ["prettier"
+  "plugins": [
+    "react",
+    "prettier"
   ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": [
+        "@babel/preset-react"
+      ]
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true,
+  },
   "rules": {
-    "prettier/prettier": ["error"
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "semi": true
+      }
     ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

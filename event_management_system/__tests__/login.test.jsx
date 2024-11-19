@@ -55,7 +55,10 @@ describe('POST /api/auth/login', () => {
   });
 
   it('should return 400 if password does not match', async () => {
-    User.findOne.mockResolvedValue({ username: 'testuser', password: 'hashedpassword' });
+    User.findOne.mockResolvedValue({
+      username: 'testuser',
+      password: 'hashedpassword',
+    });
     bcrypt.compare = jest.fn().mockResolvedValue(false);
 
     const { req, res } = createMocks({
@@ -73,7 +76,10 @@ describe('POST /api/auth/login', () => {
   });
 
   it('should return 200 if login is successful', async () => {
-    User.findOne.mockResolvedValue({ username: 'testuser', password: 'hashedpassword' });
+    User.findOne.mockResolvedValue({
+      username: 'testuser',
+      password: 'hashedpassword',
+    });
     bcrypt.compare = jest.fn().mockResolvedValue(true);
 
     const { req, res } = createMocks({

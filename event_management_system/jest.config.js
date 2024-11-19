@@ -1,10 +1,9 @@
-// jest.config.js
 module.exports = {
-  testEnvironment: "node",
+  testEnvironment: 'node',
   transform: {
-    "^.+\\.(js|jsx)$": "babel-jest",
+    '^.+\\.(js|jsx)$': 'babel-jest',
   },
   moduleNameMapper: {
-    "^@controllers/(.*)$": "<rootDir>/src/controllers/$1",
+    '^@controllers/(.*)$': '<rootDir>/src/controllers/$1',
   },
 };

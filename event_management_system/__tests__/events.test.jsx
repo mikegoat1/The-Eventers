@@ -1,20 +1,20 @@
-import eventHandler from "../src/pages/api/events/index";
-import eventHandlerId from "../src/pages/api/events/[id]";
+import eventHandler from '../src/pages/api/events/index';
+import eventHandlerId from '../src/pages/api/events/[id]';
 import {
   getAllEvents,
   createEvent,
   getEventById,
   updateEvent,
   deleteEvent,
-} from "../src/controllers/eventControllers";
-import { createMocks } from "node-mocks-http";
+} from '../src/controllers/eventControllers';
+import { createMocks } from 'node-mocks-http';
 
-jest.mock("../src/controllers/eventControllers");
+jest.mock('../src/controllers/eventControllers');
 
-describe("API Route: /api/events", () => {
-  it("should handle GET requests", async () => {
+describe('API Route: /api/events', () => {
+  it('should handle GET requests', async () => {
     const { req, res } = createMocks({
-      method: "GET",
+      method: 'GET',
     });
 
     await eventHandler(req, res);
@@ -22,9 +22,9 @@ describe("API Route: /api/events", () => {
     expect(getAllEvents).toHaveBeenCalledWith(req, res);
   });
 
-  it("should handle POST requests", async () => {
+  it('should handle POST requests', async () => {
     const { req, res } = createMocks({
-      method: "POST",
+      method: 'POST',
     });
 
     await eventHandler(req, res);
@@ -32,63 +32,63 @@ describe("API Route: /api/events", () => {
     expect(createEvent).toHaveBeenCalledWith(req, res);
   });
 
-  it("should return 405 for unsupported methods", async () => {
+  it('should return 405 for unsupported methods', async () => {
     const { req, res } = createMocks({
-      method: "DELETE",
+      method: 'DELETE',
     });
 
     await eventHandler(req, res);
 
     expect(res._getStatusCode()).toBe(405);
-    expect(res._getHeaders().allow).toEqual(["GET", "POST"]);
-    expect(res._getData()).toBe("Method DELETE Not Allowed on ");
+    expect(res._getHeaders().allow).toEqual(['GET', 'POST']);
+    expect(res._getData()).toBe('Method DELETE Not Allowed on ');
   });
 
-  describe("API Route: /api/events/[id]", () => {
-    it("should handle GET requests", async () => {
+  describe('API Route: /api/events/[id]', () => {
+    it('should handle GET requests', async () => {
       const { req, res } = createMocks({
-        method: "GET",
-        query: { id: "1" },
+        method: 'GET',
+        query: { id: '1' },
       });
 
       await eventHandlerId(req, res);
 
-      expect(getEventById).toHaveBeenCalledWith(req, res, "1");
+      expect(getEventById).toHaveBeenCalledWith(req, res, '1');
     });
 
-    it("should handle PUT requests", async () => {
+    it('should handle PUT requests', async () => {
       const { req, res } = createMocks({
-        method: "PUT",
-        query: { id: "1" },
+        method: 'PUT',
+        query: { id: '1' },
       });
 
       await eventHandlerId(req, res);
 
-      expect(updateEvent).toHaveBeenCalledWith(req, res, "1");
+      expect(updateEvent).toHaveBeenCalledWith(req, res, '1');
     });
 
-    it("should handle DELETE requests", async () => {
+    it('should handle DELETE requests', async () => {
       const { req, res } = createMocks({
-        method: "DELETE",
-        query: { id: "1" },
+        method: 'DELETE',
+        query: { id: '1' },
       });
 
       await eventHandlerId(req, res);
 
-      expect(deleteEvent).toHaveBeenCalledWith(req, res, "1");
+      expect(deleteEvent).toHaveBeenCalledWith(req, res, '1');
     });
 
-    it("should return 405 for unsupported methods", async () => {
+    it('should return 405 for unsupported methods', async () => {
       const { req, res } = createMocks({
-        method: "POST",
-        query: { id: "1" },
+        method: 'POST',
+        query: { id: '1' },
       });
 
       await eventHandlerId(req, res);
 
       expect(res._getStatusCode()).toBe(405);
-      expect(res._getHeaders().allow).toEqual(["GET", "PUT", "DELETE"]);
-      expect(res._getData()).toBe("Method POST Not Allowed");
+      expect(res._getHeaders().allow).toEqual(['GET', 'PUT', 'DELETE']);
+      expect(res._getData()).toBe('Method POST Not Allowed');
     });
   });
 });

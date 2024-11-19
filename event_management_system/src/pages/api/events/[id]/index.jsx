@@ -2,27 +2,31 @@ import {
   getEventById,
   updateEvent,
   deleteEvent,
-} from "../../../../controllers/eventControllers";
+} from '../../../../controllers/eventControllers';
 
-const allowedMethods = ["GET", "PUT", "DELETE"];
+const allowedMethods = ['GET', 'PUT', 'DELETE'];
 
- const eventHandlerId = (req, res) => {
-    const { query: { id } } = req;
+const eventHandlerId = (req, res) => {
+  const {
+    query: { id },
+  } = req;
   try {
-    if (req.method === "GET") {
+    if (req.method === 'GET') {
       return getEventById(req, res, id);
-    } else if (req.method === "PUT") {
+    } else if (req.method === 'PUT') {
       return updateEvent(req, res, id);
-    } else if (req.method === "DELETE") {
+    } else if (req.method === 'DELETE') {
       return deleteEvent(req, res, id);
     } else {
-      res.setHeader("Allow", allowedMethods);
+      res.setHeader('Allow', allowedMethods);
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ message: 'Internal Server Error', error: error.message });
   }
-}
+};
 
 export default eventHandlerId;

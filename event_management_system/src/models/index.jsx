@@ -2,7 +2,4 @@
 import User from './User';
 import Event from './Event';
 
-export {
-  User,
-  Event
-};
+export { User, Event };

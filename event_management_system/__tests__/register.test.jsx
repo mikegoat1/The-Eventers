@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http';
+import bcrypt from 'bcrypt';
 import registerHandler from '../src/pages/api/auth/register';
 import User from '../src/models/User';
-import bcrypt from 'bcrypt';
 
 jest.mock('../src/lib/mongoose');
 jest.mock('../src/models/User');
