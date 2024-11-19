@@ -43,8 +43,8 @@ describe('POST /api/auth/login', () => {
     const { req, res } = createMocks({
       method: 'POST',
       body: {
-        username: 'testuser',
-        password: 'testpassword',
+        username: 'tester',
+        password: 'resetpassword',
       },
     });
 
@@ -56,7 +56,7 @@ describe('POST /api/auth/login', () => {
 
   it('should return 400 if password does not match', async () => {
     User.findOne.mockResolvedValue({
-      username: 'testuser',
+      username: 'tester',
       password: 'hashedpassword',
     });
     bcrypt.compare = jest.fn().mockResolvedValue(false);
@@ -64,7 +64,7 @@ describe('POST /api/auth/login', () => {
     const { req, res } = createMocks({
       method: 'POST',
       body: {
-        username: 'testuser',
+        username: 'tester',
         password: 'wrongpassword',
       },
     });
@@ -77,7 +77,7 @@ describe('POST /api/auth/login', () => {
 
   it('should return 200 if login is successful', async () => {
     User.findOne.mockResolvedValue({
-      username: 'testuser',
+      username: 'tester',
       password: 'hashedpassword',
     });
     bcrypt.compare = jest.fn().mockResolvedValue(true);
@@ -85,7 +85,7 @@ describe('POST /api/auth/login', () => {
     const { req, res } = createMocks({
       method: 'POST',
       body: {
-        username: 'testuser',
+        username: 'tester',
         password: 'testpassword',
       },
     });
@@ -102,7 +102,7 @@ describe('POST /api/auth/login', () => {
     const { req, res } = createMocks({
       method: 'POST',
       body: {
-        username: 'testuser',
+        username: 'tester',
         password: 'testpassword',
       },
     });
