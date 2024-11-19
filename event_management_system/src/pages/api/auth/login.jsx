@@ -1,54 +1,12 @@
-import bcrypt from 'bcrypt';
-import { body, validationResult } from 'express-validator';
+import { login } from '../../../controllers/authControllers';
 
-import connectToDatabase from '../../../lib/mongoose';
-import User from '../../../models/User';
+const allowedMethods = ['POST'];
 
-const validate = [
-  body('username')
-    .isString()
-    .withMessage('Username must be a string')
-    .trim()
-    .escape()
-    .withMessage('Username must be trimmed and escaped'),
-  body('password')
-    .isString()
-    .withMessage('Password must be a string')
-    .trim()
-    .escape()
-    .withMessage('Password must be trimmed and escaped'),
-];
-
-const loginHandler = async (req, res) => {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).json({ message: 'Method Not Allowed' });
+export default function loginHandler(req, res) {
+  if (req.method === 'POST') {
+    return login(req, res);
+  } else {
+    res.setHeader('Allow', allowedMethods);
+    res.status(405).end(`Method ${req.method} Not Allowed on ${req.url}`);
   }
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ message: 'Invalid input' });
-  }
-  const { username, password } = req.body;
-
-  try {
-    await connectToDatabase();
-
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    console.log('%c Login successful', 'color:green');
-    res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
-    console.warn(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
-export default [validate, loginHandler];
+}

@@ -1,12 +1,14 @@
-/* eslint-disable prettier/prettier */
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/index';
+import connectToDatabase from '../lib/mongoose';
+import User from '../models/User';
 
 export const register = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    await connectToDatabase();
+
     let user = await User.findOne({ username });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
@@ -22,17 +24,18 @@ export const register = async (req, res) => {
     await user.save();
 
     const payload = { userId: user._id };
-    const token = jwt.sign(
+    jwt.sign(
       payload,
       process.env.JWT_SECRET,
       { expiresIn: '1h' },
       (err, token) => {
-        if (err) throw err;
-        res.json({ token });
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: 'Server Error' });
+        }
+        res.status(201).json({ token, userId: user._id });
       }
     );
-
-    res.status(201).json({ token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
@@ -43,6 +46,8 @@ export const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    await connectToDatabase();
+
     let user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
@@ -54,17 +59,18 @@ export const login = async (req, res) => {
     }
 
     const payload = { userId: user._id };
-    const token = jwt.sign(
+    jwt.sign(
       payload,
       process.env.JWT_SECRET,
       { expiresIn: '1h' },
       (err, token) => {
-        if (err) throw err;
-        res.json({ token });
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: 'Server Error' });
+        }
+        res.status(200).json({ token, userId: user._id });
       }
     );
-
-    res.status(200).json({ token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
@@ -72,5 +78,5 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.status(200).json({ token: '' });
+  res.status(200).json({ message: 'Logout successful' });
 };

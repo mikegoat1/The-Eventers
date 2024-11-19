@@ -1,10 +1,12 @@
-const handler = (req, res) => {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).json({ message: 'Method Not Allowed' });
-  }
-  console.log('%c Logout successful', 'color:green');
-  res.status(200).json({ message: 'Logout successful' });
-};
+import { logout } from '../../../controllers/authControllers';
 
-module.exports = handler;
+const allowedMethods = ['POST'];
+
+export default function logoutHandler(req, res) {
+  if (req.method === 'POST') {
+    return logout(req, res);
+  } else {
+    res.setHeader('Allow', allowedMethods);
+    res.status(405).end(`Method ${req.method} Not Allowed on ${req.url}`);
+  }
+}
