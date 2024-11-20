@@ -1,29 +1,13 @@
-import connectToDatabase from '../lib/mongoose';
-import Event from '../models/Event';
-import Reminder from '../models/Reminder';
+import { setEventReminder } from '../../../../controllers/reminderController';
 
-export const setEventReminder = async (req, res, eventId) => {
-  const { userId, remindAt } = req.body;
+const allowedMethods = ['POST'];
 
-  try {
-    await connectToDatabase();
-    const event = await Event.findById(eventId);
-
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    const reminder = new Reminder({
-      eventId,
-      userId,
-      remindAt,
-    });
-
-    await reminder.save();
-
-    res.status(201).json({ message: 'Reminder set', reminder });
-  } catch (error) {
-    console.error('Error setting reminder:', error);
-    res.status(500).json({ message: 'Internal server error' });
+export default function reminderHandler(req, res) {
+  const { id: eventId } = req.query;
+  if (req.method === 'POST') {
+    return setEventReminder(req, res, eventId);
+  } else {
+    res.setHeader('Allow', allowedMethods);
+    res.status(405).end(`Method ${req.method} Not Allowed on ${req.url}`);
   }
-};
+}
