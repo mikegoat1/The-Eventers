@@ -15,7 +15,7 @@ export const setEventReminder = async (req, res, eventId) => {
     if (!userId || !remindAt) {
       return res
         .status(400)
-        .json({ message: 'userId and remindAt are required' });
+        .json({ message: 'userId and remindAt are required', req: req.body });
     }
 
     const reminder = new Reminder({
