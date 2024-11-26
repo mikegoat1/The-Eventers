@@ -13,7 +13,6 @@ export const getAllEvents = async (req, res) => {
   // /api/events?search=party&category=Music (combined search and filter)
   const { search, category } = req.query;
   let filter = {};
-
   try {
     await connectToDatabase();
     if (search) {
