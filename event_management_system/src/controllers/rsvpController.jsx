@@ -20,6 +20,7 @@ export const createRsvp = async (req, res) => {
     }
     res.status(200).json({ message: 'RSVP created' });
   } catch (error) {
+    console.error('Error creating RSVP:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

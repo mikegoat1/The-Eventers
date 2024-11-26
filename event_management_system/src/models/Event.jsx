@@ -6,6 +6,11 @@ const eventSchema = new mongoose.Schema({
   location: { type: String, required: true },
   description: { type: String },
   attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  category: {
+    type: String,
+    enum: ['Music', 'Sports', 'Education', 'Health', 'Technology', 'Other'],
+    required: false,
+  },
 });
 
 const Event = mongoose.models.Event || mongoose.model('Event', eventSchema);

@@ -27,7 +27,11 @@ describe('RSVP API', () => {
     });
 
     it('should return 200 if RSVP is created successfully', async () => {
-      Rsvp.prototype.save = jest.fn().mockResolvedValue({});
+      Rsvp.prototype.save = jest.fn().mockResolvedValue({
+        eventId: 'eventId123',
+        userId: 'userId123',
+        status: 'attending',
+      });
 
       const { req, res } = createMocks({
         method: 'POST',
