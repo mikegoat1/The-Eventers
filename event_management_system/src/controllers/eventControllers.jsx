@@ -6,9 +6,30 @@ export const getAllEvents = async (req, res) => {
     res.setHeader('Allow', ['GET']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  // The enhanced method allows for both filtered and unfiltered event retrieval through the same endpoint:
+
+  // /api/events (all events)
+  // /api/events?search=party (search events)
+  // /api/events?category=Music (filter by category)
+  // /api/events?search=party&category=Music (combined search and filter)
+  const { search, category } = req.query;
+  let filter = {};
+
   try {
     await connectToDatabase();
-    const events = await Event.find({});
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { location: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (category) {
+      filter.category = category;
+    }
+
+    const events = await Event.find(filter);
     res.status(200).json(events);
   } catch (error) {
     console.error('Error fetching events:', error);

@@ -100,7 +100,7 @@ describe('RSVP API', () => {
     it('should return 200 if RSVP is updated successfully', async () => {
       Rsvp.findById.mockResolvedValue({
         status: 'attending',
-        save: jest.fn().mockResolvedValue({}),
+        save: jest.fn().mockResolvedValue(true),
       });
 
       const { req, res } = createMocks({

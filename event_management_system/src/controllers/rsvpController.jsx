@@ -14,9 +14,10 @@ export const createRsvp = async (req, res) => {
     const rsvp = new Rsvp({ eventId, userId, status });
     await rsvp.save();
     if (status === 'attending') {
-      await Event.findByIdAndUpdate(eventId, {
+      const eventUpdateResult = await Event.findByIdAndUpdate(eventId, {
         $addToSet: { attendees: userId },
       });
+      console.log('Event update result:', eventUpdateResult);
     }
     res.status(200).json({ message: 'RSVP created' });
   } catch (error) {
@@ -34,7 +35,7 @@ export const updateRsvp = async (req, res, id) => {
 
   try {
     await connectToDatabase();
-    const rsvp = await Rsvp.findById(id);
+    const rsvp = await Rsvp.findById(id).exec();
     if (!rsvp) {
       return res.status(404).json({ message: 'RSVP not found' });
     }
