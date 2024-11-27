@@ -1,0 +1,46 @@
+/* Importing Google Font Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* CSS Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global Styles - Setting Roboto Font */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #0D0D0D;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* Setting up consistent button and input styles */
+button,
+input,
+textarea {
+  font-family: inherit;
+  outline: none;
+  border: none;
+}
+
+/* Making images responsive by default */
+img {
+  max-width: 100%;
+  height: auto;
+}
