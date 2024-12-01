@@ -18,9 +18,10 @@ const StyledButton = styled(Button)(({ theme, customcolor, variant }) => {
     backgroundColor: primaryColor,
     color: theme.palette.getContrastText(primaryColor),
     borderRadius: '8px',
-    padding: '12px 24px',
+    padding: '8px 24px',
     fontWeight: 'bold',
     fontSize: '16px',
+    lineHeight: '1.5',
     '&:hover': {
       backgroundColor: primaryHoverColor,
     },
