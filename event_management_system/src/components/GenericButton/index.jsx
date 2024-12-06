@@ -3,53 +3,43 @@ import Stack from '@mui/material/Stack';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { useTheme } from '@mui/material/styles';
+import { darken } from '@mui/system';
 
 // Create a styled button with theme-aware and custom color support
-const StyledButton = styled(Button)(({ theme, customcolor, variant }) => {
-  const primaryColor = customcolor || theme.palette.primary.main;
-  const primaryHoverColor = theme.palette.augmentColor({
-    main: primaryColor,
-  }).dark;
-  const secondaryBorderColor = customcolor || theme.palette.secondary.main;
-  const secondaryHoverBackgroundColor = theme.palette.action.hover;
-
+const StyledButton = styled(Button)(({ customcolor, variant }) => {
   const primaryStyles = {
-    backgroundColor: primaryColor,
-    color: theme.palette.getContrastText(primaryColor),
+    backgroundColor: customcolor || '#FF5722',
+    color: '#FDFCFC',
     borderRadius: '8px',
     padding: '8px 24px',
     fontWeight: 'bold',
     fontSize: '16px',
     lineHeight: '1.5',
     '&:hover': {
-      backgroundColor: primaryHoverColor,
+      backgroundColor: customcolor ? darken(customcolor, 0.2) : '#AD2800', // Darken the custom color or use a default hover color
     },
     '&:disabled': {
-      backgroundColor: theme.palette.action.disabledBackground,
-      color: theme.palette.action.disabled,
+      backgroundColor: '#CAC0BF', // Disabled background color
+      color: '#CABFBF', // Disabled text color
     },
   };
 
   const secondaryStyles = {
-    border: `2px solid ${secondaryBorderColor}`,
-    color: secondaryBorderColor,
-    backgroundColor: 'transparent',
+    border: `2px solid ${customcolor || '#FFC107'}`, // Default secondary color
+    color: customcolor || '#080808',
+    backgroundColor: '#FFF9E5',
     borderRadius: '8px',
     padding: '12px 24px',
     fontWeight: 'bold',
-    fontSize: '16px',
     '&:hover': {
-      backgroundColor: secondaryHoverBackgroundColor,
-      borderColor: theme.palette.secondary.dark,
+      backgroundColor: '#FFC107', // Hover background color
+      borderColor: customcolor ? darken(customcolor, 0.2) : '#9E7700', // Darken the custom color or use a default hover border color
     },
   };
 
   const commonStyles = {
     textTransform: 'none', // Prevent uppercase transformation
-    transition: theme.transitions.create(['background-color', 'border-color'], {
-      duration: theme.transitions.duration.short,
-    }),
+    transition: 'background-color 0.3s, border-color 0.3s', // Transition for background and border color
   };
 
   return variant === 'secondary'
@@ -67,8 +57,6 @@ const GenericButton = ({
   endIcon,
   customColor,
 }) => {
-  const theme = useTheme(); // Access the current theme
-
   return (
     <Stack spacing={2} direction="row">
       <StyledButton
@@ -80,7 +68,6 @@ const GenericButton = ({
         endIcon={endIcon}
         customcolor={customColor}
         disabled={disabled}
-        theme={theme} // Pass theme for styling
       >
         {text}
       </StyledButton>
