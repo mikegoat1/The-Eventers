@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-// import IconButton from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 // import MenuItem from '@mui/material/MenuItem';
 // import Menu from '@mui/material/Menu';
-// import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import GenericButton from '../GenericButton';
 
@@ -66,6 +66,15 @@ const Navbar = ({ title }) => {
               backgroundColor: '#F5F3F3',
             }}
           >
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}
+            >
+              <MenuIcon />
+            </IconButton>
             <Typography
               className="navbarTitle"
               variant="h6"
@@ -82,7 +91,7 @@ const Navbar = ({ title }) => {
               {title}
             </Typography>
             {/* <Box sx={{ flexGrow: 1 }} /> */}
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Box sx={{ display: { xs: 'block', md: 'block' } }}>
               <Search sx={{ backgroundColor: '#F8F7F7' }}>
                 <SearchIconWrapper>
                   <SearchIcon sx={{ color: '#0D0D0D' }} />
@@ -93,7 +102,11 @@ const Navbar = ({ title }) => {
                 />
               </Search>
             </Box>
-            <Box display="flex" gap="8%">
+            <Box
+              display="flex"
+              gap="8%"
+              sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
+            >
               <GenericButton color="inherit" variant="primary" text="Login" />
               <GenericButton
                 color="inherit"

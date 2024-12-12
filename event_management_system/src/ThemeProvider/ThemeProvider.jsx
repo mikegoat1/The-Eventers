@@ -14,6 +14,15 @@ const theme = createTheme({
       textTransform: 'none',
     },
   },
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: '#080808',
+        },
+      },
+    },
+  },
 });
 
 export default theme;
