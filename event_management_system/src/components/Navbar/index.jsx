@@ -7,8 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-// import MenuItem from '@mui/material/MenuItem';
-// import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import GenericButton from '../GenericButton';
@@ -55,6 +55,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 const Navbar = ({ title }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -73,7 +79,19 @@ const Navbar = ({ title }) => {
               aria-label="menu"
               sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}
             >
-              <MenuIcon />
+              <MenuIcon
+                aria-controls={open ? 'mobile-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={(event) => setAnchorEl(event.currentTarget)}
+              />
+              <Menu id="mobile-menu" anchorEl={anchorEl} open={open}>
+                <MenuItem onClick={handleClose}>Home</MenuItem>
+                <MenuItem onClick={handleClose}>Events</MenuItem>
+                <MenuItem onClick={handleClose}>Speakers</MenuItem>
+                <MenuItem onClick={handleClose}>Blog</MenuItem>
+                <MenuItem onClick={handleClose}>Help</MenuItem>
+              </Menu>
             </IconButton>
             <Typography
               className="navbarTitle"
