@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { darken } from '@mui/system';
+// Create a size varian for the button
 
 // Create a styled button with theme-aware and custom color support
 const StyledButton = styled(Button)(({ customcolor, variant }) => {

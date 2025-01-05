@@ -21,7 +21,7 @@ const HeroSection = ({ title }) => {
           color="inherit"
           variant="primary"
           text="Get Started"
-          size="medium"
+          size="small"
         />
       </Grid>
       <Grid >

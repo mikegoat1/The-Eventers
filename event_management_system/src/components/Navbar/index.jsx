@@ -77,17 +77,17 @@ const Navbar = ({ title }) => {
               edge="start"
               color="inherit"
               aria-label="menu"
+              onClick={(event) => setAnchorEl(event.currentTarget)}
               sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}
             >
               <MenuIcon
                 aria-controls={open ? 'mobile-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                onClick={(event) => setAnchorEl(event.currentTarget)}
               />
               <Menu id="mobile-menu" anchorEl={anchorEl} open={open}>
-              <MenuItem onClick={handleClose}>Login</MenuItem>
-              <MenuItem onClick={handleClose}>Register</MenuItem>
+                <MenuItem onClick={handleClose}>Login</MenuItem>
+                <MenuItem onClick={handleClose}>Register</MenuItem>
                 <MenuItem onClick={handleClose}>Home</MenuItem>
                 <MenuItem onClick={handleClose}>Events</MenuItem>
                 <MenuItem onClick={handleClose}>Help</MenuItem>
@@ -125,10 +125,7 @@ const Navbar = ({ title }) => {
               sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
             >
               <GenericButton variant="primary" text="Login" />
-              <GenericButton
-                variant="secondary"
-                text="Register"
-              />
+              <GenericButton variant="secondary" text="Register" />
             </Box>
           </Toolbar>
         </AppBar>
