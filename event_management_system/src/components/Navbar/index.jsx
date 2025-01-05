@@ -86,10 +86,10 @@ const Navbar = ({ title }) => {
                 onClick={(event) => setAnchorEl(event.currentTarget)}
               />
               <Menu id="mobile-menu" anchorEl={anchorEl} open={open}>
+              <MenuItem onClick={handleClose}>Login</MenuItem>
+              <MenuItem onClick={handleClose}>Register</MenuItem>
                 <MenuItem onClick={handleClose}>Home</MenuItem>
                 <MenuItem onClick={handleClose}>Events</MenuItem>
-                <MenuItem onClick={handleClose}>Speakers</MenuItem>
-                <MenuItem onClick={handleClose}>Blog</MenuItem>
                 <MenuItem onClick={handleClose}>Help</MenuItem>
               </Menu>
             </IconButton>
@@ -108,7 +108,6 @@ const Navbar = ({ title }) => {
             >
               {title}
             </Typography>
-            {/* <Box sx={{ flexGrow: 1 }} /> */}
             <Box sx={{ display: { xs: 'block', md: 'block' } }}>
               <Search sx={{ backgroundColor: '#F8F7F7' }}>
                 <SearchIconWrapper>
@@ -125,9 +124,8 @@ const Navbar = ({ title }) => {
               gap="8%"
               sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
             >
-              <GenericButton color="inherit" variant="primary" text="Login" />
+              <GenericButton variant="primary" text="Login" />
               <GenericButton
-                color="inherit"
                 variant="secondary"
                 text="Register"
               />

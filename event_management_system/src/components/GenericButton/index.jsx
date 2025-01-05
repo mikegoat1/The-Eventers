@@ -11,9 +11,9 @@ const StyledButton = styled(Button)(({ customcolor, variant }) => {
     backgroundColor: customcolor || '#FF5722',
     color: '#FDFCFC',
     borderRadius: '8px',
-    padding: '8px 24px',
+    // padding: '8px 24px',
     fontWeight: 'bold',
-    fontSize: '16px',
+    // fontSize: '16px',
     lineHeight: '1.5',
     '&:hover': {
       backgroundColor: customcolor ? darken(customcolor, 0.2) : '#AD2800', // Darken the custom color or use a default hover color
@@ -29,7 +29,7 @@ const StyledButton = styled(Button)(({ customcolor, variant }) => {
     color: customcolor || '#080808',
     backgroundColor: '#FFF9E5',
     borderRadius: '8px',
-    padding: '12px 24px',
+    // padding: '12px 24px',
     fontWeight: 'bold',
     '&:hover': {
       backgroundColor: '#FFC107', // Hover background color
