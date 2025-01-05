@@ -50,13 +50,13 @@ const StyledButton = styled(Button)(({ customcolor, variant }) => {
 
 const GenericButton = ({
   text,
-  onClick,
-  variant,
-  disabled,
-  size,
-  startIcon,
-  endIcon,
-  customColor,
+  onClick = null,
+  variant = 'primary',
+  disabled = false,
+  size = 'medium',
+  startIcon = null,
+  endIcon = null,
+  customColor = null,
 }) => {
   return (
     <Stack spacing={2} direction="row">
@@ -85,16 +85,6 @@ GenericButton.propTypes = {
   startIcon: PropTypes.node,
   endIcon: PropTypes.node,
   customColor: PropTypes.string,
-};
-
-GenericButton.defaultProps = {
-  onClick: null,
-  variant: 'primary',
-  disabled: false,
-  size: 'medium',
-  startIcon: null,
-  endIcon: null,
-  customColor: null,
 };
 
 export default GenericButton;
