@@ -7,7 +7,7 @@ const Home = () => {
     <>
       <Navbar title="GATHERHUB" />
       <HeroSection title="Welcome to the Home Page" />
-
+      
     </>
   );
 };

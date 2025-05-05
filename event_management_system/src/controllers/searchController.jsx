@@ -5,6 +5,7 @@ export const searchEvents = async (req, res) => {
   const { keyword, category, date } = req.query;
 
   try {
+    await connectToDatabase();
 
     const query = {};
     if (keyword) {
