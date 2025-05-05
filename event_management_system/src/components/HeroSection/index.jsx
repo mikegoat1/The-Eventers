@@ -7,14 +7,14 @@ const HeroSection = ({ title }) => {
   return (
     <Grid
       container
-      spacing={15}
+      spacing={5}
       direction="row"
       justifyContent="center"
       alignItems="center"
       padding={4}
-      height="50vh"
+      height="60vh"
     >
-      <Grid >
+      <Grid sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <h1>{title}</h1>
         <p>This is the main entry point of the application.</p>
         <GenericButton
@@ -24,7 +24,7 @@ const HeroSection = ({ title }) => {
           size="small"
         />
       </Grid>
-      <Grid >
+      <Grid>
         <img src="https://via.placeholder.com/250" alt="placeholder" />
       </Grid>
     </Grid>

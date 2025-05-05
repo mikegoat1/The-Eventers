@@ -1,11 +1,13 @@
 import { createMocks } from 'node-mocks-http';
 import bcrypt from 'bcrypt';
-import loginHandler from '../src/pages/api/auth/login';
+import loginHandler from '../src/pages/api/auth/login.jsx';
 import User from '../src/models/User';
 
 jest.mock('../src/lib/mongoose');
 jest.mock('../src/models/User');
-
+beforeAll(() => {
+  process.env.JWT_SECRET = 'mocksecret';
+});
 describe('POST /api/auth/login', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -16,11 +18,10 @@ describe('POST /api/auth/login', () => {
       method: 'GET',
     });
 
-    await loginHandler[1](req, res);
+    await loginHandler(req, res);
 
     expect(res.statusCode).toBe(405);
-    expect(res._getJSONData()).toEqual({ message: 'Method Not Allowed' });
-  });
+    expect(res._getData()).toContain('Method GET Not Allowed');  });
 
   it('should return 400 if input is invalid', async () => {
     const { req, res } = createMocks({
@@ -31,7 +32,7 @@ describe('POST /api/auth/login', () => {
       },
     });
 
-    await loginHandler[1](req, res);
+    await loginHandler(req, res);
 
     expect(res.statusCode).toBe(400);
     expect(res._getJSONData()).toEqual({ message: 'Invalid credentials' });
@@ -48,7 +49,7 @@ describe('POST /api/auth/login', () => {
       },
     });
 
-    await loginHandler[1](req, res);
+    await loginHandler(req, res);
 
     expect(res.statusCode).toBe(400);
     expect(res._getJSONData()).toEqual({ message: 'Invalid credentials' });
@@ -69,7 +70,7 @@ describe('POST /api/auth/login', () => {
       },
     });
 
-    await loginHandler[1](req, res);
+    await loginHandler(req, res);
 
     expect(res.statusCode).toBe(400);
     expect(res._getJSONData()).toEqual({ message: 'Invalid credentials' });
@@ -77,23 +78,21 @@ describe('POST /api/auth/login', () => {
 
   it('should return 200 if login is successful', async () => {
     User.findOne.mockResolvedValue({
+      _id: 'mockUserId',
       username: 'tester',
       password: 'hashedpassword',
+      save: jest.fn().mockResolvedValue(true),
     });
     bcrypt.compare = jest.fn().mockResolvedValue(true);
-
     const { req, res } = createMocks({
       method: 'POST',
-      body: {
-        username: 'tester',
-        password: 'testpassword',
-      },
+      body: { username: 'tester', password: 'testpassword' },
     });
-
-    await loginHandler[1](req, res);
-
+    await loginHandler(req, res);
     expect(res.statusCode).toBe(200);
-    expect(res._getJSONData()).toEqual({ message: 'Login successful' });
+    const jsonData = JSON.parse(res._getData() || '{}'); // Safely parse fallback
+    expect(jsonData).toHaveProperty('token');
+    expect(jsonData).toHaveProperty('userId', 'mockUserId');
   });
 
   it('should return 500 if there is a server error', async () => {
@@ -107,9 +106,9 @@ describe('POST /api/auth/login', () => {
       },
     });
 
-    await loginHandler[1](req, res);
+    await loginHandler(req, res);
 
     expect(res.statusCode).toBe(500);
-    expect(res._getJSONData()).toEqual({ message: 'Internal server error' });
+    expect(res._getJSONData()).toEqual({ message: 'Server Error' });
   });
 });
