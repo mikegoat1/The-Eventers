@@ -8,7 +8,9 @@ import Rsvp from '../src/models/Rsvp';
 
 jest.mock('../src/lib/mongoose');
 jest.mock('../src/models/Rsvp');
-
+jest.mock('../src/models/Event', () => ({
+  findByIdAndUpdate: jest.fn().mockResolvedValue({}),
+}));
 describe('RSVP API', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -82,7 +84,9 @@ describe('RSVP API', () => {
     });
 
     it('should return 404 if RSVP is not found', async () => {
-      Rsvp.findById.mockResolvedValue(null);
+      Rsvp.findById.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      });
 
       const { req, res } = createMocks({
         method: 'PUT',
@@ -98,11 +102,15 @@ describe('RSVP API', () => {
     });
 
     it('should return 200 if RSVP is updated successfully', async () => {
-      Rsvp.findById.mockResolvedValue({
-        status: 'attending',
-        save: jest.fn().mockResolvedValue(true),
+      Rsvp.findById.mockReturnValue({
+        exec: jest.fn().mockResolvedValue({
+          _id: 'mockId',
+          status: 'attending',
+          save: jest.fn().mockResolvedValue(true),
+          eventId: 'eventId123',
+          userId: 'userId123',
+        }),
       });
-
       const { req, res } = createMocks({
         method: 'PUT',
         body: {
@@ -117,8 +125,9 @@ describe('RSVP API', () => {
     });
 
     it('should return 500 if there is an internal server error', async () => {
-      Rsvp.findById.mockRejectedValue(new Error('Database error'));
-
+      Rsvp.findById.mockReturnValue({
+        exec: jest.fn().mockRejectedValue(new Error('Database error')),
+      });
       const { req, res } = createMocks({
         method: 'PUT',
         body: {
