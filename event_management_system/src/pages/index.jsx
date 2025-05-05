@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
+import MissionStatement from '@/components/MissionStatement';
 import React from 'react';
 
 const Home = () => {
@@ -7,7 +8,7 @@ const Home = () => {
     <>
       <Navbar title="GATHERHUB" />
       <HeroSection title="Welcome to the Home Page" />
-      
+      <MissionStatement />
     </>
   );
 };
