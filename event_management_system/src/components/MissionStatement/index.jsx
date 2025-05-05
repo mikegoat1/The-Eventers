@@ -1,12 +1,11 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
 const MissionStatementContainer = () => {
   return (
-    <Box sx={{ flexGrow: 1, marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+    <Box sx={{ flexGrow: 1, marginTop: '20px',marginBottom: '20%', display: 'flex', justifyContent: 'center' }}>
       <Paper
         elevation={3}
         sx={{
@@ -16,7 +15,7 @@ const MissionStatementContainer = () => {
           width: '80%',
         }}
       >
-        <Typography variant="h5" component="div">
+        <Typography sx={{ paddingTop: '2%'}} variant="h5" component="div">
           Our Mission Statement
         </Typography>
         <Typography variant="body1" component="div" sx={{ padding: '3%' }}>
