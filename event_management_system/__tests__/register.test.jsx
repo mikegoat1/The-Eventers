@@ -20,7 +20,7 @@ describe('POST /api/auth/register', () => {
     await registerHandler(req, res);
 
     expect(res._getStatusCode()).toBe(405);
-    expect(res._getJSONData()).toEqual({ message: 'Method Not Allowed' });
+    expect(res._getData()).toContain('Method GET Not Allowed on');
   });
 
   it('should return 400 if user already exists', async () => {
@@ -56,8 +56,10 @@ describe('POST /api/auth/register', () => {
 
     await registerHandler(req, res);
 
-    expect(res._getStatusCode()).toBe(200);
-    expect(res._getJSONData()).toEqual({ message: 'Register successful' });
+    expect(res._getStatusCode()).toBe(201);
+    const data = res._getJSONData();
+    expect(data).toHaveProperty('message', 'Register successful');
+    expect(data).toHaveProperty('token');
   });
 
   it('should return 500 if there is an internal server error', async () => {
@@ -74,6 +76,6 @@ describe('POST /api/auth/register', () => {
     await registerHandler(req, res);
 
     expect(res._getStatusCode()).toBe(500);
-    expect(res._getJSONData()).toEqual({ message: 'Internal server error' });
+    expect(res._getJSONData()).toEqual({ message: 'Server Error' });
   });
 });

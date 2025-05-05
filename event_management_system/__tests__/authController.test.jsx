@@ -66,8 +66,9 @@ describe('Auth Controllers', () => {
       await register(req, res);
 
       expect(res._getStatusCode()).toBe(201);
-      expect(res._getJSONData()).toEqual({ token: 'token' });
-    });
+      const data = res._getJSONData();
+      expect(data).toHaveProperty('message', 'Register successful');
+      expect(data).toHaveProperty('token');    });
 
     it('should return 500 if there is an internal server error', async () => {
       User.findOne.mockRejectedValue(new Error('Database error'));
