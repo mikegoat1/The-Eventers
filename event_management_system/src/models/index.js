@@ -1,7 +1,7 @@
 /* Exporting User and Event models */
 import User from './User';
 import Event from './Event';
-import RSVP from './Rsvp';
+import Rsvp from './Rsvp';
 import Reminder from './Reminder';
 
-export { User, Event, RSVP, Reminder };
+export { User, Event, Rsvp, Reminder };

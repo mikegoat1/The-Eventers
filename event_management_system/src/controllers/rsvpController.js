@@ -1,6 +1,6 @@
 import connectToDatabase from '../lib/mongoose';
-import Rsvp from '../models/Rsvp';
-import Event from '../models/Event';
+
+import { Rsvp, Event } from '../models';
 
 export const createRsvp = async (req, res) => {
   if (req.method !== 'POST') {

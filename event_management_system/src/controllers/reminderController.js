@@ -1,6 +1,6 @@
 import connectToDatabase from '../lib/mongoose';
 import Event from '../models/Event';
-import Reminder from '../models/Reminder';
+import { Reminder } from '../models';
 
 export const setEventReminder = async (req, res, eventId) => {
   const { userId, remindAt, method } = req.body;

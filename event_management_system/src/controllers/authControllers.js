@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import connectToDatabase from '../lib/mongoose';
-import User from '../models/User';
+import {User} from '../models';
 
 export const register = async (req, res) => {
   const { username, password } = req.body;

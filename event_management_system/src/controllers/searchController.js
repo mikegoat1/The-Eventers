@@ -1,5 +1,5 @@
 import connectToDatabase from '../lib/mongoose';
-import Event from '../models/Event';
+import { Event } from '../models';
 
 export const searchEvents = async (req, res) => {
   const { keyword, category, date } = req.query;
