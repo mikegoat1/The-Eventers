@@ -1,16 +1,19 @@
-import connectToDatabase from '../lib/mongoose';
-import User from '../models/User';
+import User from '../../models/User.js';
 import bcrypt from 'bcrypt';
+import fs from 'fs';
 
-import users from './userSeeds.json';
-import { create } from '@mui/material/styles/createTransitions';
+import path from require('path');
 
+
+// const users = JSON.parse(readFileSync(new URL('../../../Data/users.json', import.meta.url), 'utf-8'));
+import users from '../../../Data/users.json';
+const users = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../Data/users.json'), 'utf-8'));
 const seedUsers = async () => {
     try {
         await connectToDatabase();
 
-        await User.deleteMany({}); // Clear existing users
-        console.log('Existing users deleted');
+        // await User.deleteMany({}); // Clear existing users
+        // console.log('Existing users deleted');
 
         for (const userData of users) {
             const hashedPassword = await bcrypt.hash(userData.password, 10);
