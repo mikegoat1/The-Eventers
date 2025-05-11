@@ -1,4 +1,4 @@
-import {searchEvents} from '../../../controllers/searchController';
+import { searchEvents } from '../../../controllers/searchController';
 
 const allowedMethods = ['GET'];
 export default function searchHandler(req, res) {

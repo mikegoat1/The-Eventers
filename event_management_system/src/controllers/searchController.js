@@ -21,7 +21,7 @@ export const searchEvents = async (req, res) => {
     }
     if (date) {
       const targetDate = new Date(date);
-      query.date = { $gte: new Date(date) };
+      query.date = { $gte: targetDate };
     }
     const events = await Event.find(query);
     res.status(200).json(events);

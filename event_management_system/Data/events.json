@@ -1,0 +1,242 @@
+[
+    {
+      "name": "Herbal Healing Workshop",
+      "date": "2022-01-24",
+      "location": "5108 Gateway Terrace",
+      "description": "A blend of dried herbs commonly used in Italian cooking.",
+      "attendees": [],
+      "category": "Health"
+    },
+    {
+      "name": "Cat Climber Showcase",
+      "date": "2022-11-24",
+      "location": "287 Summer Ridge Center",
+      "description": "Multi-level cat tree for climbing and scratching.",
+      "attendees": [],
+      "category": "Sports"
+    },
+    {
+      "name": "Solar Charger Tech Talk",
+      "date": "2022-09-16",
+      "location": "2871 Debs Way",
+      "description": "Solar-powered charger for smartphones and tablets.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Smart Lamp Innovation Fair",
+      "date": "2022-10-11",
+      "location": "040 Bartillon Place",
+      "description": "Adjustable lamp with multiple brightness levels and colors.",
+      "attendees": [],
+      "category": "Sports"
+    },
+    {
+      "name": "Travel Bottle Expo",
+      "date": "2022-09-12",
+      "location": "4 Lien Drive",
+      "description": "Leak-proof bottles for travel-sized toiletries.",
+      "attendees": [],
+      "category": "Other"
+    },
+    {
+      "name": "Pajama Comfort Fest",
+      "date": "2022-10-09",
+      "location": "5 Norway Maple Parkway",
+      "description": "Soft cotton pajama set for cozy nights in.",
+      "attendees": [],
+      "category": "Sports"
+    },
+    {
+      "name": "Bike Repair Workshop",
+      "date": "2022-03-08",
+      "location": "62549 Grover Point",
+      "description": "Essential tools for bike maintenance and repair.",
+      "attendees": [],
+      "category": "Sports"
+    },
+    {
+      "name": "Colorful Stir-Fry Cooking Class",
+      "date": "2022-01-13",
+      "location": "69 Birchwood Park",
+      "description": "Frozen mix of colorful stir-fry veggies.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Pet Hair Solutions Demo",
+      "date": "2022-04-01",
+      "location": "52 Dixon Street",
+      "description": "Effective roller for removing pet hair from furniture.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Sandwich Sauce Sampling",
+      "date": "2022-05-01",
+      "location": "442 Mesta Parkway",
+      "description": "Creamy mayonnaise, perfect for salads and sandwiches.",
+      "attendees": [],
+      "category": "Other"
+    },
+    {
+      "name": "Tote Bag Giveaway",
+      "date": "2022-02-04",
+      "location": "6 Elmside Avenue",
+      "description": "Durable canvas tote bag, perfect for everyday use.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Choco-Peanut Treats Tasting",
+      "date": "2022-04-10",
+      "location": "7150 Mallory Trail",
+      "description": "Delicious clusters of peanuts and chocolate for a sweet treat.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Gardening Tools Fair",
+      "date": "2022-08-06",
+      "location": "96 Lakeland Crossing",
+      "description": "Complete set of gardening tools for outdoor tasks.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Superfood Salad Workshop",
+      "date": "2022-04-25",
+      "location": "8172 Commercial Point",
+      "description": "A nutritious salad with kale, quinoa, and a zesty lemon dressing.",
+      "attendees": [],
+      "category": "Education"
+    },
+    {
+      "name": "Quick Bites Chicken Tasting",
+      "date": "2022-04-11",
+      "location": "6 Dawn Road",
+      "description": "Crispy chicken nuggets for quick meals.",
+      "attendees": [],
+      "category": "Sports"
+    },
+    {
+      "name": "Coconut Hydration Station",
+      "date": "2022-11-04",
+      "location": "2 Starling Pass",
+      "description": "Refreshing coconut water packed with electrolytes for hydration.",
+      "attendees": [],
+      "category": "Education"
+    },
+    {
+      "name": "Rustic Bread Baking Demo",
+      "date": "2022-08-12",
+      "location": "8039 Basil Plaza",
+      "description": "Freshly baked rustic bread, perfect for sandwiches or dipping in olive oil.",
+      "attendees": [],
+      "category": "Health"
+    },
+    {
+      "name": "Beauty Travel Organizer Review",
+      "date": "2022-10-17",
+      "location": "81 Hovde Junction",
+      "description": "Stylish and spacious case for makeup and beauty products.",
+      "attendees": [],
+      "category": "Health"
+    },
+    {
+      "name": "Pecan Pie Prep Party",
+      "date": "2022-10-30",
+      "location": "77505 Dexter Road",
+      "description": "Sweet and nutty filling for delicious homemade pecan pie.",
+      "attendees": [],
+      "category": "Health"
+    },
+    {
+      "name": "Lunchbox Design Showcase",
+      "date": "2022-08-03",
+      "location": "97900 Dawn Point",
+      "description": "Fun lunchbox for kids with a sturdy design.",
+      "attendees": [],
+      "category": "Other"
+    },
+    {
+      "name": "Teriyaki Tofu Cooking Class",
+      "date": "2022-05-02",
+      "location": "26524 Anderson Lane",
+      "description": "Tofu stir-fried with fresh vegetables in teriyaki sauce.",
+      "attendees": [],
+      "category": "Other"
+    },
+    {
+      "name": "Relax & Read Bath Caddy Review",
+      "date": "2022-01-12",
+      "location": "28028 Porter Alley",
+      "description": "Expandable caddy for holding books, phones, and snacks while in the bath.",
+      "attendees": [],
+      "category": "Technology"
+    },
+    {
+      "name": "Smartwatch Fitness Expo",
+      "date": "2022-05-07",
+      "location": "6895 Bonner Plaza",
+      "description": "Stylish smartwatch with fitness tracking features.",
+      "attendees": [],
+      "category": "Health"
+    },
+    {
+      "name": "Kids Coding Bot Show",
+      "date": "2022-09-30",
+      "location": "43 Dahle Avenue",
+      "description": "Fun robot that engages kids with games and activities.",
+      "attendees": [],
+      "category": "Music"
+    },
+    {
+      "name": "Spring Roll Cooking Demo",
+      "date": "2022-12-10",
+      "location": "571 Loftsgordon Plaza",
+      "description": "Crispy spring rolls filled with vegetables.",
+      "attendees": [],
+      "category": "Education"
+    },
+    {
+      "name": "Pineapple Teriyaki Tasting",
+      "date": "2022-01-27",
+      "location": "358 Pierstorff Avenue",
+      "description": "A perfect blend of pineapple and teriyaki for stir-fry.",
+      "attendees": [],
+      "category": "Other"
+    },
+    {
+      "name": "Jewelry Travel Organizer Fair",
+      "date": "2022-10-08",
+      "location": "98069 Lakewood Gardens Lane",
+      "description": "Portable case to organize and protect jewelry on trips.",
+      "attendees": [],
+      "category": "Education"
+    },
+    {
+      "name": "Cheddar Cheese Sampling",
+      "date": "2022-04-12",
+      "location": "4734 Kipling Hill",
+      "description": "Creamy cheddar cheese slices, perfect for sandwiches and snacks.",
+      "attendees": [],
+      "category": "Music"
+    },
+    {
+      "name": "Winter Comfort Gear Fair",
+      "date": "2022-05-16",
+      "location": "189 Maywood Road",
+      "description": "Heated stool cover for extra comfort during winter.",
+      "attendees": [],
+      "category": "Other"
+    },
+    {
+      "name": "Taro Chips Tasting Tour",
+      "date": "2022-11-13",
+      "location": "41886 Summer Ridge Circle",
+      "description": "Crispy chips made from taro root, a wonderful snack.",
+      "attendees": [],
+      "category": "Technology"
+    }
+  ]
