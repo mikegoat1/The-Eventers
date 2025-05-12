@@ -59,7 +59,6 @@ describe('POST /api/auth/register', () => {
     expect(res._getStatusCode()).toBe(201);
     const data = res._getJSONData();
     expect(data).toHaveProperty('message', 'Register successful');
-    expect(data).toHaveProperty('token');
   });
 
   it('should return 500 if there is an internal server error', async () => {

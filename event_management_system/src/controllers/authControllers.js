@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import connectToDatabase from '../lib/mongoose';
-import {User} from '../models';
+import cookie from 'cookie';
+import { User } from '../models';
 
 export const register = async (req, res) => {
   const { username, password } = req.body;
@@ -35,10 +36,18 @@ export const register = async (req, res) => {
         }
       );
     });
-
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60, // 1 hour
+        sameSite: 'strict',
+        path: '/',
+      }));
     res
       .status(201)
-      .json({ message: 'Register successful', token, userId: user._id });
+      .json({ message: 'Register successful', userId: user._id });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });
@@ -73,8 +82,17 @@ export const login = async (req, res) => {
         }
       );
     });
+    res.setHeader(
+      'Set-Cookie',
+      cookie.serialize('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60, // 1 hour
+        sameSite: 'strict',
+        path: '/',
+      }));
 
-    res.status(200).json({ token, userId: user._id });
+    res.status(200).json({ userId: user._id });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server Error' });

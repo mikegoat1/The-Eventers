@@ -1,11 +1,10 @@
 import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
 
 export const authMiddleware = (handler) => (req, res) => {
-  const authHeader = req.headers.authorization;
-  const token =
-    authHeader && authHeader.startsWith('Bearer ')
-      ? authHeader.split(' ')[1]
-      : authHeader;
+  const cookies = cookie.parse(req.headers.cookie || '');
+  const token = cookies.token;
+
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
