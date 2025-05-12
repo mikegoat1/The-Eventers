@@ -3,9 +3,7 @@ import fs from 'fs';
 import path, { dirname }  from 'path';
 import dotenv from 'dotenv';
 import connectToDatabase from '../../lib/mongoose.js';
-// import events from '../../../Data/events.json';
 
-// const events = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../Data/events.json'), 'utf-8'));
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
