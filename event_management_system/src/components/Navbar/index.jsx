@@ -13,7 +13,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import GenericButton from '../GenericButton';
 import axios from '../../lib/axios';
-import { set } from 'mongoose';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -66,7 +65,7 @@ const Navbar = ({ title }) => {
     const delayDebounce = setTimeout(() => {
       if (query.length > 1) {
         axios
-          .get(`/event/search?keyword=${encodeURIComponent(query)}`)
+          .get(`/search?keyword=${encodeURIComponent(query)}`)
           .then((res) => setSearchEventResults(res.data))
           .catch((err) => console.error('Error fetching search results:', err));
       }
@@ -124,7 +123,7 @@ const Navbar = ({ title }) => {
             >
               {title}
             </Typography>
-            <Box sx={{ display: { xs: 'block', md: 'block' }, position: 'relative' }}>
+            <Box sx={{ display: { xs: 'block', md: 'block' } }}>
               <Search sx={{ backgroundColor: '#F8F7F7' }}>
                 <SearchIconWrapper>
                   <SearchIcon sx={{ color: '#0D0D0D' }} />
@@ -137,11 +136,11 @@ const Navbar = ({ title }) => {
                 />
               </Search>
               {searchEventResults.length > 0 && (
-                <Box sx={{ position: 'absolute', backgroundColor: '#fff', zIndex: 10, mt: 1, p: 1 }}>
+                <Box sx={{ position: 'absolute', zIndex: 10, mt: 1, p: 1 }}>
                   {searchEventResults.map((event) => (
-                    <Typography key={event._id} variant="body2">
+                    <MenuItem key={event._id} variant="body2">
                       {event.name}
-                    </Typography>
+                    </MenuItem>
                   ))}
                 </Box>
               )}
