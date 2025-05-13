@@ -59,6 +59,7 @@ const Navbar = ({ title }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [query, setQuery] = useState('');
   const [searchEventResults, setSearchEventResults] = useState([]);
+  const [searchFocused, setSearchFocused] = useState(false);
   const open = Boolean(anchorEl);
 
   useEffect(() => {
@@ -130,20 +131,46 @@ const Navbar = ({ title }) => {
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Search Event..."
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
                   inputProps={{ 'aria-label': 'search' }}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
+                {searchFocused && query.length > 0 && searchEventResults.length > 0 && (
+                  <Box
+                    sx={{
+                      borderRadius: '2%',
+                      width: '100%',
+                      position: 'absolute',
+                      backgroundColor: '#F8F7F7',
+                      border: '1px solid #BDBDBD',
+                      color: '#080808',
+                      fontWeight: 'medium',
+                      lineHeight: '18px',
+                      letterSpacing: '0.5%',
+                      zIndex: 10,
+                      mt: 1,
+                      p: 1,
+                    }}
+                  >
+                    {searchEventResults.map((event) => (
+                      <MenuItem key={event._id} id={event._id} variant="body2">
+                        {event.name}
+                      </MenuItem>
+                    ))}
+                  </Box>
+                )}
               </Search>
-              {searchEventResults.length > 0 && (
-                <Box sx={{ position: 'absolute', backgroundColor: 'black', zIndex: 10, mt: 1, p: 1 }}>
+              {/* {searchEventResults.length > 0 && (
+                <Box sx={{  position: 'absolute', backgroundColor: 'black', zIndex: 10, mt: 1, p: 1 }}>
                   {searchEventResults.map((event) => (
-                    <MenuItem key={event._id} variant="body2">
+                    <MenuItem key={event._id} id={event._id} variant="body2">
                       {event.name}
                     </MenuItem>
                   ))}
                 </Box>
-              )}
+              )} */}
             </Box>
             <Box
               display="flex"
