@@ -136,7 +136,7 @@ const Navbar = ({ title }) => {
                 />
               </Search>
               {searchEventResults.length > 0 && (
-                <Box sx={{ position: 'absolute', zIndex: 10, mt: 1, p: 1 }}>
+                <Box sx={{ position: 'absolute', backgroundColor: 'black', zIndex: 10, mt: 1, p: 1 }}>
                   {searchEventResults.map((event) => (
                     <MenuItem key={event._id} variant="body2">
                       {event.name}

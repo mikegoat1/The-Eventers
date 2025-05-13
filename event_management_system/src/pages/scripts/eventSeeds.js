@@ -15,8 +15,8 @@ const seedEvents = async () => {
   try {
     await connectToDatabase();
 
-    // await Event.deleteMany({}); // Clear existing events
-    // console.log('Existing events deleted');
+    await Event.deleteMany({}); // Clear existing events
+    console.log('Existing events deleted');
 
     for (const eventData of events) {
       const event = new Event({
@@ -24,7 +24,8 @@ const seedEvents = async () => {
         date: eventData.date,
         location: eventData.location,
         description: eventData.description,
-        createdAt: eventData.createdAt,
+        attendees: eventData.attendees,
+        category: eventData.category,
       });
       await event.save();
       console.log(`✅ Created event: ${event.name}`);
