@@ -100,8 +100,9 @@ const Navbar = ({ title }) => {
                 aria-controls={open ? 'mobile-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
+                sx={{ color: '#FF5722' }} // Change the color here
               />
-              <Menu id="mobile-menu" anchorEl={anchorEl} open={open}>
+              <Menu id="mobile-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
                 <MenuItem onClick={handleClose}>Login</MenuItem>
                 <MenuItem onClick={handleClose}>Register</MenuItem>
                 <MenuItem onClick={handleClose}>Home</MenuItem>
