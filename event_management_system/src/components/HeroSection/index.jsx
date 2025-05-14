@@ -16,7 +16,6 @@ const HeroSection = ({ title }) => {
     >
       <Grid sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <h1>{title}</h1>
-        <p>This is the main entry point of the application.</p>
         <GenericButton
           color="inherit"
           variant="primary"

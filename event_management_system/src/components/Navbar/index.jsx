@@ -46,7 +46,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: '#0D0D0D',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -100,7 +99,7 @@ const Navbar = ({ title }) => {
                 aria-controls={open ? 'mobile-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                sx={{ color: '#FF5722' }} // Change the color here
+                sx={{ color: '#FF5722' }}
               />
             </IconButton>
             <Menu
@@ -174,15 +173,6 @@ const Navbar = ({ title }) => {
                     </Box>
                   )}
               </Search>
-              {/* {searchEventResults.length > 0 && (
-                <Box sx={{  position: 'absolute', backgroundColor: 'black', zIndex: 10, mt: 1, p: 1 }}>
-                  {searchEventResults.map((event) => (
-                    <MenuItem key={event._id} id={event._id} variant="body2">
-                      {event.name}
-                    </MenuItem>
-                  ))}
-                </Box>
-              )} */}
             </Box>
             <Box
               display="flex"
