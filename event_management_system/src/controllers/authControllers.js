@@ -56,18 +56,18 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
-
   try {
     await connectToDatabase();
 
     let user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials username' });
     }
-
+    console.log('INPUT PASSWORD:', password);
+    console.log('HASHED PASSWORD IN DB:', user.password);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials password' });
     }
 
     const payload = { userId: user._id };
@@ -95,6 +95,8 @@ export const login = async (req, res) => {
     res.status(200).json({ userId: user._id });
   } catch (err) {
     console.error(err);
+    console.error('LOGIN ERROR:', err.message);
+    console.error('STACK:', err.stack);
     res.status(500).json({ message: 'Server Error' });
   }
 };

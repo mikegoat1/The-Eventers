@@ -57,6 +57,7 @@ const GenericButton = ({
   startIcon = null,
   endIcon = null,
   customColor = null,
+  type = 'button',
 }) => {
   return (
     <Stack spacing={2} direction="row">
@@ -69,6 +70,7 @@ const GenericButton = ({
         endIcon={endIcon}
         customcolor={customColor}
         disabled={disabled}
+        type={type}
       >
         {text}
       </StyledButton>
@@ -85,6 +87,7 @@ GenericButton.propTypes = {
   startIcon: PropTypes.node,
   endIcon: PropTypes.node,
   customColor: PropTypes.string,
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
 };
 
 export default GenericButton;

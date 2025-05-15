@@ -1,4 +1,4 @@
-import { login } from '../../../controllers/authControllers';
+import { login } from '../../../../controllers/authControllers';
 
 const allowedMethods = ['POST'];
 

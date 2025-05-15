@@ -7,37 +7,35 @@ import { useFormik } from 'formik';
 import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import InputBase from '@mui/material/InputBase';
-
+import Footer from '@/components/Footer';
 
 const validationSchema = yup.object({
-  email: yup
+    username: yup
     .string()
-    .email('Invalid email format')
-    .required('Email is required'),
+    .min(3, 'Username must be at least 3 characters')
+    .required('Username is required'),
   password: yup
     .string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
 });
 
-
-
 const Login = () => {
-    const formik = useFormik({
-      initialValues: {
-        email: '',
-        password: '',
-      },
-      validationSchema: validationSchema,
-      onSubmit: async (values) => {
-        try {
-          const response = await axios.post('/login', values);
-          console.log('Login successful:', response.data);
-        } catch (error) {
-          console.error('Login failed:', error);
-        }
-      },
-    });
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post('/auth/login', values);
+        console.log('Login successful:', response.data);
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
+    },
+  });
   return (
     <>
       <Box>
@@ -67,14 +65,21 @@ const Login = () => {
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <InputBase
-                type="email"
-                name="email"
-                placeholder="Email"
+                type="username"
+                name="username"
+                placeholder="Email or Username"
                 onChange={formik.handleChange}
-                value={formik.values.email}
+                value={formik.values.username}
+                sx={{
+                  border: '2px solid #A1A0A0',
+                  padding: 1,
+                  borderRadius: 1,
+                  width: '300px',
+                  backgroundColor: '#F5F3F3',
+                }}
               />
-              {formik.errors.email && (
-                <Typography color="error">{formik.errors.email}</Typography>
+              {formik.errors.username && (
+                <Typography color="error">{formik.errors.username}</Typography>
               )}
               <InputBase
                 type="password"
@@ -82,14 +87,26 @@ const Login = () => {
                 placeholder="Password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
+                sx={{
+                  border: '2px solid #A1A0A0',
+                  padding: 1,
+                  borderRadius: 1,
+                  width: '300px',
+                  backgroundColor: '#F5F3F3',
+                  '&focus': {
+                    border: '2px solid #616060',
+                    backgroundColor: '#616060',
+                  },
+                }}
               />
               {formik.errors.password && (
                 <Typography color="error">{formik.errors.password}</Typography>
               )}
-              <GenericButton variant="primary" text="Login"/>
+              <GenericButton variant="primary" text="Login" type='submit' />
             </Box>
-            </form>
+          </form>
         </Box>
+        <Footer />
       </Box>
     </>
   );
