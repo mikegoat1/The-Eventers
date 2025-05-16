@@ -8,9 +8,9 @@ import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import InputBase from '@mui/material/InputBase';
 import Footer from '@/components/Footer';
-
+import { useRouter } from 'next/router';
 const validationSchema = yup.object({
-    username: yup
+  username: yup
     .string()
     .min(3, 'Username must be at least 3 characters')
     .required('Username is required'),
@@ -21,6 +21,8 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -31,6 +33,9 @@ const Login = () => {
       try {
         const response = await axios.post('/auth/login', values);
         console.log('Login successful:', response.data);
+        if (response.status === 200) {
+          router.push('/');
+        }
       } catch (error) {
         console.error('Login failed:', error);
       }
@@ -102,7 +107,7 @@ const Login = () => {
               {formik.errors.password && (
                 <Typography color="error">{formik.errors.password}</Typography>
               )}
-              <GenericButton variant="primary" text="Login" type='submit' />
+              <GenericButton variant="primary" text="Login" type="submit" />
             </Box>
           </form>
         </Box>
