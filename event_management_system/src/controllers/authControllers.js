@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import connectToDatabase from '../lib/mongoose';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { User } from '../models';
 
 export const register = async (req, res) => {
@@ -56,15 +56,18 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
+  console.log('LOGIN USERNAME:', username);
   try {
     await connectToDatabase();
+    // let test = await User.find();
+    // console.log('TEST:', test);
+    let user = await User.findOne({ username: username.toLowerCase() });
+    // console.log('USER:', user);
+    // console.log('Users in DB:', user.map(u => u.username));
 
-    let user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials username' });
     }
-    console.log('INPUT PASSWORD:', password);
-    console.log('HASHED PASSWORD IN DB:', user.password);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials password' });
