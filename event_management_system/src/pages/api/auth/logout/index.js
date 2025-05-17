@@ -1,4 +1,4 @@
-import { logout } from '../../../controllers/authControllers';
+import { logout } from '../../../../controllers/authControllers';
 
 const allowedMethods = ['POST'];
 

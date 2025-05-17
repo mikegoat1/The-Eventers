@@ -57,7 +57,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-const Navbar = ({ title }) => {
+const Navbar = ({ title, user }) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
@@ -83,11 +83,11 @@ const Navbar = ({ title }) => {
     setAnchorEl(null);
   };
   const handleProfileMenuOpen = (event) => {
-    setProfileMenuAnchor(event.currentTarget);
+    setProfileMenuAnchorEl(event.currentTarget);
   };
 
   const handleProfileMenuClose = () => {
-    setProfileMenuAnchor(null);
+    setProfileMenuAnchorEl(null);
   };
   const handleLogout = async () => {
     try {
@@ -216,12 +216,23 @@ const Navbar = ({ title }) => {
                 anchorEl={profileMenuAnchorEl}
                 open={isProfileMenuOpen}
                 onClose={handleProfileMenuClose}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                // anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                // transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
                 <MenuItem onClick={goToProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
+              {/* <IconButton
+                size="medium"
+                edge="end"
+                aria-label="account"
+                aria-controls="profile-menu"
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <Avatar sx={{ bgcolor: '#FF5722' }}>U</Avatar>{' '}
+              </IconButton>
               <GenericButton
                 variant="primary"
                 text="Login"
@@ -231,7 +242,35 @@ const Navbar = ({ title }) => {
                 variant="secondary"
                 text="Register"
                 onClick={registerOnClick}
-              />
+              /> */}
+              {user ? (
+                <IconButton
+                  size="medium"
+                  edge="end"
+                  aria-label="account"
+                  aria-controls="profile-menu"
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <Avatar sx={{ bgcolor: '#FF5722' }}>
+                    {user.username?.[0] || 'U'}
+                  </Avatar>
+                </IconButton>
+              ) : (
+                <>
+                  <GenericButton
+                    text="Login"
+                    variant="primary"
+                    onClick={loginOnClick}
+                  />
+                  <GenericButton
+                    variant="secondary"
+                    text="Register"
+                    onClick={registerOnClick}
+                  />
+                </>
+              )}
             </Box>
           </Toolbar>
         </AppBar>
