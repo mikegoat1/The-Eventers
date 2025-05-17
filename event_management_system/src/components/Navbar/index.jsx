@@ -89,6 +89,20 @@ const Navbar = ({ title }) => {
   const handleProfileMenuClose = () => {
     setProfileMenuAnchor(null);
   };
+  const handleLogout = async () => {
+    try {
+      await axios.post('/auth/logout');
+      handleProfileMenuClose();
+      router.push('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
+  const goToProfile = () => {
+    handleProfileMenuClose();
+    router.push('/profile');
+  };
   const loginOnClick = () => {
     router.push('/login');
   };
@@ -198,6 +212,16 @@ const Navbar = ({ title }) => {
               gap="8%"
               sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
             >
+              <Menu
+                anchorEl={profileMenuAnchorEl}
+                open={isProfileMenuOpen}
+                onClose={handleProfileMenuClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <MenuItem onClick={goToProfile}>Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
               <GenericButton
                 variant="primary"
                 text="Login"
