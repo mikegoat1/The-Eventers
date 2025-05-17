@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  MenuItem,
+  Menu,
+  Avatar,
+} from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
+import { Menu as MenuIcon, Search as SearchIcon } from '@mui/icons-material';
 import GenericButton from '../GenericButton';
 import axios from '../../lib/axios';
+import { useRouter } from 'next/router';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -55,10 +58,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 const Navbar = ({ title }) => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
   const [query, setQuery] = useState('');
   const [searchEventResults, setSearchEventResults] = useState([]);
   const [searchFocused, setSearchFocused] = useState(false);
+  const isProfileMenuOpen = Boolean(profileMenuAnchorEl);
   const open = Boolean(anchorEl);
 
   useEffect(() => {
@@ -75,6 +81,19 @@ const Navbar = ({ title }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleProfileMenuOpen = (event) => {
+    setProfileMenuAnchor(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchor(null);
+  };
+  const loginOnClick = () => {
+    router.push('/login');
+  };
+  const registerOnClick = () => {
+    router.push('/register');
   };
   return (
     <>
@@ -179,8 +198,16 @@ const Navbar = ({ title }) => {
               gap="8%"
               sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
             >
-              <GenericButton variant="primary" text="Login" />
-              <GenericButton variant="secondary" text="Register" />
+              <GenericButton
+                variant="primary"
+                text="Login"
+                onClick={loginOnClick}
+              />
+              <GenericButton
+                variant="secondary"
+                text="Register"
+                onClick={registerOnClick}
+              />
             </Box>
           </Toolbar>
         </AppBar>
