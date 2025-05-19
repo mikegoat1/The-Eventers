@@ -20,7 +20,7 @@ const validationSchema = yup.object({
     .required('Password is required'),
 });
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
 
   const formik = useFormik({
@@ -31,16 +31,18 @@ const Login = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('/auth/login', values);
-        console.log('Login successful:', response.data);
-        if (response.status === 200) {
+        const response = await axios.post('/auth/register', values);
+        console.log('Register Status:', response.status);
+        if (response.status === 201) {
+          console.log('Register successful:', response.data);
           router.push('/');
         }
       } catch (error) {
-        console.error('Login failed:', error);
+        console.error('Register failed:', error);
       }
     },
   });
+
   const handleBack = () => {
     router.push('/');
   };
@@ -74,6 +76,7 @@ const Login = () => {
             </Typography>
           </Box>
         </AppBar>
+
         <Box
           sx={{
             display: 'flex',
@@ -84,7 +87,7 @@ const Login = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h4">Login Page</Typography>
+          <Typography variant="h4">Register Page</Typography>
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <InputBase
@@ -125,7 +128,7 @@ const Login = () => {
               {formik.errors.password && (
                 <Typography color="error">{formik.errors.password}</Typography>
               )}
-              <GenericButton variant="primary" text="Login" type="submit" />
+              <GenericButton variant="primary" text="Register" type="submit" />
             </Box>
           </form>
         </Box>
@@ -135,4 +138,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
