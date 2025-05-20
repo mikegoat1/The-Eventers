@@ -7,7 +7,7 @@ import { darken } from '@mui/system';
 // Create a size varian for the button
 
 // Create a styled button with theme-aware and custom color support
-const StyledButton = styled(Button)(({ customcolor, variant }) => {
+const StyledButton = styled(Button)(({ customcolor, variant, size }) => {
   const primaryStyles = {
     backgroundColor: customcolor || '#FF5722',
     color: '#FDFCFC',
@@ -42,10 +42,26 @@ const StyledButton = styled(Button)(({ customcolor, variant }) => {
     textTransform: 'none', // Prevent uppercase transformation
     transition: 'background-color 0.3s, border-color 0.3s', // Transition for background and border color
   };
-
-  return variant === 'secondary'
-    ? { ...commonStyles, ...secondaryStyles }
-    : { ...commonStyles, ...primaryStyles };
+  const sizeStyles = {
+    small: {
+      fontSize: '0.75rem',
+      padding: '4px 12px',
+    },
+    medium: {
+      fontSize: '0.875rem',
+      padding: '6px 16px',
+    },
+    large: {
+      fontSize: '1rem',
+      padding: '8px 20px',
+    },
+  };
+  return {
+    ...(variant === 'secondary'
+      ? { ...commonStyles, ...secondaryStyles }
+      : { ...commonStyles, ...primaryStyles }),
+    ...sizeStyles[size],
+  };
 });
 
 const GenericButton = ({

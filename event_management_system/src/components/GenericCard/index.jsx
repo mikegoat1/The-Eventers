@@ -76,9 +76,8 @@ const GenericCard = ({
         </Box>
         <Box sx={{ alignSelf: 'flex-end', display: 'flex', gap: 1 }}>
           <GenericButton
-            variant="solid"
-            color="primary"
-            size="sm"
+            variant="primary"
+            size="small"
             text={buttonText}
             onClick={onButtonClick}
           />
