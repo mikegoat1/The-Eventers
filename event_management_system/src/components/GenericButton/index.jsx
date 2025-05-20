@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { darken } from '@mui/system';
-// Create a size varian for the button
 
 // Create a styled button with theme-aware and custom color support
 const StyledButton = styled(Button)(({ customColor, variant, size }) => {
@@ -12,9 +11,7 @@ const StyledButton = styled(Button)(({ customColor, variant, size }) => {
     backgroundColor: customColor || '#FF5722',
     color: '#FDFCFC',
     borderRadius: '8px',
-    // padding: '8px 24px',
     fontWeight: 'bold',
-    // fontSize: '16px',
     lineHeight: '1.5',
     '&:hover': {
       backgroundColor: customColor ? darken(customColor, 0.2) : '#AD2800', // Darken the custom color or use a default hover color
