@@ -51,6 +51,7 @@ export const getEventById = async (req, res, id) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 export const updateEvent = async (req, res, id) => {
   if (req.method !== 'PUT') {
     res.setHeader('Allow', ['PUT']);

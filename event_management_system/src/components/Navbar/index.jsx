@@ -79,6 +79,8 @@ const Navbar = ({ title, user }) => {
     return () => clearTimeout(delayDebounce);
   }, [query]);
 
+  console.log('searchEventResults', searchEventResults);
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -198,6 +200,12 @@ const Navbar = ({ title, user }) => {
                         <MenuItem
                           key={event._id}
                           id={event._id}
+                          onClick={() =>
+                            router.push({
+                              pathname: '/events/[id]',
+                              query: { id: event._id },
+                            })
+                          }
                           variant="body2"
                         >
                           {event.name}

@@ -7,9 +7,7 @@ import {
 const allowedMethods = ['GET', 'PUT', 'DELETE'];
 
 const eventHandlerId = (req, res) => {
-  const {
-    query: { id },
-  } = req;
+  const id = req.query.id;
   try {
     if (req.method === 'GET') {
       return getEventById(req, res, id);
