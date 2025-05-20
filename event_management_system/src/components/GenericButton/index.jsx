@@ -7,9 +7,9 @@ import { darken } from '@mui/system';
 // Create a size varian for the button
 
 // Create a styled button with theme-aware and custom color support
-const StyledButton = styled(Button)(({ customcolor, variant, size }) => {
+const StyledButton = styled(Button)(({ customColor, variant, size }) => {
   const primaryStyles = {
-    backgroundColor: customcolor || '#FF5722',
+    backgroundColor: customColor || '#FF5722',
     color: '#FDFCFC',
     borderRadius: '8px',
     // padding: '8px 24px',
@@ -17,7 +17,7 @@ const StyledButton = styled(Button)(({ customcolor, variant, size }) => {
     // fontSize: '16px',
     lineHeight: '1.5',
     '&:hover': {
-      backgroundColor: customcolor ? darken(customcolor, 0.2) : '#AD2800', // Darken the custom color or use a default hover color
+      backgroundColor: customColor ? darken(customColor, 0.2) : '#AD2800', // Darken the custom color or use a default hover color
     },
     '&:disabled': {
       backgroundColor: '#CAC0BF', // Disabled background color
@@ -26,15 +26,15 @@ const StyledButton = styled(Button)(({ customcolor, variant, size }) => {
   };
 
   const secondaryStyles = {
-    border: `2px solid ${customcolor || '#FFC107'}`, // Default secondary color
-    color: customcolor || '#080808',
+    border: `2px solid ${customColor || '#FFC107'}`, // Default secondary color
+    color: customColor || '#080808',
     backgroundColor: '#FFF9E5',
     borderRadius: '8px',
     // padding: '12px 24px',
     fontWeight: 'bold',
     '&:hover': {
       backgroundColor: '#FFC107', // Hover background color
-      borderColor: customcolor ? darken(customcolor, 0.2) : '#9E7700', // Darken the custom color or use a default hover border color
+      borderColor: customColor ? darken(customColor, 0.2) : '#9E7700', // Darken the custom color or use a default hover border color
     },
   };
 
@@ -84,7 +84,7 @@ const GenericButton = ({
         size={size}
         startIcon={startIcon}
         endIcon={endIcon}
-        customcolor={customColor}
+        customColor={customColor}
         disabled={disabled}
         type={type}
       >
