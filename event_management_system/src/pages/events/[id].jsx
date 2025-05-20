@@ -11,6 +11,7 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import IconButton from '@mui/joy/IconButton';
 import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
 import { useRouter } from 'next/router';
+import GenericCard from '@/components/GenericCard';
 
 const SingleEvent = () => {
   const router = useRouter();
@@ -77,68 +78,14 @@ const SingleEvent = () => {
             {event?.name ? 'Event Details' : 'Loading event...'}
           </Typography>
           {event && (
-            <Card sx={{ width: 320 }}>
-              <div>
-                <Typography level="title-lg">{event.name}</Typography>
-                <Typography level="body-sm">
-                  {new Date(event.date).toLocaleString()}
-                </Typography>
-                <Typography level="body-md" sx={{ marginTop: 1 }}>
-                  {event.description || 'No description available.'}
-                </Typography>
-                <IconButton
-                  aria-label="bookmark event"
-                  variant="plain"
-                  color="neutral"
-                  size="sm"
-                  sx={{
-                    position: 'absolute',
-                    top: '0.875rem',
-                    right: '0.5rem',
-                  }}
-                >
-                  <BookmarkAdd />
-                </IconButton>
-              </div>
-              <AspectRatio minHeight="120px" maxHeight="200px">
-                <img
-                  src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                  srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-                  loading="lazy"
-                  alt=""
-                />
-              </AspectRatio>
-              <CardContent orientation="horizontal">
-                <div>
-                  <Typography level="body-xs">Category:</Typography>
-                  <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
-                    {event.category || 'N/A'}
-                  </Typography>
-                  <div>
-                    <Typography level="body-xs">Location:</Typography>
-                    <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
-                      {event.location || 'N/A'}
-                    </Typography>
-                  </div>
-                </div>
-                <Box>
-                    <Typography level="body-xs">Attendees:</Typography>
-                    <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
-                        {event.attendees.length > 0 ? `Attending: ${event.attendees.length}` :  'N/A'}
-                    </Typography>
-                </Box>
-                <Box sx={{ alignSelf: 'flex-end', display: 'flex', gap: 1 }}>
-                  <GenericButton
-                    variant="solid"
-                    color="primary"
-                    size="sm"
-                    text="RVSP"
-                    sx={{ marginLeft: 'auto'}}
-                    onClick={() => router.push(`/events/${event._id}/register`)}
-                  />
-                </Box>
-              </CardContent>
-            </Card>
+            <GenericCard
+              name={event.name}
+              date={event.date}
+              description={event.description}
+              category={event.category}
+              location={event.location}
+              attendees={event.attendees}
+            />
           )}
         </Box>
         <Footer />
