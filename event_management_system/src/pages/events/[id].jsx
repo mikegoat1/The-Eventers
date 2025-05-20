@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Typography from '@mui/joy/Typography';
 import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import Footer from '@/components/Footer';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import AspectRatio from '@mui/joy/AspectRatio';
+import IconButton from '@mui/joy/IconButton';
+import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
 import { useRouter } from 'next/router';
 
 const SingleEvent = () => {
@@ -71,33 +74,71 @@ const SingleEvent = () => {
           }}
         >
           <Typography variant="h4">
-            {event?.name || 'Loading event...'}
+            {event?.name ? 'Event Details' : 'Loading event...'}
           </Typography>
           {event && (
-            <Box sx={{ width: '80%', maxWidth: 600 }}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography color="text.secondary" gutterBottom>
-                    {new Date(event.date).toLocaleString()}
+            <Card sx={{ width: 320 }}>
+              <div>
+                <Typography level="title-lg">{event.name}</Typography>
+                <Typography level="body-sm">
+                  {new Date(event.date).toLocaleString()}
+                </Typography>
+                <Typography level="body-md" sx={{ marginTop: 1 }}>
+                  {event.description || 'No description available.'}
+                </Typography>
+                <IconButton
+                  aria-label="bookmark event"
+                  variant="plain"
+                  color="neutral"
+                  size="sm"
+                  sx={{
+                    position: 'absolute',
+                    top: '0.875rem',
+                    right: '0.5rem',
+                  }}
+                >
+                  <BookmarkAdd />
+                </IconButton>
+              </div>
+              <AspectRatio minHeight="120px" maxHeight="200px">
+                <img
+                  src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+                  srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                  loading="lazy"
+                  alt=""
+                />
+              </AspectRatio>
+              <CardContent orientation="horizontal">
+                <div>
+                  <Typography level="body-xs">Category:</Typography>
+                  <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
+                    {event.category || 'N/A'}
                   </Typography>
-                  <Typography variant="body2" sx={{ marginBottom: 1 }}>
-                    <strong>Location:</strong> {event.location}
-                  </Typography>
-                  <Typography variant="body2" sx={{ marginBottom: 1 }}>
-                    <strong>Description:</strong> {event.description}
-                  </Typography>
-                  <Typography variant="body2" sx={{ marginBottom: 1 }}>
-                    <strong>Category:</strong> {event.category || 'N/A'}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Attendees:</strong>{' '}
-                    {event.attendees.length > 0
-                      ? event.attendees.length
-                      : 'No attendees yet'}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Box>
+                  <div>
+                    <Typography level="body-xs">Location:</Typography>
+                    <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
+                      {event.location || 'N/A'}
+                    </Typography>
+                  </div>
+                </div>
+                <Box>
+                    <Typography level="body-xs">Attendees:</Typography>
+                    <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
+                        {event.attendees.length > 0 ? `Attending: ${event.attendees.length}` :  'N/A'}
+                    </Typography>
+                </Box>
+                <Box>
+                  <GenericButton
+                    variant="solid"
+                    color="primary"
+                    size="sm"
+                    text="RVSP"
+                    sx={{ marginLeft: 'auto' }}
+                    onClick={() => router.push(`/events/${event._id}/register`)}
+                  />
+                </Box>
+              </CardContent>
+            </Card>
           )}
         </Box>
         <Footer />
