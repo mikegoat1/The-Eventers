@@ -127,13 +127,13 @@ const SingleEvent = () => {
                         {event.attendees.length > 0 ? `Attending: ${event.attendees.length}` :  'N/A'}
                     </Typography>
                 </Box>
-                <Box>
+                <Box sx={{ alignSelf: 'flex-end', display: 'flex', gap: 1 }}>
                   <GenericButton
                     variant="solid"
                     color="primary"
                     size="sm"
                     text="RVSP"
-                    sx={{ marginLeft: 'auto' }}
+                    sx={{ marginLeft: 'auto'}}
                     onClick={() => router.push(`/events/${event._id}/register`)}
                   />
                 </Box>
