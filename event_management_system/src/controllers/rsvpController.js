@@ -2,6 +2,42 @@ import connectToDatabase from '../lib/mongoose';
 
 import { Rsvp, Event } from '../models';
 
+export const getRsvp = async (req, res) => {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', ['GET']);
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+
+  try {
+    await connectToDatabase();
+
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ message: 'Missing userId in query' });
+    }
+
+    const rsvp = await Rsvp.find({ userId }).populate('eventId');
+
+    const events = rsvp.map(rsvp => {
+      const event = rsvp.eventId;
+      return {
+        _id: event._id.toString(),
+        name: event.name,
+        date: event.date,
+        description: event.description,
+        category: event.category,
+        location: event.location,
+        attendees: event.attendees || [],
+      };
+    });
+
+    res.status(200).json({ events });
+  } catch (error) {
+    console.error('Error fetching RSVPs:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const createRsvp = async (req, res) => {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);

@@ -5,11 +5,6 @@ import Typography from '@mui/joy/Typography';
 import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import Footer from '@/components/Footer';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import AspectRatio from '@mui/joy/AspectRatio';
-import IconButton from '@mui/joy/IconButton';
-import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
 import { useRouter } from 'next/router';
 import GenericCard from '@/components/GenericCard';
 
