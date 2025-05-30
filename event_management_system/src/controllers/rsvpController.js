@@ -67,7 +67,7 @@ export const updateRsvp = async (req, res, id) => {
     res.setHeader('Allow', ['PUT']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
-  const { status } = req.body;
+  const { status } = req.body.status;
 
   try {
     await connectToDatabase();

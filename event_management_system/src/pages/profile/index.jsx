@@ -96,7 +96,10 @@ export async function getServerSideProps(context) {
 
     return { props: { events: response.data.events } };
   } catch (error) {
-    console.error('Failed to load RSVPs:', error.response?.data || error.message);
+    console.error(
+      'Failed to load RSVPs:',
+      error.response?.data || error.message
+    );
     return { redirect: { destination: '/', permanent: false } };
   }
 }
