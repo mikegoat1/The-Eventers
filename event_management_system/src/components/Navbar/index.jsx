@@ -16,6 +16,7 @@ import { Menu as MenuIcon, Search as SearchIcon } from '@mui/icons-material';
 import GenericButton from '../GenericButton';
 import axios from '../../lib/axios';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -149,21 +150,24 @@ const Navbar = ({ title, user }) => {
               <MenuItem onClick={handleClose}>Events</MenuItem>
               <MenuItem onClick={handleClose}>Help</MenuItem>
             </Menu>
-            <Typography
-              className="navbarTitle"
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                display: { xs: 'none', sm: 'block' },
-                color: '#080808',
-                fontWeight: 'medium',
-                lineHeight: '18px',
-                letterSpacing: '0.5%',
-              }}
-            >
-              {title}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' ,gap: 1 }}>
+              <Typography
+                className="navbarTitle"
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{
+                  display: { xs: 'none', sm: 'block' },
+                  color: '#080808',
+                  fontWeight: 'medium',
+                  lineHeight: '18px',
+                  letterSpacing: '0.5%',
+                }}
+              >
+                {title}
+              </Typography>
+              <Image src="/Assets/Logo1.png" width={25} height={25} />
+            </Box>
             <Box sx={{ display: { xs: 'block', md: 'block' } }}>
               <Search sx={{ backgroundColor: '#F8F7F7' }}>
                 <SearchIconWrapper>

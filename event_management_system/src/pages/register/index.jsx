@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import Card from '@mui/joy/Card';
 
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 const validationSchema = yup.object({
   username: yup
     .string()
@@ -51,7 +52,6 @@ const Register = () => {
     const checkUsername = async () => {
       const username = formik.values.username;
       if (username && !formik.errors.username) {
-        // Optional: add async check here (e.g., server validation)
         setIsUsernameValid(true);
       } else {
         setIsUsernameValid(false);
@@ -132,6 +132,7 @@ const Register = () => {
               borderRadius: 2,
             }}
           >
+            <Image src="/Assets/Logo1.png" style={{alignSelf:"start"}} width={80} height={80} />
             <Typography sx={{ alignSelf: 'start' }} variant="h4">
               Welcome!
             </Typography>

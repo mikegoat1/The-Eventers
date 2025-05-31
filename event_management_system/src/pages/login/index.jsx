@@ -8,6 +8,10 @@ import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import InputBase from '@mui/material/InputBase';
 import Footer from '@/components/Footer';
+import Card from '@mui/joy/Card';
+import Image from 'next/image';
+
+
 import { useRouter } from 'next/router';
 const validationSchema = yup.object({
   username: yup
@@ -74,60 +78,103 @@ const Login = () => {
             </Typography>
           </Box>
         </AppBar>
+
         <Box
           sx={{
+            position: 'relative',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
             flexDirection: 'column',
             gap: 2,
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: 'url("/Assets/loginBackground.png")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.5,
+              zIndex: 0,
+            },
+            zIndex: 1,
           }}
         >
-          <Typography variant="h4">Login Page</Typography>
-          <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <InputBase
-                type="username"
-                name="username"
-                placeholder="Email or Username"
-                onChange={formik.handleChange}
-                value={formik.values.username}
-                sx={{
-                  border: '2px solid #A1A0A0',
-                  padding: 1,
-                  borderRadius: 1,
-                  width: '300px',
-                  backgroundColor: '#F5F3F3',
-                }}
-              />
-              {formik.errors.username && (
-                <Typography color="error">{formik.errors.username}</Typography>
-              )}
-              <InputBase
-                type="password"
-                name="password"
-                placeholder="Password"
-                onChange={formik.handleChange}
-                value={formik.values.password}
-                sx={{
-                  border: '2px solid #A1A0A0',
-                  padding: 1,
-                  borderRadius: 1,
-                  width: '300px',
-                  backgroundColor: '#F5F3F3',
-                  '&focus': {
-                    border: '2px solid #616060',
-                    backgroundColor: '#616060',
-                  },
-                }}
-              />
-              {formik.errors.password && (
-                <Typography color="error">{formik.errors.password}</Typography>
-              )}
-              <GenericButton variant="primary" text="Login" type="submit" />
-            </Box>
-          </form>
+          <Card
+            sx={{
+              width: 400,
+              padding: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              backgroundColor: '#F5F3F3',
+              borderRadius: 2,
+            }}
+          >
+            <Image
+              src="/Assets/Logo1.png"
+              style={{ alignSelf: 'start' }}
+              width={80}
+              height={80}
+            />
+
+            <Typography sx={{ alignSelf: 'start', marginBottom: '30%'  }} variant="h4">
+              Login Page
+            </Typography>
+            <form onSubmit={formik.handleSubmit}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <InputBase
+                  type="username"
+                  name="username"
+                  placeholder="Email or Username"
+                  onChange={formik.handleChange}
+                  value={formik.values.username}
+                  sx={{
+                    border: '2px solid #A1A0A0',
+                    padding: 1,
+                    borderRadius: 1,
+                    width: '300px',
+                    backgroundColor: '#F5F3F3',
+                  }}
+                />
+                {formik.errors.username && (
+                  <Typography color="error">
+                    {formik.errors.username}
+                  </Typography>
+                )}
+                <InputBase
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={formik.handleChange}
+                  value={formik.values.password}
+                  sx={{
+                    border: '2px solid #A1A0A0',
+                    padding: 1,
+                    borderRadius: 1,
+                    width: '300px',
+                    backgroundColor: '#F5F3F3',
+                    '&focus': {
+                      border: '2px solid #616060',
+                      backgroundColor: '#616060',
+                    },
+                  }}
+                />
+                {formik.errors.password && (
+                  <Typography color="error">
+                    {formik.errors.password}
+                  </Typography>
+                )}
+                <GenericButton variant="primary" text="Login" type="submit" />
+              </Box>
+            </form>
+          </Card>
         </Box>
         <Footer />
       </Box>
