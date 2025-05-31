@@ -7,6 +7,7 @@ import GenericButton from '@/components/GenericButton';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/router';
 import GenericCard from '@/components/GenericCard';
+import Image from 'next/image';
 
 const SingleEvent = () => {
   const router = useRouter();
@@ -50,13 +51,17 @@ const SingleEvent = () => {
               type="button"
               onClick={handleBack}
             />
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ flexGrow: 1, textAlign: 'center', padding: 2 }}
-            >
-              GATHERHUB
-            </Typography>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center' ,gap: 1 ,margin: '0 auto'}}>
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{ flexGrow: 1, textAlign: 'center', padding: 1 }}
+              >
+                GATHERHUB
+              </Typography>
+              <Image src="/Assets/Logo1.png" width={25} height={25} />
+            </Box>
           </Box>
         </AppBar>
         <Box

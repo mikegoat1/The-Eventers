@@ -51,7 +51,7 @@ const GenericCard = ({
         <img
           src={
             image ||
-            'https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286'
+            'https://picsum.photos/600/400?random=1'
           }
           loading="lazy"
           alt=""
