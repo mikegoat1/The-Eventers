@@ -27,7 +27,7 @@ const Home = ({ user }) => {
   return (
     <>
       <Navbar title="GATHERHUB" user={user} />
-      <HeroSection title="Welcome to the Home Page" />
+      <HeroSection title="Welcome to GatherHub" />
       <MissionStatement />
       <Footer />
     </>
