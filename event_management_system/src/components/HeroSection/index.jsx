@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid2';
 import GenericButton from '../GenericButton';
+import Image from 'next/image';
 
 const HeroSection = ({ title }) => {
   return (
@@ -13,6 +14,8 @@ const HeroSection = ({ title }) => {
       alignItems="center"
       padding={4}
       height="60vh"
+      marginBottom={15}
+      marginTop={10}
     >
       <Grid sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <h1>{title}</h1>
@@ -23,8 +26,14 @@ const HeroSection = ({ title }) => {
           size="small"
         />
       </Grid>
-      <Grid>
-        <img src="https://via.placeholder.com/250" alt="placeholder" />
+      <Grid >
+        <Image
+          style={{ borderRadius: '10%' }}
+          src="/Assets/heroImage.png"
+          width={350}
+          height={350}
+          alt="placeholder"
+        />
       </Grid>
     </Grid>
   );
