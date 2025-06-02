@@ -234,27 +234,6 @@ const Navbar = ({ title, user }) => {
                 <MenuItem onClick={goToProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
-              {/* <IconButton
-                size="medium"
-                edge="end"
-                aria-label="account"
-                aria-controls="profile-menu"
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <Avatar sx={{ bgcolor: '#FF5722' }}>U</Avatar>{' '}
-              </IconButton>
-              <GenericButton
-                variant="primary"
-                text="Login"
-                onClick={loginOnClick}
-              />
-              <GenericButton
-                variant="secondary"
-                text="Register"
-                onClick={registerOnClick}
-              /> */}
               {user ? (
                 <IconButton
                   size="medium"

@@ -43,21 +43,47 @@ export const createRsvp = async (req, res) => {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+
   const { eventId, userId, status } = req.body;
 
   try {
     await connectToDatabase();
-    const rsvp = new Rsvp({ eventId, userId, status });
+
+    // Check if RSVP already exists
+    let rsvp = await Rsvp.findOne({ eventId, userId });
+
+    if (rsvp) {
+      const previousStatus = rsvp.status;
+      rsvp.status = status;
+      await rsvp.save();
+
+      // Sync with Event.attendees
+      if (previousStatus !== 'attending' && status === 'attending') {
+        await Event.findByIdAndUpdate(eventId, {
+          $addToSet: { attendees: userId },
+        });
+      } else if (previousStatus === 'attending' && status !== 'attending') {
+        await Event.findByIdAndUpdate(eventId, {
+          $pull: { attendees: userId },
+        });
+      }
+
+      return res.status(200).json({ message: 'RSVP updated' });
+    }
+
+    // If not found, create new RSVP
+    rsvp = new Rsvp({ eventId, userId, status });
     await rsvp.save();
+
     if (status === 'attending') {
-      const eventUpdateResult = await Event.findByIdAndUpdate(eventId, {
+      await Event.findByIdAndUpdate(eventId, {
         $addToSet: { attendees: userId },
       });
-      console.log('Event update result:', eventUpdateResult);
     }
+
     res.status(200).json({ message: 'RSVP created' });
   } catch (error) {
-    console.error('Error creating RSVP:', error);
+    console.error('Error creating/updating RSVP:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -67,7 +93,7 @@ export const updateRsvp = async (req, res, id) => {
     res.setHeader('Allow', ['PUT']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
-  const { status } = req.body.status;
+  const { status } = req.body;
 
   try {
     await connectToDatabase();
