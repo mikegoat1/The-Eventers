@@ -10,6 +10,9 @@ import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import GenericCard from '@/components/GenericCard';
 import Image from 'next/image';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
+import Snackbar from '@mui/material/Snackbar';
 
 export async function getServerSideProps(context) {
   const cookies = cookie.parse(context.req.headers.cookie || '');
@@ -32,6 +35,10 @@ const SingleEvent = ({ user }) => {
 
   const [event, setEvent] = useState(null);
   const [isAttending, setIsAttending] = useState(false);
+  const [rsvpAlert, setRsvpAlert] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarContent, setSnackbarContent] = useState(null);
+
   console.log('User:', user);
   useEffect(() => {
     const fetchEvent = async () => {
@@ -56,10 +63,26 @@ const SingleEvent = ({ user }) => {
     router.push('/');
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleRSVP = async () => {
     if (!user || !user.id) {
-      router.push('/login');
-      alert('Please log in to RSVP for events.');
+      setSnackbarContent(
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="info"
+          sx={{ width: '100%' }}
+        >
+          Please log in to RSVP for events.
+        </Alert>
+      );
+      setSnackbarOpen(true);
+
+      setTimeout(() => {
+        router.push('/login');
+      }, 1500);
       return;
     }
 
@@ -71,15 +94,35 @@ const SingleEvent = ({ user }) => {
         userId: user.id,
         status: newStatus,
       });
+
       const res = await axios.get(`/events/${event._id}`);
       setEvent(res.data);
       setIsAttending(res.data.attendees.includes(user.id));
-      // setIsAttending(!isAttending);
 
-      alert(`RSVP ${newStatus === 'attending' ? 'successful' : 'removed'}`);
+      setSnackbarContent(
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={newStatus === 'attending' ? 'success' : 'warning'}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {newStatus === 'attending' ? 'RSVP Successful' : 'RSVP removed'}
+        </Alert>
+      );
+      setSnackbarOpen(true);
     } catch (error) {
       console.error('Error RSVPing:', error);
-      alert('Failed to RSVP. Please try again later.');
+      setSnackbarContent(
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Failed to RSVP. Please try again later.
+        </Alert>
+      );
+      setSnackbarOpen(true);
     }
   };
 
@@ -149,6 +192,14 @@ const SingleEvent = ({ user }) => {
             />
           )}
         </Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          {snackbarContent}
+        </Snackbar>
         <Footer />
       </Box>
     </>
