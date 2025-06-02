@@ -71,8 +71,10 @@ const SingleEvent = ({ user }) => {
         userId: user.id,
         status: newStatus,
       });
-
-      setIsAttending(!isAttending);
+      const res = await axios.get(`/events/${event._id}`);
+      setEvent(res.data);
+      setIsAttending(res.data.attendees.includes(user.id));
+      // setIsAttending(!isAttending);
 
       alert(`RSVP ${newStatus === 'attending' ? 'successful' : 'removed'}`);
     } catch (error) {
