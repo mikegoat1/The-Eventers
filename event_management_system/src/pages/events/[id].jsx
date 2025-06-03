@@ -11,7 +11,6 @@ import jwt from 'jsonwebtoken';
 import GenericCard from '@/components/GenericCard';
 import Image from 'next/image';
 import Alert from '@mui/material/Alert';
-import CheckIcon from '@mui/icons-material/Check';
 import Snackbar from '@mui/material/Snackbar';
 
 export async function getServerSideProps(context) {

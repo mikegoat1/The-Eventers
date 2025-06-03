@@ -254,11 +254,13 @@ const Navbar = ({ title, user }) => {
                     text="Login"
                     variant="primary"
                     onClick={loginOnClick}
+                    size='small'
                   />
                   <GenericButton
                     variant="secondary"
                     text="Register"
                     onClick={registerOnClick}
+                    size='small'
                   />
                 </>
               )}

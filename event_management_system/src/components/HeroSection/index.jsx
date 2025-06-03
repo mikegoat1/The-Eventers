@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid2';
 import GenericButton from '../GenericButton';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const HeroSection = ({ title }) => {
+  const router = useRouter();
+
   return (
     <Grid
       container
@@ -14,7 +17,7 @@ const HeroSection = ({ title }) => {
       alignItems="center"
       padding={4}
       height="60vh"
-      marginBottom={15}
+      marginBottom={8}
       marginTop={10}
     >
       <Grid sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -22,11 +25,12 @@ const HeroSection = ({ title }) => {
         <GenericButton
           color="inherit"
           variant="primary"
-          text="Get Started"
-          size="small"
+          text="Join GatherHub"
+          size="medium"
+          onClick={() => router.push('/register')}
         />
       </Grid>
-      <Grid >
+      <Grid>
         <Image
           style={{ borderRadius: '10%' }}
           src="/Assets/heroImage.png"
