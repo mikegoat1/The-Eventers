@@ -34,7 +34,7 @@ const SingleEvent = ({ user }) => {
 
   const [event, setEvent] = useState(null);
   const [isAttending, setIsAttending] = useState(false);
-  const [rsvpAlert, setRsvpAlert] = useState(null);
+  // const [rsvpAlert, setRsvpAlert] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarContent, setSnackbarContent] = useState(null);
 

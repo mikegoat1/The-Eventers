@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import MissionStatement from '@/components/MissionStatement';
 import Footer from '@/components/Footer';
+import Carousel from '@/components/Carousel';
 import React from 'react';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
@@ -22,13 +23,12 @@ export async function getServerSideProps(context) {
   }
 }
 const Home = ({ user }) => {
-
-
   return (
     <>
       <Navbar title="GATHERHUB" user={user} />
       <HeroSection title="Welcome to GatherHub" />
       <MissionStatement />
+      <Carousel user={user} filterCategory={'Health'} maxItems={6} />
       <Footer />
     </>
   );
