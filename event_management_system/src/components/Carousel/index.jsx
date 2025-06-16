@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-// import GenericCard from '@/components/GenericCard';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Card } from '@mui/material';
@@ -19,6 +18,8 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    pauseOnHover: true,
+    autoplay: true,
     responsive: [
       {
         breakpoint: 960,
@@ -62,22 +63,48 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
       </Typography>
       <Slider {...settings}>
         {Array.isArray(carouselEvents) && carouselEvents.length > 0 ? (
-          carouselEvents.map((event) => (
+          carouselEvents.map((event, i) => (
             <Box key={event._id || event.name} sx={{ px: 1 }}>
-              <Card sx={{ width: '100%', position: 'relative', padding: 2 }}>
-                <Typography variant="h6">{event.name}</Typography>
-                <Box display="flex" flexDirection="row" mt={1} gap={1}>
-                  <Typography variant="body2" color="textSecondary">
-                    {new Date(event.date).toLocaleString()}
-                  </Typography>
-                  <Typography variant="body2">
-                    Location: {event.location || 'N/A'}
-                  </Typography>
-                </Box>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2">
-                    Category: {event.category || 'N/A'}
-                  </Typography>
+              <Card
+                sx={{
+                  width: '100%',
+                  position: 'relative',
+                  padding: 2,
+                  px: 1,
+                  backgroundImage: `url(https://picsum.photos/400/200?random=${i})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  zIndex: 1,
+                  color: '#FFCB1F',
+                }}
+              >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    bgcolor: 'rgba(0,0,0,0.5)',
+                    zIndex: 2,
+                    pointerEvents: 'none',
+                  }}
+                />
+                <Box sx={{ position: 'relative', zIndex: 3 }}>
+                  <Typography variant="h6">{event.name}</Typography>
+                  <Box display="flex" flexDirection="row" mt={1} gap={1}>
+                    <Typography variant="body2">
+                      {new Date(event.date).toLocaleString()}
+                    </Typography>
+                    <Typography variant="body2">
+                      Location: {event.location || 'N/A'}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body2">
+                      Category: {event.category || 'N/A'}
+                    </Typography>
+                  </Box>
                 </Box>
               </Card>
             </Box>
