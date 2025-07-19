@@ -160,7 +160,7 @@ const Login = () => {
                     borderRadius: 1,
                     width: '300px',
                     backgroundColor: '#F5F3F3',
-                    '&focus': {
+                    '&:focus': {
                       border: '2px solid #616060',
                       backgroundColor: '#616060',
                     },
