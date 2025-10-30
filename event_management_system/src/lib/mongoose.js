@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const MONGODB_URI =
   process.env.MONGODB_URI ||
-  'mongodb://localhost:3000/event_management_system';
+  'mongodb://localhost:27017/event_management_system';
 console.log('Mongo URI:', process.env.MONGODB_URI);
 if (!MONGODB_URI) {
   throw new Error(

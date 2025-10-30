@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { Card } from '@mui/material';
 import { useRouter } from 'next/router';
 import axios from '../../lib/axios';
+import GenericButton from '../GenericButton';
 
 const EventCarousel = ({ user, filterCategory, maxItems }) => {
   const [carouselEvents, setCarouselEvents] = useState(null);
@@ -55,6 +56,13 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
     };
     fetchEvent();
   }, [router.isReady]);
+  const handleJoinClick = () => {
+    router.push('/register')
+  }
+  const handleReserveClick = (eventId) => {
+    router.push(`/events/${eventId}`);
+  };
+  console.log('User:', user?.id);
   console.log('Carousel Events:', carouselEvents);
   return (
     <Box sx={{ mt: 4, px: 2, mb: 4 }}>
@@ -100,10 +108,25 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
                       Location: {event.location || 'N/A'}
                     </Typography>
                   </Box>
-                  <Box sx={{ mt: 2 }}>
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: 1,
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <Typography variant="body2">
                       Category: {event.category || 'N/A'}
                     </Typography>
+                    <Box sx={{ marginRight: 1 }}>
+                      {!user ? (
+                        <GenericButton text="Join Up" onClick={handleJoinClick} />
+                      ) : (
+                        <GenericButton text="Reserve" onClick={() => handleReserveClick(event._id)} />
+                      )}
+                    </Box>
                   </Box>
                 </Box>
               </Card>
