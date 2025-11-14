@@ -12,6 +12,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import axios from '../../lib/axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
   Alert,
   Box,
@@ -90,6 +91,7 @@ const formatEventDate = (value) => {
 };
 
 const EventsManager = ({ user }) => {
+  const router = useRouter();
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [fetchError, setFetchError] = useState('');
@@ -281,7 +283,10 @@ const EventsManager = ({ user }) => {
                       return (
                         <Card
                           key={event._id || event.name}
-                          sx={{ backgroundColor: '#FFF' }}
+                          sx={{ backgroundColor: '#FFF', cursor: 'pointer' }}
+                          onClick={() =>
+                            router.push(`/events/${event._id}`)
+                          }
                         >
                           <CardContent>
                             <Stack
