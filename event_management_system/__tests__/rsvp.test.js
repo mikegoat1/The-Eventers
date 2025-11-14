@@ -35,6 +35,9 @@ describe('RSVP API', () => {
         status: 'attending',
       });
 
+      // ensure findOne returns null so controller creates a new RSVP
+      Rsvp.findOne = jest.fn().mockResolvedValue(null);
+
       const { req, res } = createMocks({
         method: 'POST',
         body: {
@@ -43,6 +46,8 @@ describe('RSVP API', () => {
           status: 'attending',
         },
       });
+      // simulate authenticated user
+      req.userId = 'userId123';
 
       await createRsvp(req, res);
 
@@ -55,6 +60,9 @@ describe('RSVP API', () => {
         .fn()
         .mockRejectedValue(new Error('Database error'));
 
+      // ensure findOne returns null so controller attempts to create
+      Rsvp.findOne = jest.fn().mockResolvedValue(null);
+
       const { req, res } = createMocks({
         method: 'POST',
         body: {
@@ -63,6 +71,8 @@ describe('RSVP API', () => {
           status: 'attending',
         },
       });
+      // simulate authenticated user
+      req.userId = 'userId123';
 
       await createRsvp(req, res);
 
@@ -95,6 +105,9 @@ describe('RSVP API', () => {
         },
       });
 
+      // simulate authenticated user
+      req.userId = 'userId123';
+
       await updateRsvp(req, res, 'rsvpId123');
 
       expect(res._getStatusCode()).toBe(404);
@@ -118,6 +131,9 @@ describe('RSVP API', () => {
         },
       });
 
+      // simulate authenticated user
+      req.userId = 'userId123';
+
       await updateRsvp(req, res, 'rsvpId123');
 
       expect(res._getStatusCode()).toBe(200);
@@ -134,6 +150,9 @@ describe('RSVP API', () => {
           status: 'maybe',
         },
       });
+
+      // simulate authenticated user
+      req.userId = 'userId123';
 
       await updateRsvp(req, res, 'rsvpId123');
 
@@ -161,6 +180,9 @@ describe('RSVP API', () => {
         method: 'DELETE',
       });
 
+      // simulate authenticated user
+      req.userId = 'userId123';
+
       await deleteRsvp(req, res, 'rsvpId123');
 
       expect(res._getStatusCode()).toBe(404);
@@ -169,12 +191,18 @@ describe('RSVP API', () => {
 
     it('should return 200 if RSVP is deleted successfully', async () => {
       Rsvp.findById.mockResolvedValue({
+        userId: 'userId123',
+        status: 'maybe',
+        eventId: 'eventId123',
         deleteOne: jest.fn().mockResolvedValue({}),
       });
 
       const { req, res } = createMocks({
         method: 'DELETE',
       });
+
+      // simulate authenticated user
+      req.userId = 'userId123';
 
       await deleteRsvp(req, res, 'rsvpId123');
 
@@ -188,6 +216,9 @@ describe('RSVP API', () => {
       const { req, res } = createMocks({
         method: 'DELETE',
       });
+
+      // simulate authenticated user
+      req.userId = 'userId123';
 
       await deleteRsvp(req, res, 'rsvpId123');
 

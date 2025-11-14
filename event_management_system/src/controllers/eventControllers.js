@@ -92,6 +92,7 @@ export const createEvent = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   const { name, date, location, description, attendees, category } = req.body;
+  const organizer = req.userId;
 
   try {
     await connectToDatabase();
@@ -101,6 +102,7 @@ export const createEvent = async (req, res) => {
       location,
       description,
       attendees,
+      organizer,
       category,
     });
     await event.save();

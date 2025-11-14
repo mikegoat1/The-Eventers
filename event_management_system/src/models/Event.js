@@ -6,6 +6,7 @@ const eventSchema = new mongoose.Schema({
   location: { type: String, required: true },
   description: { type: String },
   attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   category: {
     type: String,
     enum: ['Music', 'Sports', 'Education', 'Health', 'Technology', 'Other'],

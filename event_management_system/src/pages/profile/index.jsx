@@ -9,13 +9,37 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { parse as parseCookie } from 'cookie';
 import jwt from 'jsonwebtoken';
+import { Card, CardContent, Grid, LinearProgress, Stack } from '@mui/material';
 
-const Profile = ({ events, user }) => {
+const Profile = ({ events, user, analytics }) => {
   const router = useRouter();
 
   const handleBack = () => {
     router.push('/');
   };
+
+  const summaryMetrics = [
+    {
+      label: 'Events created',
+      value: analytics?.summary?.totalEvents ?? 0,
+    },
+    {
+      label: 'Total attendees',
+      value: analytics?.summary?.totalAttendees ?? 0,
+    },
+    {
+      label: 'Avg attendees per event',
+      value: analytics?.summary?.averageAttendeesPerEvent ?? 0,
+    },
+  ];
+
+  const categoryData = analytics?.categoryPopularity || [];
+  const maxCategoryEvents =
+    categoryData.reduce(
+      (max, category) =>
+        category.totalEvents > max ? category.totalEvents : max,
+      0
+    ) || 1;
 
   return (
     <>
@@ -51,6 +75,118 @@ const Profile = ({ events, user }) => {
           <Typography sx={{ marginTop: 1 }}>
             Total RSVP&apos;d events: {events.length}
           </Typography>
+        </Box>
+
+        {/* Analytics */}
+        <Box sx={{ padding: 3 }}>
+          <Typography variant="h4">Event Analytics</Typography>
+          {analytics?.summary ? (
+            <Grid container spacing={3} sx={{ mt: 2 }}>
+              <Grid item xs={12} md={4}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6">Organizer Summary</Typography>
+                    <Stack spacing={1.5} sx={{ mt: 2 }}>
+                      {summaryMetrics.map((metric) => (
+                        <Box
+                          key={metric.label}
+                          sx={{ display: 'flex', justifyContent: 'space-between' }}
+                        >
+                          <Typography sx={{ color: '#6A6A6A' }}>
+                            {metric.label}
+                          </Typography>
+                          <Typography fontWeight={600}>
+                            {metric.value}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} md={8}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6">Category Popularity</Typography>
+                    {categoryData.length === 0 ? (
+                      <Typography sx={{ mt: 2 }}>
+                        You haven&apos;t published any events yet.
+                      </Typography>
+                    ) : (
+                      <Stack spacing={2} sx={{ mt: 2 }}>
+                        {categoryData.map((category) => (
+                          <Box key={category.category}>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Typography>{category.category}</Typography>
+                              <Typography variant="body2" sx={{ color: '#6A6A6A' }}>
+                                {category.totalEvents} events
+                              </Typography>
+                            </Box>
+                            <LinearProgress
+                              variant="determinate"
+                              value={
+                                (category.totalEvents / maxCategoryEvents) * 100
+                              }
+                              sx={{ height: 8, borderRadius: 2, mt: 0.5 }}
+                            />
+                          </Box>
+                        ))}
+                      </Stack>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">Attendance Trends</Typography>
+                    {analytics.attendanceTrends?.length ? (
+                      <Grid container spacing={2} sx={{ mt: 2 }}>
+                        {analytics.attendanceTrends.map((trend) => (
+                          <Grid key={trend.period} item xs={12} sm={6} md={4}>
+                            <Box
+                              sx={{
+                                border: '1px solid #E0E0E0',
+                                borderRadius: 2,
+                                p: 2,
+                              }}
+                            >
+                              <Typography fontWeight={600}>
+                                {trend.period}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#6A6A6A' }}>
+                                Events: {trend.totalEvents}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#6A6A6A' }}>
+                                Attendees: {trend.totalAttendees}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    ) : (
+                      <Typography sx={{ mt: 2 }}>
+                        Publish events to start tracking attendance over time.
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          ) : (
+            <Typography sx={{ mt: 2 }}>
+              We couldn&apos;t load your analytics yet. Create events to see
+              organizer insights here.
+            </Typography>
+          )}
         </Box>
 
         {/* Events list */}
@@ -124,10 +260,27 @@ export async function getServerSideProps(context) {
       withCredentials: true,
     });
 
+    let analytics = null;
+    try {
+      const analyticsResponse = await axios.get(`${baseUrl}/api/analytics`, {
+        headers: {
+          Cookie: context.req.headers.cookie || '',
+        },
+        withCredentials: true,
+      });
+      analytics = analyticsResponse.data;
+    } catch (analyticsError) {
+      console.error(
+        'Failed to load analytics:',
+        analyticsError.response?.data || analyticsError.message
+      );
+    }
+
     return {
       props: {
         events: response.data.events || [],
         user,
+        analytics,
       },
     };
   } catch (error) {
