@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import axios from '../../lib/axios';
+import Link from 'next/link';
 import {
   Alert,
   Box,
@@ -191,6 +192,15 @@ const EventsManager = ({ user }) => {
             Browse your events, review attendance, and publish new
             experiences in one place.
           </Typography>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            sx={{ mt: 2 }}
+          >
+            <Button component={Link} href="/events/calendar" variant="outlined">
+              Open calendar view
+            </Button>
+          </Stack>
 
           <Grid container spacing={4} sx={{ mt: 3 }}>
             <Grid item xs={12} md={8}>

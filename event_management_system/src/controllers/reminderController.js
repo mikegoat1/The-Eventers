@@ -1,9 +1,20 @@
 import connectToDatabase from '../lib/mongoose';
 import Event from '../models/Event';
 import { Reminder } from '../models';
+import { validationResult } from 'express-validator';
 
 export const setEventReminder = async (req, res, eventId) => {
-  const { userId, remindAt, method } = req.body;
+  const { remindAt, method } = req.body;
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   try {
     await connectToDatabase();
@@ -11,11 +22,6 @@ export const setEventReminder = async (req, res, eventId) => {
 
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
-    }
-    if (!userId || !remindAt) {
-      return res
-        .status(400)
-        .json({ message: 'userId and remindAt are required', req: req.body });
     }
 
     const reminder = new Reminder({
