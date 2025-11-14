@@ -22,6 +22,7 @@ const GenericCard = ({
   image,
   onButtonClick,
   buttonText = 'RSVP',
+  hideAttendees = false,
 }) => {
   return (
     <Card sx={{ width: 320, position: 'relative' }}>
@@ -68,12 +69,14 @@ const GenericCard = ({
             {location || 'N/A'}
           </Typography>
         </div>
-        <Box>
-          <Typography level="body-xs">Attendees:</Typography>
-          <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
-            {attendees.length > 0 ? `Attending: ${attendees.length}` : 'N/A'}
-          </Typography>
-        </Box>
+        {!hideAttendees && (
+          <Box>
+            <Typography level="body-xs">Attendees:</Typography>
+            <Typography sx={{ fontSize: 'lg', fontWeight: 'lg' }}>
+              {attendees.length > 0 ? `Attending: ${attendees.length}` : 'N/A'}
+            </Typography>
+          </Box>
+        )}
         <Box sx={{ alignSelf: 'flex-end', display: 'flex', gap: 1 }}>
           <GenericButton
             variant="primary"
