@@ -91,8 +91,14 @@ describe('POST /api/auth/login', () => {
     await loginHandler(req, res);
     expect(res.statusCode).toBe(200);
     const jsonData = JSON.parse(res._getData() || '{}'); // Safely parse fallback
-    expect(jsonData).toHaveProperty('token');
+    // Controller sets the token as a cookie and returns only the userId in the body
     expect(jsonData).toHaveProperty('userId', 'mockUserId');
+    // ensure Set-Cookie header was set
+    const headers = res._getHeaders();
+    const hasSetCookie = Object.keys(headers).some(
+      (k) => k.toLowerCase() === 'set-cookie' || k.toLowerCase() === 'set-cookie'
+    );
+    expect(hasSetCookie).toBe(true);
   });
 
   it('should return 500 if there is a server error', async () => {

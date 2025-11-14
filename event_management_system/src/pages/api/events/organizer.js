@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import connectToDatabase from '../../../lib/mongoose';
 import { Event } from '../../../models/index';
 import { authMiddleware } from '../../../lib/authMiddleware';
@@ -14,10 +15,16 @@ const organizerEventsHandler = async (req, res) => {
   if (!userId) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
+  let organizerId;
+  try {
+    organizerId = new mongoose.Types.ObjectId(userId);
+  } catch {
+    return res.status(400).json({ message: 'Invalid user id' });
+  }
 
   try {
     await connectToDatabase();
-    const events = await Event.find({ organizer: userId })
+    const events = await Event.find({ organizer: organizerId })
       .sort({ date: 1 })
       .lean();
     return res.status(200).json({ events });

@@ -11,7 +11,7 @@ import { parse as parseCookie } from 'cookie';
 import jwt from 'jsonwebtoken';
 import { Card, CardContent, Grid, LinearProgress, Stack } from '@mui/material';
 
-const Profile = ({ events, user, analytics }) => {
+const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
   const router = useRouter();
 
   const handleBack = () => {
@@ -189,6 +189,42 @@ const Profile = ({ events, user, analytics }) => {
           )}
         </Box>
 
+        {/* Published events */}
+        <Box sx={{ padding: 3 }}>
+          <Typography variant="h4">Events I&apos;ve Published</Typography>
+          {publishedEvents.length === 0 ? (
+            <Typography sx={{ mt: 2 }}>
+              You haven&apos;t published any events yet. Use the Events page to
+              create your first gathering.
+            </Typography>
+          ) : (
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  md: 'repeat(2, minmax(0, 1fr))',
+                },
+                gap: 3,
+                marginTop: 2,
+              }}
+            >
+              {publishedEvents.map((event) => (
+                <Box key={event._id} sx={{ height: '100%' }}>
+                  <GenericCard
+                    name={event.name}
+                    date={event.date}
+                    description={event.description}
+                    category={event.category}
+                    location={event.location}
+                    attendees={event.attendees}
+                  />
+                </Box>
+              ))}
+            </Box>
+          )}
+        </Box>
+
         {/* Events list */}
         <Box sx={{ padding: 3 }}>
           <Typography variant="h4">Events I&apos;ve RSVP&apos;d</Typography>
@@ -260,6 +296,25 @@ export async function getServerSideProps(context) {
       withCredentials: true,
     });
 
+    let publishedEvents = [];
+    try {
+      const organizerResponse = await axios.get(
+        `${baseUrl}/api/events/organizer`,
+        {
+          headers: {
+            Cookie: context.req.headers.cookie || '',
+          },
+          withCredentials: true,
+        }
+      );
+      publishedEvents = organizerResponse.data.events || [];
+    } catch (organizerError) {
+      console.error(
+        'Failed to load organizer events:',
+        organizerError.response?.data || organizerError.message
+      );
+    }
+
     let analytics = null;
     try {
       const analyticsResponse = await axios.get(`${baseUrl}/api/analytics`, {
@@ -281,6 +336,7 @@ export async function getServerSideProps(context) {
         events: response.data.events || [],
         user,
         analytics,
+        publishedEvents,
       },
     };
   } catch (error) {

@@ -1,5 +1,5 @@
 import connectToDatabase from '../lib/mongoose';
-import { Event } from '../models/index';
+import { Event, Rsvp } from '../models/index';
 import { validationResult } from 'express-validator';
 
 export const getAllEvents = async (req, res) => {
@@ -106,6 +106,17 @@ export const createEvent = async (req, res) => {
       category,
     });
     await event.save();
+
+    if (organizer) {
+      await Rsvp.findOneAndUpdate(
+        { eventId: event._id, userId: organizer },
+        { status: 'attending' },
+        { upsert: true, new: true }
+      );
+      await Event.findByIdAndUpdate(event._id, {
+        $addToSet: { attendees: organizer },
+      });
+    }
     res.status(200).json({ message: 'Event created' });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
