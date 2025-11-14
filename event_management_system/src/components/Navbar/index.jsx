@@ -10,6 +10,7 @@ import {
   MenuItem,
   Menu,
   Avatar,
+  Button,
 } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import { Menu as MenuIcon, Search as SearchIcon } from '@mui/icons-material';
@@ -112,6 +113,18 @@ const Navbar = ({ title, user }) => {
   const registerOnClick = () => {
     router.push('/register');
   };
+  const goHome = () => {
+    handleClose();
+    router.push('/');
+  };
+  const goToEvents = () => {
+    handleClose();
+    router.push('/events');
+  };
+  const goToCalendar = () => {
+    handleClose();
+    router.push('/events/calendar');
+  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -144,11 +157,21 @@ const Navbar = ({ title, user }) => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Login</MenuItem>
-              <MenuItem onClick={handleClose}>Register</MenuItem>
-              <MenuItem onClick={handleClose}>Home</MenuItem>
-              <MenuItem onClick={handleClose}>Events</MenuItem>
-              <MenuItem onClick={handleClose}>Help</MenuItem>
+              <MenuItem sx={{ color: '#000' }} onClick={loginOnClick}>
+                Login
+              </MenuItem>
+              <MenuItem sx={{ color: '#000' }} onClick={registerOnClick}>
+                Register
+              </MenuItem>
+              <MenuItem sx={{ color: '#000' }} onClick={goHome}>
+                Home
+              </MenuItem>
+              <MenuItem sx={{ color: '#000' }} onClick={goToEvents}>
+                Events
+              </MenuItem>
+              <MenuItem sx={{ color: '#000' }} onClick={goToCalendar}>
+                Calendar
+              </MenuItem>
             </Menu>
             <Box sx={{ display: 'flex', alignItems: 'center' ,gap: 1 }}>
               <Typography
@@ -218,6 +241,24 @@ const Navbar = ({ title, user }) => {
                     </Box>
                   )}
               </Search>
+            </Box>
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                gap: 2,
+                alignItems: 'center',
+                mr: 2,
+              }}
+            >
+              <Button onClick={goHome} sx={{ color: '#000' }}>
+                Home
+              </Button>
+              <Button onClick={goToEvents} sx={{ color: '#000' }}>
+                Events
+              </Button>
+              <Button onClick={goToCalendar} sx={{ color: '#000' }}>
+                Calendar
+              </Button>
             </Box>
             <Box
               display="flex"

@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import { parse as parseCookie } from 'cookie';
 
 export const authMiddleware = (handler) => (req, res) => {
-  const cookies = cookie.parse(req.headers.cookie || '');
+  const rawCookieHeader = req.headers?.cookie ?? '';
+  const cookies = rawCookieHeader ? parseCookie(rawCookieHeader) : {};
   const token = cookies.token;
 
   if (!token) {
@@ -11,7 +12,6 @@ export const authMiddleware = (handler) => (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Attach the userId from the token payload for downstream handlers
     req.userId = decoded.userId;
     return handler(req, res);
   } catch (error) {
