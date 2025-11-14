@@ -1,5 +1,6 @@
 import connectToDatabase from '../lib/mongoose';
 import { Event } from '../models/index';
+import { validationResult } from 'express-validator';
 
 export const getAllEvents = async (req, res) => {
   if (req.method !== 'GET') {
@@ -57,6 +58,10 @@ export const updateEvent = async (req, res, id) => {
     res.setHeader('Allow', ['PUT']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { name, date, location, description, attendees, category } = req.body;
   try {
     await connectToDatabase();
@@ -81,6 +86,10 @@ export const createEvent = async (req, res) => {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
   const { name, date, location, description, attendees, category } = req.body;
 

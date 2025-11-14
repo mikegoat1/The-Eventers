@@ -4,13 +4,23 @@ import connectToDatabase from '../lib/mongoose';
 import * as cookie from 'cookie';
 import { User } from '../models';
 
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  return secret;
+};
+
 export const register = async (req, res) => {
   const { username, password } = req.body;
 
   try {
     await connectToDatabase();
+    const secret = getJwtSecret();
+    const normalizedUsername = username?.toLowerCase();
 
-    let user = await User.findOne({ username });
+    let user = await User.findOne({ username: normalizedUsername });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -18,7 +28,7 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     user = new User({
-      username,
+      username: normalizedUsername,
       password: hashedPassword,
     });
 
@@ -28,7 +38,7 @@ export const register = async (req, res) => {
     const token = await new Promise((resolve, reject) => {
       jwt.sign(
         payload,
-        process.env.JWT_SECRET || 'mocksecret',
+        secret,
         { expiresIn: '1h' },
         (err, token) => {
           if (err) reject(err);
@@ -44,40 +54,44 @@ export const register = async (req, res) => {
         maxAge: 60 * 60, // 1 hour
         sameSite: 'strict',
         path: '/',
-      }));
+      })
+    );
     res
       .status(201)
       .json({ message: 'Register successful', userId: user._id });
   } catch (err) {
     console.error(err);
+    if (err.message.includes('JWT_SECRET')) {
+      return res
+        .status(500)
+        .json({ message: 'Server misconfiguration: JWT secret missing' });
+    }
     res.status(500).json({ message: 'Server Error' });
   }
 };
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
-  console.log('LOGIN USERNAME:', username);
   try {
     await connectToDatabase();
-    // let test = await User.find();
-    // console.log('TEST:', test);
-    let user = await User.findOne({ username: username.toLowerCase() });
-    // console.log('USER:', user);
-    // console.log('Users in DB:', user.map(u => u.username));
+    const secret = getJwtSecret();
+    const normalizedUsername = username?.toLowerCase();
+
+    let user = await User.findOne({ username: normalizedUsername });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials username' });
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials password' });
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const payload = { userId: user._id };
     const token = await new Promise((resolve, reject) => {
       jwt.sign(
         payload,
-        process.env.JWT_SECRET,
+        secret,
         { expiresIn: '1h' },
         (err, token) => {
           if (err) reject(err);
@@ -93,13 +107,17 @@ export const login = async (req, res) => {
         maxAge: 60 * 60, // 1 hour
         sameSite: 'strict',
         path: '/',
-      }));
+      })
+    );
 
     res.status(200).json({ userId: user._id });
   } catch (err) {
     console.error(err);
-    console.error('LOGIN ERROR:', err.message);
-    console.error('STACK:', err.stack);
+    if (err.message.includes('JWT_SECRET')) {
+      return res
+        .status(500)
+        .json({ message: 'Server misconfiguration: JWT secret missing' });
+    }
     res.status(500).json({ message: 'Server Error' });
   }
 };

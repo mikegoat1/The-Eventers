@@ -1,5 +1,5 @@
 import connectToDatabase from '../lib/mongoose';
-
+import { validationResult } from 'express-validator';
 import { Rsvp, Event } from '../models';
 
 export const getRsvp = async (req, res) => {
@@ -11,9 +11,9 @@ export const getRsvp = async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { userId } = req.query;
+    const userId = req.userId;
     if (!userId) {
-      return res.status(400).json({ message: 'Missing userId in query' });
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     const rsvp = await Rsvp.find({ userId }).populate('eventId');
@@ -44,7 +44,15 @@ export const createRsvp = async (req, res) => {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { eventId, userId, status } = req.body;
+  const { eventId, status } = req.body;
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   try {
     await connectToDatabase();
@@ -94,12 +102,23 @@ export const updateRsvp = async (req, res, id) => {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
   const { status } = req.body;
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   try {
     await connectToDatabase();
     const rsvp = await Rsvp.findById(id).exec();
     if (!rsvp) {
       return res.status(404).json({ message: 'RSVP not found' });
+    }
+    if (rsvp.userId.toString() !== userId) {
+      return res.status(403).json({ message: 'Forbidden' });
     }
     const previousStatus = rsvp.status;
     rsvp.status = status;
@@ -125,11 +144,18 @@ export const deleteRsvp = async (req, res, id) => {
     res.setHeader('Allow', ['DELETE']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     await connectToDatabase();
     const rsvp = await Rsvp.findById(id);
     if (!rsvp) {
       return res.status(404).json({ message: 'RSVP not found' });
+    }
+    if (rsvp.userId.toString() !== userId) {
+      return res.status(403).json({ message: 'Forbidden' });
     }
     if (rsvp.status === 'attending') {
       await Event.findByIdAndUpdate(rsvp.eventId, {

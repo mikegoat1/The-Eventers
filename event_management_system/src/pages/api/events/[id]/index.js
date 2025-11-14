@@ -3,6 +3,9 @@ import {
   updateEvent,
   deleteEvent,
 } from '../../../../controllers/eventControllers';
+import { authMiddleware } from '../../../../lib/authMiddleware';
+import { updateEventValidator } from '../../../../lib/validators/eventValidators';
+import { runValidation } from '../../../../utils/runValidation';
 
 const allowedMethods = ['GET', 'PUT', 'DELETE'];
 
@@ -12,9 +15,21 @@ const eventHandlerId = (req, res) => {
     if (req.method === 'GET') {
       return getEventById(req, res, id);
     } else if (req.method === 'PUT') {
-      return updateEvent(req, res, id);
+      const authedUpdate = authMiddleware(async (authedReq, authedRes) => {
+        const validationResult = await runValidation(
+          updateEventValidator,
+          authedReq,
+          authedRes
+        );
+        if (validationResult === false) return;
+        return updateEvent(authedReq, authedRes, id);
+      });
+      return authedUpdate(req, res);
     } else if (req.method === 'DELETE') {
-      return deleteEvent(req, res, id);
+      const authedDelete = authMiddleware((authedReq, authedRes) =>
+        deleteEvent(authedReq, authedRes, id)
+      );
+      return authedDelete(req, res);
     } else {
       res.setHeader('Allow', allowedMethods);
       res.status(405).end(`Method ${req.method} Not Allowed`);

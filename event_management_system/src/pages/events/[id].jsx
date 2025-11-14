@@ -90,7 +90,6 @@ const SingleEvent = ({ user }) => {
 
       await axios.post('/rsvp', {
         eventId: event._id,
-        userId: user.id,
         status: newStatus,
       });
 
