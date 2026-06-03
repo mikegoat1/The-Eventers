@@ -1,7 +1,11 @@
 import { body } from 'express-validator';
 
 export const createRsvpValidator = [
-  body('eventId').notEmpty().withMessage('eventId is required').isString(),
+  body('eventId')
+    .notEmpty()
+    .withMessage('eventId is required')
+    .isMongoId()
+    .withMessage('eventId must be a valid event id'),
   body('status')
     .notEmpty()
     .withMessage('status is required')

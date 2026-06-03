@@ -9,6 +9,7 @@ import GenericButton from '@/components/GenericButton';
 import InputBase from '@mui/material/InputBase';
 import Footer from '@/components/Footer';
 import Card from '@mui/joy/Card';
+import Alert from '@mui/material/Alert';
 
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -25,6 +26,7 @@ const validationSchema = yup.object({
 
 const Register = () => {
   const router = useRouter();
+  const [submitError, setSubmitError] = useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -33,15 +35,17 @@ const Register = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      setSubmitError('');
       try {
         const response = await axios.post('/auth/register', values);
-        console.log('Register Status:', response.status);
         if (response.status === 201) {
-          console.log('Register successful:', response.data);
           router.push('/');
         }
       } catch (error) {
-        console.error('Register failed:', error);
+        setSubmitError(
+          error.response?.data?.message ||
+            'Registration failed. Please try again.'
+        );
       }
     },
   });
@@ -132,7 +136,13 @@ const Register = () => {
               borderRadius: 2,
             }}
           >
-            <Image src="/Assets/Logo1.png" style={{alignSelf:"start"}} width={80} height={80} />
+            <Image
+              src="/Assets/Logo1.png"
+              style={{ alignSelf: 'start' }}
+              width={80}
+              height={80}
+              alt="GatherHub logo"
+            />
             <Typography sx={{ alignSelf: 'start' }} variant="h4">
               Welcome!
             </Typography>
@@ -142,6 +152,11 @@ const Register = () => {
             >
               Whats your Email?
             </Typography>
+            {submitError && (
+              <Alert severity="error" sx={{ width: '100%' }}>
+                {submitError}
+              </Alert>
+            )}
             <form onSubmit={formik.handleSubmit}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <InputBase

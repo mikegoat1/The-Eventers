@@ -30,7 +30,7 @@ describe('RSVP API', () => {
 
     it('should return 200 if RSVP is created successfully', async () => {
       Rsvp.prototype.save = jest.fn().mockResolvedValue({
-        eventId: 'eventId123',
+        eventId: '507f1f77bcf86cd799439021',
         userId: 'userId123',
         status: 'attending',
       });
@@ -41,7 +41,7 @@ describe('RSVP API', () => {
       const { req, res } = createMocks({
         method: 'POST',
         body: {
-          eventId: 'eventId123',
+          eventId: '507f1f77bcf86cd799439021',
           userId: 'userId123',
           status: 'attending',
         },
@@ -66,7 +66,7 @@ describe('RSVP API', () => {
       const { req, res } = createMocks({
         method: 'POST',
         body: {
-          eventId: 'eventId123',
+          eventId: '507f1f77bcf86cd799439021',
           userId: 'userId123',
           status: 'attending',
         },
@@ -87,7 +87,7 @@ describe('RSVP API', () => {
         method: 'GET',
       });
 
-      await updateRsvp(req, res, 'rsvpId123');
+      await updateRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(405);
       expect(res._getJSONData()).toEqual({ message: 'Method Not Allowed' });
@@ -108,7 +108,7 @@ describe('RSVP API', () => {
       // simulate authenticated user
       req.userId = 'userId123';
 
-      await updateRsvp(req, res, 'rsvpId123');
+      await updateRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(404);
       expect(res._getJSONData()).toEqual({ message: 'RSVP not found' });
@@ -120,7 +120,7 @@ describe('RSVP API', () => {
           _id: 'mockId',
           status: 'attending',
           save: jest.fn().mockResolvedValue(true),
-          eventId: 'eventId123',
+          eventId: '507f1f77bcf86cd799439021',
           userId: 'userId123',
         }),
       });
@@ -134,7 +134,7 @@ describe('RSVP API', () => {
       // simulate authenticated user
       req.userId = 'userId123';
 
-      await updateRsvp(req, res, 'rsvpId123');
+      await updateRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(200);
       expect(res._getJSONData()).toEqual({ message: 'RSVP updated' });
@@ -154,7 +154,7 @@ describe('RSVP API', () => {
       // simulate authenticated user
       req.userId = 'userId123';
 
-      await updateRsvp(req, res, 'rsvpId123');
+      await updateRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(500);
       expect(res._getJSONData()).toEqual({ message: 'Internal server error' });
@@ -167,7 +167,7 @@ describe('RSVP API', () => {
         method: 'GET',
       });
 
-      await deleteRsvp(req, res, 'rsvpId123');
+      await deleteRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(405);
       expect(res._getJSONData()).toEqual({ message: 'Method Not Allowed' });
@@ -183,7 +183,7 @@ describe('RSVP API', () => {
       // simulate authenticated user
       req.userId = 'userId123';
 
-      await deleteRsvp(req, res, 'rsvpId123');
+      await deleteRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(404);
       expect(res._getJSONData()).toEqual({ message: 'RSVP not found' });
@@ -193,7 +193,7 @@ describe('RSVP API', () => {
       Rsvp.findById.mockResolvedValue({
         userId: 'userId123',
         status: 'maybe',
-        eventId: 'eventId123',
+        eventId: '507f1f77bcf86cd799439021',
         deleteOne: jest.fn().mockResolvedValue({}),
       });
 
@@ -204,7 +204,7 @@ describe('RSVP API', () => {
       // simulate authenticated user
       req.userId = 'userId123';
 
-      await deleteRsvp(req, res, 'rsvpId123');
+      await deleteRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(200);
       expect(res._getJSONData()).toEqual({ message: 'RSVP deleted' });
@@ -220,7 +220,7 @@ describe('RSVP API', () => {
       // simulate authenticated user
       req.userId = 'userId123';
 
-      await deleteRsvp(req, res, 'rsvpId123');
+      await deleteRsvp(req, res, '507f1f77bcf86cd799439022');
 
       expect(res._getStatusCode()).toBe(500);
       expect(res._getJSONData()).toEqual({ message: 'Internal server error' });

@@ -62,8 +62,7 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
   const handleReserveClick = (eventId) => {
     router.push(`/events/${eventId}`);
   };
-  console.log('User:', user?.id);
-  console.log('Carousel Events:', carouselEvents);
+
   return (
     <Box sx={{ mt: 4, px: 2, mb: 4 }}>
       <Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>

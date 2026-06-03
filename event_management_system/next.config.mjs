@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    webpack: (config, { isServer }) => {
-      // Disable Webpack's default caching to troubleshoot caching issues
-      config.cache = true;
+  webpack: (config) => {
+    // Disable Webpack's default caching to troubleshoot caching issues
+    config.cache = true;
 
-      return config;
-    },
-  };
+    return config;
+  },
+};
 
-  export default nextConfig;
+export default nextConfig;

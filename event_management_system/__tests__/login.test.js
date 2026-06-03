@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http';
 import bcrypt from 'bcrypt';
 import loginHandler from '../src/pages/api/auth/login/index.js';
-import User from '../src/models/User.jsx';
+import User from '../src/models/User';
 
 jest.mock('../src/lib/mongoose');
 jest.mock('../src/models/User');
@@ -21,7 +21,8 @@ describe('POST /api/auth/login', () => {
     await loginHandler(req, res);
 
     expect(res.statusCode).toBe(405);
-    expect(res._getData()).toContain('Method GET Not Allowed');  });
+    expect(res._getData()).toContain('Method GET Not Allowed');
+  });
 
   it('should return 400 if input is invalid', async () => {
     const { req, res } = createMocks({
@@ -96,7 +97,8 @@ describe('POST /api/auth/login', () => {
     // ensure Set-Cookie header was set
     const headers = res._getHeaders();
     const hasSetCookie = Object.keys(headers).some(
-      (k) => k.toLowerCase() === 'set-cookie' || k.toLowerCase() === 'set-cookie'
+      (k) =>
+        k.toLowerCase() === 'set-cookie' || k.toLowerCase() === 'set-cookie'
     );
     expect(hasSetCookie).toBe(true);
   });

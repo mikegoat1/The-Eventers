@@ -7,6 +7,10 @@ jest.mock('../src/lib/mongoose');
 jest.mock('../src/models/User');
 jest.mock('bcrypt');
 
+beforeAll(() => {
+  process.env.JWT_SECRET = 'mocksecret';
+});
+
 describe('POST /api/auth/register', () => {
   beforeEach(() => {
     jest.clearAllMocks();

@@ -8,7 +8,9 @@ const allowedMethods = ['GET'];
 const organizerEventsHandler = async (req, res) => {
   if (req.method !== 'GET') {
     res.setHeader('Allow', allowedMethods);
-    return res.status(405).end(`Method ${req.method} Not Allowed on ${req.url}`);
+    return res
+      .status(405)
+      .end(`Method ${req.method} Not Allowed on ${req.url}`);
   }
 
   const userId = req.userId;

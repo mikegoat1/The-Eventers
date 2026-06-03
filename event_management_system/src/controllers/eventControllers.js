@@ -1,6 +1,21 @@
 import connectToDatabase from '../lib/mongoose';
 import { Event, Rsvp } from '../models/index';
 import { validationResult } from 'express-validator';
+import mongoose from 'mongoose';
+
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
+
+const isEventOrganizer = (event, userId) => {
+  return event.organizer?.toString() === userId;
+};
+
+const applyDefinedUpdates = (event, updates) => {
+  Object.entries(updates).forEach(([key, value]) => {
+    if (value !== undefined) {
+      event[key] = value;
+    }
+  });
+};
 
 export const getAllEvents = async (req, res) => {
   if (req.method !== 'GET') {
@@ -41,6 +56,9 @@ export const getEventById = async (req, res, id) => {
     res.setHeader('Allow', ['GET']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid event id' });
+  }
   try {
     await connectToDatabase();
     const event = await Event.findById(id);
@@ -58,6 +76,12 @@ export const updateEvent = async (req, res, id) => {
     res.setHeader('Allow', ['PUT']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid event id' });
+  }
+  if (!req.userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -69,12 +93,17 @@ export const updateEvent = async (req, res, id) => {
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
-    event.name = name;
-    event.description = description;
-    event.date = date;
-    event.location = location;
-    event.attendees = attendees;
-    event.category = category;
+    if (!isEventOrganizer(event, req.userId)) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    applyDefinedUpdates(event, {
+      name,
+      description,
+      date,
+      location,
+      attendees,
+      category,
+    });
     await event.save();
     res.status(200).json({ message: 'Event updated' });
   } catch (error) {
@@ -91,7 +120,7 @@ export const createEvent = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { name, date, location, description, attendees, category } = req.body;
+  const { name, date, location, description, category } = req.body;
   const organizer = req.userId;
 
   try {
@@ -101,7 +130,7 @@ export const createEvent = async (req, res) => {
       date,
       location,
       description,
-      attendees,
+      attendees: [],
       organizer,
       category,
     });
@@ -128,11 +157,20 @@ export const deleteEvent = async (req, res, id) => {
     res.setHeader('Allow', ['DELETE']);
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid event id' });
+  }
+  if (!req.userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     await connectToDatabase();
     const event = await Event.findById(id);
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
+    }
+    if (!isEventOrganizer(event, req.userId)) {
+      return res.status(403).json({ message: 'Forbidden' });
     }
     await event.deleteOne();
     res.status(200).json({ message: 'Event deleted' });

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   AppBar,
+  Badge,
   Box,
+  Divider,
   Toolbar,
   IconButton,
   Typography,
@@ -11,9 +13,16 @@ import {
   Menu,
   Avatar,
   Button,
+  ListItemText,
+  Tooltip,
 } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import { Menu as MenuIcon, Search as SearchIcon } from '@mui/icons-material';
+import {
+  Check as CheckIcon,
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+  Search as SearchIcon,
+} from '@mui/icons-material';
 import GenericButton from '../GenericButton';
 import axios from '../../lib/axios';
 import { useRouter } from 'next/router';
@@ -59,15 +68,46 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-const Navbar = ({ title, user }) => {
+
+const formatReminderDate = (date) =>
+  new Date(date).toLocaleString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
+const Navbar = ({ title, user = null }) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
+  const [reminderMenuAnchorEl, setReminderMenuAnchorEl] = useState(null);
   const [query, setQuery] = useState('');
   const [searchEventResults, setSearchEventResults] = useState([]);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [dueReminders, setDueReminders] = useState([]);
+  const [reminderError, setReminderError] = useState('');
   const isProfileMenuOpen = Boolean(profileMenuAnchorEl);
+  const isReminderMenuOpen = Boolean(reminderMenuAnchorEl);
   const open = Boolean(anchorEl);
+
+  const loadDueReminders = useCallback(async () => {
+    if (!user) {
+      setDueReminders([]);
+      setReminderError('');
+      return;
+    }
+
+    try {
+      const response = await axios.get('/reminders?state=due');
+      setDueReminders(response.data.reminders || []);
+      setReminderError('');
+    } catch (err) {
+      setReminderError(
+        err.response?.data?.message || 'Unable to load reminders'
+      );
+    }
+  }, [user]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -81,7 +121,11 @@ const Navbar = ({ title, user }) => {
     return () => clearTimeout(delayDebounce);
   }, [query]);
 
-  console.log('searchEventResults', searchEventResults);
+  useEffect(() => {
+    loadDueReminders();
+    const intervalId = setInterval(loadDueReminders, 60000);
+    return () => clearInterval(intervalId);
+  }, [loadDueReminders]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -92,6 +136,35 @@ const Navbar = ({ title, user }) => {
 
   const handleProfileMenuClose = () => {
     setProfileMenuAnchorEl(null);
+  };
+  const handleReminderMenuOpen = (event) => {
+    setReminderMenuAnchorEl(event.currentTarget);
+    loadDueReminders();
+  };
+  const handleReminderMenuClose = () => {
+    setReminderMenuAnchorEl(null);
+  };
+  const handleDismissReminder = async (event, reminderId) => {
+    event.stopPropagation();
+
+    try {
+      await axios.patch(`/reminders/${reminderId}`);
+      setDueReminders((reminders) =>
+        reminders.filter((reminder) => reminder._id !== reminderId)
+      );
+    } catch (err) {
+      setReminderError(
+        err.response?.data?.message || 'Unable to dismiss reminder'
+      );
+    }
+  };
+  const goToReminderEvent = (reminder) => {
+    const eventId = reminder.eventId?._id || reminder.eventId;
+    handleReminderMenuClose();
+
+    if (eventId) {
+      router.push(`/events/${eventId}`);
+    }
   };
   const handleLogout = async () => {
     try {
@@ -173,7 +246,7 @@ const Navbar = ({ title, user }) => {
                 Calendar
               </MenuItem>
             </Menu>
-            <Box sx={{ display: 'flex', alignItems: 'center' ,gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography
                 className="navbarTitle"
                 variant="h6"
@@ -189,7 +262,12 @@ const Navbar = ({ title, user }) => {
               >
                 {title}
               </Typography>
-              <Image src="/Assets/Logo1.png" width={25} height={25} />
+              <Image
+                src="/Assets/Logo1.png"
+                width={25}
+                height={25}
+                alt="GatherHub logo"
+              />
             </Box>
             <Box sx={{ display: { xs: 'block', md: 'block' } }}>
               <Search sx={{ backgroundColor: '#F8F7F7' }}>
@@ -261,9 +339,12 @@ const Navbar = ({ title, user }) => {
               </Button>
             </Box>
             <Box
-              display="flex"
-              gap="8%"
-              sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
+              sx={{
+                display: { xs: user ? 'flex' : 'none', md: 'flex' },
+                gap: { xs: 1, md: 2 },
+                alignItems: 'center',
+                mr: { xs: 0, md: 2 },
+              }}
             >
               <Menu
                 anchorEl={profileMenuAnchorEl}
@@ -275,6 +356,90 @@ const Navbar = ({ title, user }) => {
                 <MenuItem onClick={goToProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
+              {user && (
+                <>
+                  <Tooltip title="Reminders">
+                    <IconButton
+                      size="medium"
+                      aria-label="reminders"
+                      aria-controls="reminder-menu"
+                      aria-haspopup="true"
+                      onClick={handleReminderMenuOpen}
+                    >
+                      {dueReminders.length > 0 ? (
+                        <Badge
+                          badgeContent={dueReminders.length}
+                          color="error"
+                          overlap="circular"
+                        >
+                          <NotificationsIcon sx={{ color: '#000' }} />
+                        </Badge>
+                      ) : (
+                        <NotificationsIcon sx={{ color: '#000' }} />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    id="reminder-menu"
+                    anchorEl={reminderMenuAnchorEl}
+                    open={isReminderMenuOpen}
+                    onClose={handleReminderMenuClose}
+                    PaperProps={{ sx: { width: 340, maxWidth: '90vw' } }}
+                  >
+                    <Box sx={{ px: 2, py: 1 }}>
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        Due reminders
+                      </Typography>
+                    </Box>
+                    <Divider />
+                    {reminderError ? (
+                      <MenuItem disabled>{reminderError}</MenuItem>
+                    ) : dueReminders.length === 0 ? (
+                      <MenuItem disabled>No due reminders</MenuItem>
+                    ) : (
+                      dueReminders.map((reminder) => {
+                        const eventName =
+                          reminder.eventId?.name || 'Event reminder';
+                        const location = reminder.eventId?.location || 'TBD';
+
+                        return (
+                          <MenuItem
+                            key={reminder._id}
+                            onClick={() => goToReminderEvent(reminder)}
+                            sx={{
+                              alignItems: 'flex-start',
+                              gap: 1,
+                              whiteSpace: 'normal',
+                            }}
+                          >
+                            <ListItemText
+                              primary={eventName}
+                              secondary={`${formatReminderDate(
+                                reminder.remindAt
+                              )} • ${location}`}
+                              primaryTypographyProps={{ fontWeight: 600 }}
+                              secondaryTypographyProps={{
+                                sx: { whiteSpace: 'normal' },
+                              }}
+                            />
+                            <Tooltip title="Dismiss reminder">
+                              <IconButton
+                                size="small"
+                                aria-label={`Dismiss ${eventName}`}
+                                onClick={(event) =>
+                                  handleDismissReminder(event, reminder._id)
+                                }
+                              >
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </MenuItem>
+                        );
+                      })
+                    )}
+                  </Menu>
+                </>
+              )}
               {user ? (
                 <IconButton
                   size="medium"
@@ -295,13 +460,13 @@ const Navbar = ({ title, user }) => {
                     text="Login"
                     variant="primary"
                     onClick={loginOnClick}
-                    size='small'
+                    size="small"
                   />
                   <GenericButton
                     variant="secondary"
                     text="Register"
                     onClick={registerOnClick}
-                    size='small'
+                    size="small"
                   />
                 </>
               )}
@@ -315,6 +480,10 @@ const Navbar = ({ title, user }) => {
 
 Navbar.propTypes = {
   title: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+  }),
 };
 
 export default Navbar;

@@ -15,6 +15,7 @@ jest.mock('jsonwebtoken');
 describe('Auth Controllers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    process.env.JWT_SECRET = 'mocksecret';
   });
 
   describe('POST /api/auth/register', () => {
@@ -68,7 +69,8 @@ describe('Auth Controllers', () => {
       expect(res._getStatusCode()).toBe(201);
       const data = res._getJSONData();
       expect(data).toHaveProperty('message', 'Register successful');
-      expect(data).toHaveProperty('token');    });
+      expect(res._getHeaders()).toHaveProperty('set-cookie');
+    });
 
     it('should return 500 if there is an internal server error', async () => {
       User.findOne.mockRejectedValue(new Error('Database error'));
@@ -119,6 +121,7 @@ describe('Auth Controllers', () => {
 
     it('should return 400 if password does not match', async () => {
       User.findOne.mockResolvedValue({
+        _id: 'mockUserId',
         username: 'existingUser',
         password: 'hashedPassword',
       });
@@ -140,6 +143,7 @@ describe('Auth Controllers', () => {
 
     it('should return 200 if login is successful', async () => {
       User.findOne.mockResolvedValue({
+        _id: 'mockUserId',
         username: 'existingUser',
         password: 'hashedPassword',
       });
@@ -159,7 +163,8 @@ describe('Auth Controllers', () => {
       await login(req, res);
 
       expect(res._getStatusCode()).toBe(200);
-      expect(res._getJSONData()).toEqual({ token: 'token' });
+      expect(res._getJSONData()).toEqual({ userId: 'mockUserId' });
+      expect(res._getHeaders()).toHaveProperty('set-cookie');
     });
 
     it('should return 500 if there is an internal server error', async () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,7 +10,7 @@ import InputBase from '@mui/material/InputBase';
 import Footer from '@/components/Footer';
 import Card from '@mui/joy/Card';
 import Image from 'next/image';
-
+import Alert from '@mui/material/Alert';
 
 import { useRouter } from 'next/router';
 const validationSchema = yup.object({
@@ -26,6 +26,7 @@ const validationSchema = yup.object({
 
 const Login = () => {
   const router = useRouter();
+  const [submitError, setSubmitError] = useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -34,14 +35,17 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      setSubmitError('');
       try {
         const response = await axios.post('/auth/login', values);
-        console.log('Login successful:', response.data);
         if (response.status === 200) {
           router.push('/');
         }
       } catch (error) {
-        console.error('Login failed:', error);
+        setSubmitError(
+          error.response?.data?.message ||
+            'Login failed. Please check your username and password.'
+        );
       }
     },
   });
@@ -122,11 +126,20 @@ const Login = () => {
               style={{ alignSelf: 'start' }}
               width={80}
               height={80}
+              alt="GatherHub logo"
             />
 
-            <Typography sx={{ alignSelf: 'start', marginBottom: '30%'  }} variant="h4">
+            <Typography
+              sx={{ alignSelf: 'start', marginBottom: '30%' }}
+              variant="h4"
+            >
               Login Page
             </Typography>
+            {submitError && (
+              <Alert severity="error" sx={{ width: '100%' }}>
+                {submitError}
+              </Alert>
+            )}
             <form onSubmit={formik.handleSubmit}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <InputBase

@@ -28,7 +28,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+
+# local MongoDB runtime
+/.mongo-data/
+/.mongo-logs/
 
 # vercel
 .vercel

@@ -1,6 +1,9 @@
 import connectToDatabase from '../lib/mongoose';
 import { validationResult } from 'express-validator';
 import { Rsvp, Event } from '../models';
+import mongoose from 'mongoose';
+
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
 export const getRsvp = async (req, res) => {
   if (req.method !== 'GET') {
@@ -18,7 +21,7 @@ export const getRsvp = async (req, res) => {
 
     const rsvp = await Rsvp.find({ userId }).populate('eventId');
 
-    const events = rsvp.map(rsvp => {
+    const events = rsvp.map((rsvp) => {
       const event = rsvp.eventId;
       return {
         _id: event._id.toString(),
@@ -48,6 +51,9 @@ export const createRsvp = async (req, res) => {
   const userId = req.userId;
   if (!userId) {
     return res.status(401).json({ message: 'Unauthorized' });
+  }
+  if (!isValidObjectId(eventId)) {
+    return res.status(400).json({ message: 'Invalid event id' });
   }
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -106,6 +112,9 @@ export const updateRsvp = async (req, res, id) => {
   if (!userId) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid RSVP id' });
+  }
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -147,6 +156,9 @@ export const deleteRsvp = async (req, res, id) => {
   const userId = req.userId;
   if (!userId) {
     return res.status(401).json({ message: 'Unauthorized' });
+  }
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid RSVP id' });
   }
   try {
     await connectToDatabase();

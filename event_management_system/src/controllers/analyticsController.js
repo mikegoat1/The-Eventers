@@ -94,9 +94,7 @@ export const getOrganizerAnalytics = async (req, res) => {
       totalAttendees: item.totalAttendees,
     }));
 
-    res
-      .status(200)
-      .json({ summary, attendanceTrends, categoryPopularity });
+    res.status(200).json({ summary, attendanceTrends, categoryPopularity });
   } catch (error) {
     console.error('Error generating analytics:', error);
     res.status(500).json({ message: 'Internal server error' });

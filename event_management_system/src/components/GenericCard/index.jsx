@@ -50,12 +50,9 @@ const GenericCard = ({
       </div>
       <AspectRatio minHeight="120px" maxHeight="200px">
         <img
-          src={
-            image ||
-            'https://picsum.photos/600/400?random=1'
-          }
+          src={image || 'https://picsum.photos/600/400?random=1'}
           loading="lazy"
-          alt=""
+          alt={name}
         />
       </AspectRatio>
       <CardContent orientation="horizontal">
@@ -77,14 +74,16 @@ const GenericCard = ({
             </Typography>
           </Box>
         )}
-        <Box sx={{ alignSelf: 'flex-end', display: 'flex', gap: 1 }}>
-          <GenericButton
-            variant="primary"
-            size="small"
-            text={buttonText}
-            onClick={onButtonClick}
-          />
-        </Box>
+        {onButtonClick && (
+          <Box sx={{ alignSelf: 'flex-end', display: 'flex', gap: 1 }}>
+            <GenericButton
+              variant="primary"
+              size="small"
+              text={buttonText}
+              onClick={onButtonClick}
+            />
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

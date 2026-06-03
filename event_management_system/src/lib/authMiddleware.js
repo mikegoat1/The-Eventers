@@ -10,6 +10,12 @@ export const authMiddleware = (handler) => (req, res) => {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
+  if (!process.env.JWT_SECRET) {
+    return res
+      .status(500)
+      .json({ message: 'Server misconfiguration: JWT secret missing' });
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;

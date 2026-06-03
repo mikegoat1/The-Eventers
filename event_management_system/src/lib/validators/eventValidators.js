@@ -1,10 +1,7 @@
 import { body } from 'express-validator';
 
 export const createEventValidator = [
-  body('name')
-    .trim()
-    .notEmpty()
-    .withMessage('Event name is required'),
+  body('name').trim().notEmpty().withMessage('Event name is required'),
   body('date')
     .notEmpty()
     .withMessage('Event date is required')

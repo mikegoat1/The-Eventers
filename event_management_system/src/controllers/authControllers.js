@@ -36,15 +36,10 @@ export const register = async (req, res) => {
 
     const payload = { userId: user._id };
     const token = await new Promise((resolve, reject) => {
-      jwt.sign(
-        payload,
-        secret,
-        { expiresIn: '1h' },
-        (err, token) => {
-          if (err) reject(err);
-          else resolve(token);
-        }
-      );
+      jwt.sign(payload, secret, { expiresIn: '1h' }, (err, token) => {
+        if (err) reject(err);
+        else resolve(token);
+      });
     });
     res.setHeader(
       'Set-Cookie',
@@ -56,9 +51,7 @@ export const register = async (req, res) => {
         path: '/',
       })
     );
-    res
-      .status(201)
-      .json({ message: 'Register successful', userId: user._id });
+    res.status(201).json({ message: 'Register successful', userId: user._id });
   } catch (err) {
     console.error(err);
     if (err.message.includes('JWT_SECRET')) {
@@ -89,15 +82,10 @@ export const login = async (req, res) => {
 
     const payload = { userId: user._id };
     const token = await new Promise((resolve, reject) => {
-      jwt.sign(
-        payload,
-        secret,
-        { expiresIn: '1h' },
-        (err, token) => {
-          if (err) reject(err);
-          else resolve(token);
-        }
-      );
+      jwt.sign(payload, secret, { expiresIn: '1h' }, (err, token) => {
+        if (err) reject(err);
+        else resolve(token);
+      });
     });
     res.setHeader(
       'Set-Cookie',

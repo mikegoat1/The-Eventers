@@ -1,62 +1,76 @@
-import react from "eslint-plugin-react";
-import prettier from "eslint-plugin-prettier";
-import globals from "globals";
-import babelParser from "@babel/eslint-parser";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import react from 'eslint-plugin-react';
+import prettier from 'eslint-plugin-prettier';
+import globals from 'globals';
+import babelParser from '@babel/eslint-parser';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import js from '@eslint/js';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
 });
 
-export default [...compat.extends(
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@next/next/recommended",
-    "prettier",
-), {
+const cleanGlobals = (source) =>
+  Object.fromEntries(
+    Object.entries(source).map(([key, value]) => [key.trim(), value])
+  );
+
+export default [
+  {
+    ignores: ['.next/**', 'coverage/**', 'node_modules/**', 'out/**'],
+  },
+  ...compat.extends(
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@next/next/recommended',
+    'prettier'
+  ),
+  {
     plugins: {
-        react,
-        prettier,
+      react,
+      prettier,
     },
 
     languageOptions: {
-        globals: {
-            ...globals.browser,
-            ...globals.node,
-            ...globals.jest,
+      globals: {
+        ...cleanGlobals(globals.browser),
+        ...cleanGlobals(globals.node),
+        ...cleanGlobals(globals.jest),
+      },
+
+      parser: babelParser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+
+      parserOptions: {
+        requireConfigFile: false,
+
+        babelOptions: {
+          presets: ['@babel/preset-react'],
         },
-
-        parser: babelParser,
-        ecmaVersion: 5,
-        sourceType: "commonjs",
-
-        parserOptions: {
-            requireConfigFile: false,
-
-            babelOptions: {
-                presets: ["@babel/preset-react"],
-            },
-        },
+      },
     },
 
     settings: {
-        react: {
-            version: "detect",
-        },
+      react: {
+        version: 'detect',
+      },
     },
 
     rules: {
-        "prettier/prettier": ["error", {
-            trailingComma: "es5",
-            singleQuote: true,
-            semi: true,
-        }],
+      'prettier/prettier': [
+        'error',
+        {
+          trailingComma: 'es5',
+          singleQuote: true,
+          semi: true,
+        },
+      ],
     },
-}];
+  },
+];

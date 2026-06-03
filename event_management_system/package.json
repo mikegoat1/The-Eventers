@@ -6,8 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "eslint --fix .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "seed:events": "node scripts/seedEvents.cjs",
+    "seed:users": "node scripts/seedUsers.cjs",
     "test": "jest"
   },
   "dependencies": {
@@ -21,7 +23,7 @@
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/material": "^6.1.8",
     "axios": "^1.9.0",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cookie": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

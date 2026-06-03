@@ -1,5 +1,6 @@
 import eventHandler from '../src/pages/api/events/index';
 import eventHandlerId from '../src/pages/api/events/[id]';
+import jwt from 'jsonwebtoken';
 import {
   getAllEvents,
   createEvent,
@@ -11,7 +12,15 @@ import { createMocks } from 'node-mocks-http';
 
 jest.mock('../src/controllers/eventControllers');
 
+const JWT_SECRET = 'mocksecret';
+const authCookie = () =>
+  `token=${jwt.sign({ userId: 'userId123' }, JWT_SECRET)}`;
+
 describe('API Route: /api/events', () => {
+  beforeAll(() => {
+    process.env.JWT_SECRET = JWT_SECRET;
+  });
+
   it('should handle GET requests', async () => {
     const { req, res } = createMocks({
       method: 'GET',
@@ -25,6 +34,15 @@ describe('API Route: /api/events', () => {
   it('should handle POST requests', async () => {
     const { req, res } = createMocks({
       method: 'POST',
+      headers: {
+        cookie: authCookie(),
+      },
+      body: {
+        name: 'Test Event',
+        date: '2026-06-10T12:00:00.000Z',
+        location: 'Test Hall',
+        category: 'Music',
+      },
     });
 
     await eventHandler(req, res);
@@ -60,6 +78,12 @@ describe('API Route: /api/events', () => {
       const { req, res } = createMocks({
         method: 'PUT',
         query: { id: '1' },
+        headers: {
+          cookie: authCookie(),
+        },
+        body: {
+          name: 'Updated Event',
+        },
       });
 
       await eventHandlerId(req, res);
@@ -71,6 +95,9 @@ describe('API Route: /api/events', () => {
       const { req, res } = createMocks({
         method: 'DELETE',
         query: { id: '1' },
+        headers: {
+          cookie: authCookie(),
+        },
       });
 
       await eventHandlerId(req, res);

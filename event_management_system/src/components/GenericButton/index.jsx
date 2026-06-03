@@ -6,7 +6,9 @@ import Button from '@mui/material/Button';
 import { darken } from '@mui/system';
 
 // Create a styled button with theme-aware and custom color support
-const StyledButton = styled(Button)(({ customColor, variant, size }) => {
+const StyledButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'customColor',
+})(({ customColor, variant, size }) => {
   const primaryStyles = {
     backgroundColor: customColor || '#FF5722',
     color: '#FDFCFC',
