@@ -1,0 +1,9 @@
+node_modules
+.next
+coverage
+.mongo-data
+.mongo-logs
+Data
+__tests__
+*.test.js
+*.spec.js
