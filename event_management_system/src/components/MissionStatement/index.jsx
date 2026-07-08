@@ -5,7 +5,14 @@ import Paper from '@mui/material/Paper';
 
 const MissionStatementContainer = () => {
   return (
-    <Box sx={{ flexGrow: 1, marginBottom: '10%', display: 'flex', justifyContent: 'center' }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        marginBottom: '10%',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
       <Paper
         elevation={0}
         sx={{

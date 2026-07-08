@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
@@ -287,8 +288,8 @@ const CalendarPage = ({ user }) => {
                 variant="body1"
                 sx={{ color: 'text.secondary', maxWidth: 560 }}
               >
-                Drag through the month/week views to see where your events
-                land and schedule reminders in one click.
+                Drag through the month/week views to see where your events land
+                and schedule reminders in one click.
               </Typography>
             </Box>
             <Button
@@ -411,7 +412,11 @@ const CalendarPage = ({ user }) => {
               )}
 
               {user ? (
-                <Box component="form" onSubmit={handleReminderSubmit} sx={{ mt: 3 }}>
+                <Box
+                  component="form"
+                  onSubmit={handleReminderSubmit}
+                  sx={{ mt: 3 }}
+                >
                   <Typography
                     variant="subtitle1"
                     sx={{ mb: 1, fontWeight: 700 }}
@@ -464,6 +469,13 @@ const CalendarPage = ({ user }) => {
       </Dialog>
     </>
   );
+};
+
+CalendarPage.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
 };
 
 export default CalendarPage;

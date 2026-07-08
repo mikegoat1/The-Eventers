@@ -237,7 +237,10 @@ const Navbar = ({ title, user = null }) => {
               <MenuItem sx={{ color: 'text.primary' }} onClick={loginOnClick}>
                 Login
               </MenuItem>
-              <MenuItem sx={{ color: 'text.primary' }} onClick={registerOnClick}>
+              <MenuItem
+                sx={{ color: 'text.primary' }}
+                onClick={registerOnClick}
+              >
                 Register
               </MenuItem>
               <MenuItem sx={{ color: 'text.primary' }} onClick={goHome}>
@@ -454,7 +457,9 @@ const Navbar = ({ title, user = null }) => {
                   onClick={handleProfileMenuOpen}
                   color="inherit"
                 >
-                  <Avatar sx={{ bgcolor: 'primary.main', color: 'text.primary' }}>
+                  <Avatar
+                    sx={{ bgcolor: 'primary.main', color: 'text.primary' }}
+                  >
                     {user.username?.[0] || 'U'}
                   </Avatar>
                 </IconButton>

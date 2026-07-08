@@ -22,7 +22,8 @@ const stickerShadow = `4px 4px 0 ${BORDER}`;
 const surfaceBorder = `2px solid ${BORDER}`;
 const peachGradient = `linear-gradient(160deg, ${CREAM} 0%, ${PEACH} 100%)`;
 
-const headingFont = 'var(--font-heading), "Bricolage Grotesque", system-ui, sans-serif';
+const headingFont =
+  'var(--font-heading), "Bricolage Grotesque", system-ui, sans-serif';
 const bodyFont = 'var(--font-body), "DM Sans", system-ui, sans-serif';
 
 // Warm ink sits on every Block Party brand fill (never white-on-orange).

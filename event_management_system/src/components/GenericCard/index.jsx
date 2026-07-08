@@ -19,7 +19,8 @@ const categoryFill = (category, theme) => {
   ];
   const key = (category || 'general').toString();
   let hash = 0;
-  for (let i = 0; i < key.length; i += 1) hash = (hash + key.charCodeAt(i)) % palette.length;
+  for (let i = 0; i < key.length; i += 1)
+    hash = (hash + key.charCodeAt(i)) % palette.length;
   return palette[hash];
 };
 
@@ -66,7 +67,12 @@ const GenericCard = ({
           src={image || '/Assets/heroImage.png'}
           loading="lazy"
           alt={name}
-          sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block',
+          }}
         />
         {/* Category sticker chip */}
         {category && (

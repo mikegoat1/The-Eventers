@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import MissionStatement from '@/components/MissionStatement';
@@ -40,6 +41,13 @@ const Home = ({ user }) => {
       <Footer />
     </Box>
   );
+};
+
+Home.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
 };
 
 export default Home;

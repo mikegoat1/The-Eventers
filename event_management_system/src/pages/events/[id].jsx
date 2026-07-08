@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -698,6 +699,13 @@ const SingleEvent = ({ user }) => {
       </Box>
     </>
   );
+};
+
+SingleEvent.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
 };
 
 export default SingleEvent;

@@ -41,7 +41,10 @@ const HeroSection = ({ title }) => {
       marginBottom={8}
       marginTop={10}
     >
-      <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Grid
+        size={{ xs: 12, md: 6 }}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+      >
         <Typography
           variant="h1"
           component="h1"
@@ -94,7 +97,15 @@ const HeroSection = ({ title }) => {
           parties — all in one friendly place.
         </Typography>
 
-        <Box sx={{ ...popIn, animationDelay: '160ms', display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box
+          sx={{
+            ...popIn,
+            animationDelay: '160ms',
+            display: 'flex',
+            gap: 2,
+            flexWrap: 'wrap',
+          }}
+        >
           <GenericButton
             variant="primary"
             text="Join GatherHub"
@@ -110,7 +121,10 @@ const HeroSection = ({ title }) => {
         </Box>
       </Grid>
 
-      <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Grid
+        size={{ xs: 12, md: 6 }}
+        sx={{ display: 'flex', justifyContent: 'center' }}
+      >
         <Box
           sx={{
             ...popIn,
@@ -123,7 +137,9 @@ const HeroSection = ({ title }) => {
             boxShadow: (t) => t.custom.stickerShadow,
             borderRadius: 3,
             transform: 'rotate(-3deg)',
-            '@media (prefers-reduced-motion: reduce)': { transform: 'rotate(-3deg)' },
+            '@media (prefers-reduced-motion: reduce)': {
+              transform: 'rotate(-3deg)',
+            },
           }}
         >
           <Image
@@ -134,7 +150,15 @@ const HeroSection = ({ title }) => {
             alt="People gathering at a community event"
           />
           {/* Pinned sticker tags */}
-          <Box sx={{ display: 'flex', gap: 1, position: 'absolute', bottom: 10, left: 12 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              position: 'absolute',
+              bottom: 10,
+              left: 12,
+            }}
+          >
             {stickerTags.map((tag, i) => (
               <Box
                 key={tag}
@@ -149,7 +173,11 @@ const HeroSection = ({ title }) => {
                   border: (t) => t.custom.surfaceBorder,
                   boxShadow: (t) => `2px 2px 0 ${t.custom.surfaceBorderColor}`,
                   backgroundColor: (t) =>
-                    [t.palette.warning.main, t.palette.secondary.main, t.palette.primary.main][i],
+                    [
+                      t.palette.warning.main,
+                      t.palette.secondary.main,
+                      t.palette.primary.main,
+                    ][i],
                 }}
               >
                 {tag}

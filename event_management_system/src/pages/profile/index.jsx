@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import GenericCard from '@/components/GenericCard';
@@ -139,7 +140,10 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
                       {summaryMetrics.map((metric) => (
                         <Box
                           key={metric.label}
-                          sx={{ display: 'flex', justifyContent: 'space-between' }}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
                         >
                           <Typography color="text.secondary">
                             {metric.label}
@@ -178,7 +182,10 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
                               <Typography sx={{ fontWeight: 600 }}>
                                 {category.category}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
                                 {category.totalEvents} events
                               </Typography>
                             </Box>
@@ -235,10 +242,16 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
                               <Typography sx={{ fontWeight: 700 }}>
                                 {trend.period}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
                                 Events: {trend.totalEvents}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
                                 Attendees: {trend.totalAttendees}
                               </Typography>
                             </Box>
@@ -424,5 +437,44 @@ export async function getServerSideProps(context) {
     return { redirect: { destination: '/', permanent: false } };
   }
 }
+
+const eventShape = PropTypes.shape({
+  _id: PropTypes.string,
+  name: PropTypes.string,
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  description: PropTypes.string,
+  category: PropTypes.string,
+  location: PropTypes.string,
+  attendees: PropTypes.array,
+});
+
+Profile.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
+  events: PropTypes.arrayOf(eventShape),
+  publishedEvents: PropTypes.arrayOf(eventShape),
+  analytics: PropTypes.shape({
+    summary: PropTypes.shape({
+      totalEvents: PropTypes.number,
+      totalAttendees: PropTypes.number,
+      averageAttendeesPerEvent: PropTypes.number,
+    }),
+    categoryPopularity: PropTypes.arrayOf(
+      PropTypes.shape({
+        category: PropTypes.string,
+        totalEvents: PropTypes.number,
+      })
+    ),
+    attendanceTrends: PropTypes.arrayOf(
+      PropTypes.shape({
+        period: PropTypes.string,
+        totalEvents: PropTypes.number,
+        totalAttendees: PropTypes.number,
+      })
+    ),
+  }),
+};
 
 export default Profile;

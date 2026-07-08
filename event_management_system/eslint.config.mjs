@@ -31,6 +31,10 @@ export default [
     'prettier'
   ),
   {
+    // Without an explicit files glob, flat config only matches **/*.js, so the
+    // entire React app (every .jsx file) was silently never linted.
+    files: ['**/*.js', '**/*.jsx'],
+
     plugins: {
       react,
       prettier,

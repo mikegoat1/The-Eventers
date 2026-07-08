@@ -18,7 +18,12 @@ const Footer = () => {
         <Typography
           variant="h6"
           component="p"
-          sx={{ flexGrow: 1, textAlign: 'center', padding: '14px', fontWeight: 700 }}
+          sx={{
+            flexGrow: 1,
+            textAlign: 'center',
+            padding: '14px',
+            fontWeight: 700,
+          }}
         >
           © 2025 GatherHub. All rights reserved.
         </Typography>

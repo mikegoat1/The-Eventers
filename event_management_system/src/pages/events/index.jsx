@@ -1,9 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { useFormik } from 'formik';
@@ -162,14 +158,11 @@ const EventsManager = ({ user }) => {
   const displayedEvents = useMemo(() => {
     return events.filter((event) => {
       const matchesCategory =
-        selectedCategory === 'All' ||
-        event.category === selectedCategory;
+        selectedCategory === 'All' || event.category === selectedCategory;
       const matchesSearch =
         !searchQuery ||
         event.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.description
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase());
+        event.description?.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [events, selectedCategory, searchQuery]);
@@ -230,14 +223,10 @@ const EventsManager = ({ user }) => {
             textAlign="center"
             sx={{ color: 'text.secondary', mt: 1 }}
           >
-            Browse your events, review attendance, and publish new
-            experiences in one place.
+            Browse your events, review attendance, and publish new experiences
+            in one place.
           </Typography>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            sx={{ mt: 2 }}
-          >
+          <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
             <Button
               component={Link}
               href="/events/calendar"
@@ -260,15 +249,11 @@ const EventsManager = ({ user }) => {
                     label="Search by name or description"
                     placeholder="Search events..."
                     value={searchQuery}
-                    onChange={(event) =>
-                      setSearchQuery(event.target.value)
-                    }
+                    onChange={(event) => setSearchQuery(event.target.value)}
                     fullWidth
                   />
                   <FormControl sx={{ minWidth: 200 }}>
-                    <InputLabel id="category-filter-label">
-                      Category
-                    </InputLabel>
+                    <InputLabel id="category-filter-label">Category</InputLabel>
                     <Select
                       labelId="category-filter-label"
                       label="Category"
@@ -306,9 +291,7 @@ const EventsManager = ({ user }) => {
                 ) : (
                   <Stack spacing={2}>
                     {displayedEvents.map((event) => {
-                      const attendeeCount = Array.isArray(
-                        event.attendees
-                      )
+                      const attendeeCount = Array.isArray(event.attendees)
                         ? event.attendees.length
                         : 0;
                       const attendeePreview =
@@ -354,9 +337,7 @@ const EventsManager = ({ user }) => {
                               '&:active': { transform: 'none' },
                             },
                           })}
-                          onClick={() =>
-                            router.push(`/events/${event._id}`)
-                          }
+                          onClick={() => router.push(`/events/${event._id}`)}
                         >
                           <CardContent>
                             <Stack
@@ -366,9 +347,7 @@ const EventsManager = ({ user }) => {
                               gap={1}
                               mb={1}
                             >
-                              <Typography variant="h6">
-                                {event.name}
-                              </Typography>
+                              <Typography variant="h6">{event.name}</Typography>
                               <Chip
                                 label={event.category || 'Uncategorized'}
                                 color="warning"
@@ -451,8 +430,8 @@ const EventsManager = ({ user }) => {
                   variant="body2"
                   sx={{ mb: 2, color: 'text.secondary' }}
                 >
-                  Use the form below to publish an event complete with
-                  category tags and attendee tracking.
+                  Use the form below to publish an event complete with category
+                  tags and attendee tracking.
                 </Typography>
 
                 {formStatus && (
@@ -482,12 +461,8 @@ const EventsManager = ({ user }) => {
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.name && Boolean(formik.errors.name)
-                      }
-                      helperText={
-                        formik.touched.name && formik.errors.name
-                      }
+                      error={formik.touched.name && Boolean(formik.errors.name)}
+                      helperText={formik.touched.name && formik.errors.name}
                       fullWidth
                     />
                     <TextField
@@ -498,12 +473,8 @@ const EventsManager = ({ user }) => {
                       value={formik.values.date}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.date && Boolean(formik.errors.date)
-                      }
-                      helperText={
-                        formik.touched.date && formik.errors.date
-                      }
+                      error={formik.touched.date && Boolean(formik.errors.date)}
+                      helperText={formik.touched.date && formik.errors.date}
                       fullWidth
                     />
                     <TextField
@@ -518,8 +489,7 @@ const EventsManager = ({ user }) => {
                         Boolean(formik.errors.location)
                       }
                       helperText={
-                        formik.touched.location &&
-                        formik.errors.location
+                        formik.touched.location && formik.errors.location
                       }
                       fullWidth
                     />
@@ -547,12 +517,11 @@ const EventsManager = ({ user }) => {
                           </MenuItem>
                         ))}
                       </Select>
-                      {formik.touched.category &&
-                        formik.errors.category && (
-                          <FormHelperText>
-                            {formik.errors.category}
-                          </FormHelperText>
-                        )}
+                      {formik.touched.category && formik.errors.category && (
+                        <FormHelperText>
+                          {formik.errors.category}
+                        </FormHelperText>
+                      )}
                     </FormControl>
                     <TextField
                       name="description"
@@ -568,8 +537,7 @@ const EventsManager = ({ user }) => {
                         Boolean(formik.errors.description)
                       }
                       helperText={
-                        formik.touched.description &&
-                        formik.errors.description
+                        formik.touched.description && formik.errors.description
                       }
                       fullWidth
                     />
@@ -600,6 +568,13 @@ const EventsManager = ({ user }) => {
       <Footer />
     </>
   );
+};
+
+EventsManager.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
 };
 
 export default EventsManager;

@@ -20,7 +20,8 @@ const categoryFill = (category, theme) => {
   ];
   const key = (category || 'general').toString();
   let hash = 0;
-  for (let i = 0; i < key.length; i += 1) hash = (hash + key.charCodeAt(i)) % palette.length;
+  for (let i = 0; i < key.length; i += 1)
+    hash = (hash + key.charCodeAt(i)) % palette.length;
   return palette[hash];
 };
 
@@ -30,7 +31,8 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
   const theme = useTheme();
 
   // Heading now reflects the ACTUAL filter, not a hardcoded season.
-  const heading = title || (filterCategory ? `${filterCategory} Events` : 'Upcoming Events');
+  const heading =
+    title || (filterCategory ? `${filterCategory} Events` : 'Upcoming Events');
 
   const settings = {
     dots: true,
@@ -76,7 +78,12 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
 
   return (
     <Box sx={{ mt: 4, px: 2, mb: 4 }}>
-      <Typography variant="h5" component="h2" gutterBottom sx={{ textAlign: 'center' }}>
+      <Typography
+        variant="h5"
+        component="h2"
+        gutterBottom
+        sx={{ textAlign: 'center' }}
+      >
         {heading}
       </Typography>
       <Slider {...settings}>
@@ -110,7 +117,12 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
                       src={event.image || '/Assets/heroImage.png'}
                       loading="lazy"
                       alt={event.name}
-                      sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
                     />
                     {event.category && (
                       <Box
@@ -137,10 +149,20 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
                   </Box>
 
                   <Box sx={{ p: 2 }}>
-                    <Typography variant="h6" component="h3" sx={{ lineHeight: 1.2 }}>
+                    <Typography
+                      variant="h6"
+                      component="h3"
+                      sx={{ lineHeight: 1.2 }}
+                    >
                       {event.name}
                     </Typography>
-                    <Box display="flex" flexDirection="row" mt={1} gap={1} flexWrap="wrap">
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      mt={1}
+                      gap={1}
+                      flexWrap="wrap"
+                    >
                       <Typography variant="body2" color="text.secondary">
                         {new Date(event.date).toLocaleString()}
                       </Typography>
@@ -156,7 +178,11 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
                       }}
                     >
                       {!user ? (
-                        <GenericButton text="Join Up" size="small" onClick={handleJoinClick} />
+                        <GenericButton
+                          text="Join Up"
+                          size="small"
+                          onClick={handleJoinClick}
+                        />
                       ) : (
                         <GenericButton
                           text="Reserve"
@@ -172,7 +198,9 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
           })
         ) : (
           <Box sx={{ textAlign: 'center', py: 4 }}>
-            <Typography variant="body1">No events available at the moment.</Typography>
+            <Typography variant="body1">
+              No events available at the moment.
+            </Typography>
           </Box>
         )}
       </Slider>
