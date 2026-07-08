@@ -19,9 +19,11 @@ const bricolage = Bricolage_Grotesque({
   variable: '--font-heading',
 });
 
+// Loaded as a variable font (no `weight` array) so that the 600/700/800 weights
+// used by buttons, sticker chips and card titles resolve to real faces instead
+// of being synthesized into faux-bold by the browser.
 const dmSans = DM_Sans({
   subsets: ['latin'],
-  weight: ['400', '500'],
   display: 'swap',
   variable: '--font-body',
 });

@@ -120,14 +120,16 @@ const GenericCard = ({
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 2, mt: 1.5, flexWrap: 'wrap' }}>
-          <Box>
-            <Typography variant="caption" color="text.secondary">
-              Location
-            </Typography>
-            <Typography variant="body2" fontWeight={700}>
-              {location || 'N/A'}
-            </Typography>
-          </Box>
+          {location && (
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Location
+              </Typography>
+              <Typography variant="body2" fontWeight={700}>
+                {location}
+              </Typography>
+            </Box>
+          )}
           {!hideAttendees && (
             <Box>
               <Typography variant="caption" color="text.secondary">

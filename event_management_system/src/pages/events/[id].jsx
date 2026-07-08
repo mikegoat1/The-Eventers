@@ -330,10 +330,12 @@ const SingleEvent = ({ user }) => {
 
     if (!user) {
       setSnackbarContent(
+        // Standard (not filled) variant: `info` is the one severity the theme
+        // does not override, so a filled info Alert renders white on MUI's
+        // default blue at 3.86:1 and fails WCAG AA. Standard is tinted + dark.
         <Alert
           onClose={handleSnackbarClose}
           severity="info"
-          variant="filled"
           sx={{ width: '100%' }}
         >
           Please log in to join the event chat.

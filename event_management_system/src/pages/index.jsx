@@ -36,7 +36,7 @@ const Home = ({ user }) => {
       <Navbar title="GATHERHUB" user={user} />
       <HeroSection title="Welcome to GatherHub" />
       <MissionStatement />
-      <Carousel user={user} filterCategory={'Health'} maxItems={6} />
+      <Carousel user={user} maxItems={6} />
       <Footer />
     </Box>
   );

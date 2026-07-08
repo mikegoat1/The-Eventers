@@ -26,8 +26,12 @@ const headingFont = 'var(--font-heading), "Bricolage Grotesque", system-ui, sans
 const bodyFont = 'var(--font-body), "DM Sans", system-ui, sans-serif';
 
 // Warm ink sits on every Block Party brand fill (never white-on-orange).
-// Provided so augmentColor / getContrastText resolve to INK (#211D18) on brand
-// colors; non-brand fills (e.g. error red) keep a legible white.
+// MUI calls this as theme.palette.getContrastText(bg) wherever it needs a
+// readable foreground for a fill, so brand colors resolve to INK (#211D18).
+// Non-brand fills fall through to white: that clears AA on the MUI defaults for
+// error (#D32F2F, 4.98:1) and success (#2E7D32, 5.13:1). Note `info` is NOT
+// overridden below, so a filled info surface would be white on #0288D1
+// (3.86:1) — use the default (standard) Alert variant for info, not filled.
 const getContrastText = (background) =>
   [ACCENT, GREEN, HONEY, PEACH, CREAM, SURFACE].includes(background)
     ? INK
