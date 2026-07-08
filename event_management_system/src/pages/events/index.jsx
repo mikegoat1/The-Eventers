@@ -8,7 +8,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import axios from '../../lib/axios';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import {
   Alert,
   Box,
@@ -126,7 +125,6 @@ const formatEventDate = (value) => {
 };
 
 const EventsManager = ({ user }) => {
-  const router = useRouter();
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [fetchError, setFetchError] = useState('');
@@ -310,7 +308,13 @@ const EventsManager = ({ user }) => {
                       return (
                         <Card
                           key={event._id || event.name}
+                          component={Link}
+                          href={`/events/${event._id}`}
+                          aria-label={`View details for ${event.name}`}
                           sx={(theme) => ({
+                            display: 'block',
+                            textDecoration: 'none',
+                            color: 'inherit',
                             cursor: 'pointer',
                             backgroundColor: theme.custom.cream,
                             borderRadius: `${theme.shape.borderRadius}px`,
@@ -337,7 +341,6 @@ const EventsManager = ({ user }) => {
                               '&:active': { transform: 'none' },
                             },
                           })}
-                          onClick={() => router.push(`/events/${event._id}`)}
                         >
                           <CardContent>
                             <Stack
