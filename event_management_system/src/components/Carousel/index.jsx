@@ -1,17 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Slider from 'react-slick';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import { useTheme } from '@mui/material/styles';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Card } from '@mui/material';
 import { useRouter } from 'next/router';
 import axios from '../../lib/axios';
 import GenericButton from '../GenericButton';
 
-const EventCarousel = ({ user, filterCategory, maxItems }) => {
+// Deterministic category -> sticker fill, mirroring GenericCard.
+const categoryFill = (category, theme) => {
+  const palette = [
+    theme.palette.secondary.main,
+    theme.palette.primary.main,
+    theme.palette.warning.main,
+  ];
+  const key = (category || 'general').toString();
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) hash = (hash + key.charCodeAt(i)) % palette.length;
+  return palette[hash];
+};
+
+const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
   const [carouselEvents, setCarouselEvents] = useState(null);
   const router = useRouter();
+  const theme = useTheme();
+
+  // Heading now reflects the ACTUAL filter, not a hardcoded season.
+  const heading = title || (filterCategory ? `${filterCategory} Events` : 'Upcoming Events');
 
   const settings = {
     dots: true,
@@ -20,22 +39,13 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
     slidesToShow: 3,
     slidesToScroll: 1,
     pauseOnHover: true,
-    autoplay: true,
+    autoplay: false,
     responsive: [
-      {
-        breakpoint: 960,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
+      { breakpoint: 960, settings: { slidesToShow: 2 } },
+      { breakpoint: 600, settings: { slidesToShow: 1 } },
     ],
   };
+
   useEffect(() => {
     const fetchEvent = async () => {
       if (!router.isReady) return;
@@ -56,91 +66,125 @@ const EventCarousel = ({ user, filterCategory, maxItems }) => {
     };
     fetchEvent();
   }, [router.isReady]);
+
   const handleJoinClick = () => {
-    router.push('/register')
-  }
+    router.push('/register');
+  };
   const handleReserveClick = (eventId) => {
     router.push(`/events/${eventId}`);
   };
 
   return (
     <Box sx={{ mt: 4, px: 2, mb: 4 }}>
-      <Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>
-        Summer Events
+      <Typography variant="h5" component="h2" gutterBottom sx={{ textAlign: 'center' }}>
+        {heading}
       </Typography>
       <Slider {...settings}>
         {Array.isArray(carouselEvents) && carouselEvents.length > 0 ? (
-          carouselEvents.map((event, i) => (
-            <Box key={event._id || event.name} sx={{ px: 1 }}>
-              <Card
-                sx={{
-                  width: '100%',
-                  position: 'relative',
-                  padding: 2,
-                  px: 1,
-                  backgroundImage: `url(https://picsum.photos/400/200?random=${i})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  zIndex: 1,
-                  color: '#FFCB1F',
-                }}
-              >
-                <Box
+          carouselEvents.map((event) => {
+            const stickerColor = categoryFill(event.category, theme);
+            return (
+              <Box key={event._id || event.name} sx={{ px: 1, py: 1 }}>
+                <Card
                   sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
                     width: '100%',
-                    height: '100%',
-                    bgcolor: 'rgba(0,0,0,0.5)',
-                    zIndex: 2,
-                    pointerEvents: 'none',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    borderRadius: `${theme.shape.borderRadius}px`,
+                    border: theme.custom.surfaceBorder,
+                    boxShadow: theme.custom.stickerShadow,
+                    backgroundColor: 'background.paper',
                   }}
-                />
-                <Box sx={{ position: 'relative', zIndex: 3 }}>
-                  <Typography variant="h6">{event.name}</Typography>
-                  <Box display="flex" flexDirection="row" mt={1} gap={1}>
-                    <Typography variant="body2">
-                      {new Date(event.date).toLocaleString()}
-                    </Typography>
-                    <Typography variant="body2">
-                      Location: {event.location || 'N/A'}
-                    </Typography>
-                  </Box>
+                >
+                  {/* Event photo on top — real event image */}
                   <Box
                     sx={{
-                      mt: 2,
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: 1,
-                      justifyContent: 'space-between',
+                      position: 'relative',
+                      height: 160,
+                      overflow: 'hidden',
+                      borderBottom: theme.custom.surfaceBorder,
                     }}
                   >
-                    <Typography variant="body2">
-                      Category: {event.category || 'N/A'}
+                    <Box
+                      component="img"
+                      src={event.image || '/Assets/heroImage.png'}
+                      loading="lazy"
+                      alt={event.name}
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                    {event.category && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: 12,
+                          left: 12,
+                          px: 1.25,
+                          py: 0.25,
+                          borderRadius: 999,
+                          backgroundColor: stickerColor,
+                          border: theme.custom.surfaceBorder,
+                          boxShadow: `2px 2px 0 ${theme.custom.surfaceBorderColor}`,
+                          color: 'text.primary',
+                          fontWeight: 800,
+                          fontSize: '0.75rem',
+                          letterSpacing: '0.02em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {event.category}
+                      </Box>
+                    )}
+                  </Box>
+
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="h6" component="h3" sx={{ lineHeight: 1.2 }}>
+                      {event.name}
                     </Typography>
-                    <Box sx={{ marginRight: 1 }}>
+                    <Box display="flex" flexDirection="row" mt={1} gap={1} flexWrap="wrap">
+                      <Typography variant="body2" color="text.secondary">
+                        {new Date(event.date).toLocaleString()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        · {event.location || 'N/A'}
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
                       {!user ? (
-                        <GenericButton text="Join Up" onClick={handleJoinClick} />
+                        <GenericButton text="Join Up" size="small" onClick={handleJoinClick} />
                       ) : (
-                        <GenericButton text="Reserve" onClick={() => handleReserveClick(event._id)} />
+                        <GenericButton
+                          text="Reserve"
+                          size="small"
+                          onClick={() => handleReserveClick(event._id)}
+                        />
                       )}
                     </Box>
                   </Box>
-                </Box>
-              </Card>
-            </Box>
-          ))
+                </Card>
+              </Box>
+            );
+          })
         ) : (
           <Box sx={{ textAlign: 'center', py: 4 }}>
-            <Typography variant="body1">
-              No events available at the moment.
-            </Typography>
+            <Typography variant="body1">No events available at the moment.</Typography>
           </Box>
         )}
       </Slider>
     </Box>
   );
+};
+
+EventCarousel.propTypes = {
+  user: PropTypes.object,
+  filterCategory: PropTypes.string,
+  maxItems: PropTypes.number,
+  title: PropTypes.string,
 };
 
 export default EventCarousel;

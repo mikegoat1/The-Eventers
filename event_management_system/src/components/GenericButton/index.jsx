@@ -1,64 +1,77 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { darken } from '@mui/system';
 
-// Create a styled button with theme-aware and custom color support
+// Block Party button: solid rounded-pill sticker with chunky ink border +
+// hard offset shadow. Every color pulls from the theme (zero hardcoded hex).
 const StyledButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'customColor',
-})(({ customColor, variant, size }) => {
-  const primaryStyles = {
-    backgroundColor: customColor || '#FF5722',
-    color: '#FDFCFC',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    lineHeight: '1.5',
+})(({ theme, customColor, variant, size }) => {
+  const ink = theme.palette.text.primary; // warm near-black ink
+  const accent = customColor || theme.palette.primary.main; // bright brand orange
+  const { stickerShadow, surfaceBorder } = theme.custom;
+
+  const commonStyles = {
+    textTransform: 'none',
+    borderRadius: 999, // rounded pill
+    fontWeight: 700,
+    lineHeight: 1.4,
+    color: ink,
+    border: surfaceBorder,
+    boxShadow: stickerShadow,
+    // Bouncy pop on hover — GPU-friendly transform/shadow only, <250ms.
+    transition: theme.transitions.create(['transform', 'box-shadow'], {
+      duration: 180,
+      easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    }),
     '&:hover': {
-      backgroundColor: customColor ? darken(customColor, 0.2) : '#AD2800', // Darken the custom color or use a default hover color
+      transform: 'translate(-1px, -2px)',
+      boxShadow: `6px 7px 0 ${theme.custom.surfaceBorderColor}`,
     },
-    '&:disabled': {
-      backgroundColor: '#CAC0BF', // Disabled background color
-      color: '#CABFBF', // Disabled text color
+    '&:active': {
+      transform: 'translate(2px, 2px)',
+      boxShadow: `1px 1px 0 ${theme.custom.surfaceBorderColor}`,
+    },
+    '&.Mui-disabled': {
+      backgroundColor: theme.palette.action.disabledBackground,
+      color: theme.palette.text.secondary,
+      boxShadow: 'none',
+      borderColor: theme.palette.text.secondary,
+    },
+    '@media (prefers-reduced-motion: reduce)': {
+      transition: 'none',
+      '&:hover': { transform: 'none' },
+      '&:active': { transform: 'none' },
+    },
+  };
+
+  const primaryStyles = {
+    backgroundColor: accent,
+    '&:hover': {
+      ...commonStyles['&:hover'],
+      backgroundColor: accent,
     },
   };
 
   const secondaryStyles = {
-    border: `2px solid ${customColor || '#FFC107'}`, // Default secondary color
-    color: customColor || '#080808',
-    backgroundColor: '#FFF9E5',
-    borderRadius: '8px',
-    // padding: '12px 24px',
-    fontWeight: 'bold',
+    backgroundColor: theme.custom.cream,
     '&:hover': {
-      backgroundColor: '#FFC107', // Hover background color
-      borderColor: customColor ? darken(customColor, 0.2) : '#9E7700', // Darken the custom color or use a default hover border color
+      ...commonStyles['&:hover'],
+      backgroundColor: alpha(theme.palette.warning.main, 0.25),
     },
   };
 
-  const commonStyles = {
-    textTransform: 'none', // Prevent uppercase transformation
-    transition: 'background-color 0.3s, border-color 0.3s', // Transition for background and border color
-  };
   const sizeStyles = {
-    small: {
-      fontSize: '0.75rem',
-      padding: '4px 12px',
-    },
-    medium: {
-      fontSize: '0.875rem',
-      padding: '6px 16px',
-    },
-    large: {
-      fontSize: '1rem',
-      padding: '8px 20px',
-    },
+    small: { fontSize: '0.8125rem', padding: '5px 16px' },
+    medium: { fontSize: '0.9375rem', padding: '8px 22px' },
+    large: { fontSize: '1.0625rem', padding: '11px 28px' },
   };
+
   return {
-    ...(variant === 'secondary'
-      ? { ...commonStyles, ...secondaryStyles }
-      : { ...commonStyles, ...primaryStyles }),
+    ...commonStyles,
+    ...(variant === 'secondary' ? secondaryStyles : primaryStyles),
     ...sizeStyles[size],
   };
 });
