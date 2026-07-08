@@ -1,8 +1,7 @@
 import React, { StrictMode } from 'react';
 import PropTypes from 'prop-types';
 import { Bricolage_Grotesque, DM_Sans } from 'next/font/google';
-import { ThemeProvider, THEME_ID } from '@mui/material/styles';
-import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import theme from '@/ThemeProvider/ThemeProvider';
@@ -30,23 +29,20 @@ const dmSans = DM_Sans({
 function MyApp({ Component, pageProps }) {
   return (
     <StrictMode>
-      {/* Material + Joy coexistence (official MUI pattern): key the Material
-          theme with THEME_ID and nest Joy's CssVarsProvider inside so the
-          @mui/joy components already used on some pages (login/register/etc.)
-          keep their own default theme instead of crashing. */}
-      <ThemeProvider theme={{ [THEME_ID]: theme }}>
-        <JoyCssVarsProvider>
-          <CssBaseline />
-          <GlobalStyles
-            styles={{
-              ':root': {
-                '--font-heading': bricolage.style.fontFamily,
-                '--font-body': dmSans.style.fontFamily,
-              },
-            }}
-          />
-          <Component {...pageProps} />
-        </JoyCssVarsProvider>
+      {/* Single Material UI theme. Joy UI has been fully removed from the app,
+          so the former Material + Joy coexistence bridge (a themeId-keyed theme
+          object nesting a second CssVars provider) is no longer needed. */}
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <GlobalStyles
+          styles={{
+            ':root': {
+              '--font-heading': bricolage.style.fontFamily,
+              '--font-body': dmSans.style.fontFamily,
+            },
+          }}
+        />
+        <Component {...pageProps} />
       </ThemeProvider>
     </StrictMode>
   );

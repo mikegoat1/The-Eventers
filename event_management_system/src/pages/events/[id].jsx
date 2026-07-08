@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Typography from '@mui/joy/Typography';
+import Typography from '@mui/material/Typography';
 import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import Footer from '@/components/Footer';
@@ -21,6 +21,45 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+
+// Block Party sticker surface: white fill, chunky ink border, hard offset shadow.
+const stickerSurface = (theme) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: `${theme.shape.borderRadius}px`,
+  border: theme.custom.surfaceBorder,
+  boxShadow: theme.custom.stickerShadow,
+});
+
+// Pill-shaped action that matches GenericButton's sticker language.
+const stickerPillButton = (theme) => ({
+  borderRadius: '999px',
+  border: theme.custom.surfaceBorder,
+  boxShadow: `3px 3px 0 ${theme.custom.surfaceBorderColor}`,
+  backgroundColor: theme.custom.cream,
+  color: theme.palette.text.primary,
+  fontWeight: 700,
+  px: 2.5,
+  transition: theme.transitions.create(['transform', 'box-shadow'], {
+    duration: 180,
+    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  }),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.warning.main, 0.25),
+    border: theme.custom.surfaceBorder,
+    transform: 'translate(-1px, -2px)',
+    boxShadow: `5px 6px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '&:active': {
+    transform: 'translate(2px, 2px)',
+    boxShadow: `1px 1px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': { transform: 'none' },
+    '&:active': { transform: 'none' },
+  },
+});
 
 const EVENT_CATEGORIES = [
   'Music',
@@ -330,7 +369,14 @@ const SingleEvent = ({ user }) => {
       <Box>
         <AppBar
           position="static"
-          sx={{ backgroundColor: '#F5F3F3', color: '#080808' }}
+          elevation={0}
+          sx={(theme) => ({
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+            backgroundImage: 'none',
+            borderBottom: theme.custom.surfaceBorder,
+            boxShadow: 'none',
+          })}
         >
           <Box
             sx={{
@@ -403,6 +449,7 @@ const SingleEvent = ({ user }) => {
                 variant="outlined"
                 onClick={() => setIsEditing((current) => !current)}
                 disabled={actionLoading}
+                sx={stickerPillButton}
               >
                 {isEditing ? 'Cancel edit' : 'Edit event'}
               </Button>
@@ -411,6 +458,15 @@ const SingleEvent = ({ user }) => {
                 variant="outlined"
                 onClick={handleDeleteEvent}
                 disabled={actionLoading}
+                sx={(theme) => ({
+                  ...stickerPillButton(theme),
+                  color: theme.palette.error.dark,
+                  backgroundColor: theme.palette.background.paper,
+                  '&:hover': {
+                    ...stickerPillButton(theme)['&:hover'],
+                    backgroundColor: alpha(theme.palette.error.main, 0.12),
+                  },
+                })}
               >
                 Delete event
               </Button>
@@ -420,16 +476,14 @@ const SingleEvent = ({ user }) => {
             <Box
               component="form"
               onSubmit={handleEditSubmit}
-              sx={{
+              sx={(theme) => ({
                 width: '100%',
                 maxWidth: 640,
                 display: 'grid',
                 gap: 2,
-                bgcolor: '#FFFBF5',
-                border: '1px solid #E0E0E0',
-                borderRadius: 2,
                 p: 3,
-              }}
+                ...stickerSurface(theme),
+              })}
             >
               <TextField
                 label="Event name"
@@ -477,21 +531,33 @@ const SingleEvent = ({ user }) => {
                 minRows={4}
                 fullWidth
               />
-              <Button type="submit" variant="contained" disabled={actionLoading}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={actionLoading}
+                sx={(theme) => ({
+                  ...stickerPillButton(theme),
+                  justifySelf: 'start',
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.primary.contrastText,
+                  '&:hover': {
+                    ...stickerPillButton(theme)['&:hover'],
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                })}
+              >
                 {actionLoading ? 'Saving...' : 'Save changes'}
               </Button>
             </Box>
           )}
           {event && (
             <Box
-              sx={{
+              sx={(theme) => ({
                 width: '100%',
                 maxWidth: 640,
-                bgcolor: '#FFFBF5',
-                border: '1px solid #E0E0E0',
-                borderRadius: 2,
                 p: 3,
-              }}
+                ...stickerSurface(theme),
+              })}
             >
               <Stack
                 direction="row"
@@ -499,8 +565,23 @@ const SingleEvent = ({ user }) => {
                 alignItems="center"
                 spacing={2}
               >
-                <Typography variant="h5">Event Chat</Typography>
-                <Typography sx={{ color: '#6A6A6A' }}>
+                <Typography variant="h5" component="h2">
+                  Event Chat
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={(theme) => ({
+                    flexShrink: 0,
+                    px: 1.25,
+                    py: 0.25,
+                    borderRadius: '999px',
+                    backgroundColor: theme.palette.warning.main,
+                    border: theme.custom.surfaceBorder,
+                    boxShadow: `2px 2px 0 ${theme.custom.surfaceBorderColor}`,
+                    color: theme.palette.warning.contrastText,
+                    fontWeight: 800,
+                  })}
+                >
                   {messages.length}{' '}
                   {messages.length === 1 ? 'message' : 'messages'}
                 </Typography>
@@ -521,19 +602,19 @@ const SingleEvent = ({ user }) => {
                 }}
               >
                 {messages.length === 0 ? (
-                  <Typography sx={{ color: '#6A6A6A' }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     No messages yet.
                   </Typography>
                 ) : (
                   messages.map((message) => (
                     <Box
                       key={message._id}
-                      sx={{
-                        border: '1px solid #E8E0D7',
-                        borderRadius: 1,
+                      sx={(theme) => ({
+                        border: theme.custom.surfaceBorder,
+                        borderRadius: '10px',
                         p: 1.5,
-                        bgcolor: '#FFFFFF',
-                      }}
+                        backgroundColor: theme.custom.cream,
+                      })}
                     >
                       <Stack
                         direction="row"
@@ -541,14 +622,19 @@ const SingleEvent = ({ user }) => {
                         alignItems="center"
                         spacing={1}
                       >
-                        <Typography fontWeight={600}>
+                        <Typography variant="body2" sx={{ fontWeight: 700 }}>
                           {message.userId?.username || 'GatherHub user'}
                         </Typography>
-                        <Typography sx={{ color: '#6A6A6A', fontSize: 13 }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'text.secondary', flexShrink: 0 }}
+                        >
                           {formatMessageDate(message.createdAt)}
                         </Typography>
                       </Stack>
-                      <Typography sx={{ mt: 0.75 }}>{message.body}</Typography>
+                      <Typography variant="body2" sx={{ mt: 0.75 }}>
+                        {message.body}
+                      </Typography>
                     </Box>
                   ))
                 )}
@@ -575,8 +661,17 @@ const SingleEvent = ({ user }) => {
                   <Button
                     type="submit"
                     variant="contained"
-                    sx={{ mt: 1.5 }}
                     disabled={messageSubmitting || !messageDraft.trim()}
+                    sx={(theme) => ({
+                      ...stickerPillButton(theme),
+                      mt: 1.5,
+                      backgroundColor: theme.palette.primary.main,
+                      color: theme.palette.primary.contrastText,
+                      '&:hover': {
+                        ...stickerPillButton(theme)['&:hover'],
+                        backgroundColor: theme.palette.primary.main,
+                      },
+                    })}
                   >
                     {messageSubmitting ? 'Posting...' : 'Post message'}
                   </Button>

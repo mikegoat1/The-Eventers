@@ -10,8 +10,8 @@ const MissionStatementContainer = () => {
         elevation={0}
         sx={{
           position: 'relative',
-          textAlign: 'center',
-          padding: { xs: '32px 20px', md: '40px 48px' },
+          textAlign: 'left',
+          padding: { xs: '36px 20px 32px', md: '44px 48px 40px' },
           backgroundColor: 'background.paper',
           border: (t) => t.custom.surfaceBorder,
           boxShadow: (t) => t.custom.stickerShadow,
@@ -45,17 +45,21 @@ const MissionStatementContainer = () => {
         </Box>
 
         <Typography sx={{ mt: 1 }} variant="h5" component="h2">
-          Our Mission Statement
+          Come as you are. Leave with new people.
         </Typography>
-        <Typography variant="body1" component="p" sx={{ padding: '3%' }}>
-          We ignite connections by bringing people together through exciting
-          events that spark community, collaboration, and powerful networking.
-          Our mission is to create a vibrant platform where ideas flow,
-          relationships grow, and opportunities come alive. We believe great
-          things happen when people connect — that’s why we focus on building
-          spaces where diverse voices meet, share, and inspire. Whether you’re
-          looking to expand your network, spark new projects, or simply meet
-          like-minded people, we’re here to make it happen.
+        <Typography
+          variant="body1"
+          component="p"
+          sx={{
+            mt: 2,
+            maxWidth: '65ch',
+            color: 'text.secondary',
+          }}
+        >
+          Every event here is an open invitation — bring your ideas, your
+          questions, or just yourself. When different voices end up in the same
+          room, projects start, collaborations click, and strangers turn into
+          the people you build things with.
         </Typography>
       </Paper>
     </Box>

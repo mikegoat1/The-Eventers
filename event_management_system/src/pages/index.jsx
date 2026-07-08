@@ -26,11 +26,12 @@ export async function getServerSideProps(context) {
 const Home = ({ user }) => {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         minHeight: '100vh',
-        // background: 'linear-gradient(120deg, #FFF1CC, #FFD33D, #FFF1CC)',
-        background: 'linear-gradient(120deg, #FDF6ED, #ECE7E1, #B1A79E)',
-      }}
+        // Block Party page wash: cream -> peach, matching the CssBaseline body
+        // background so the page never seams against the viewport edges.
+        background: theme.custom.peachGradient,
+      })}
     >
       <Navbar title="GATHERHUB" user={user} />
       <HeroSection title="Welcome to GatherHub" />

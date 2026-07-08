@@ -1,7 +1,6 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Typography from '@mui/joy/Typography';
 import GenericCard from '@/components/GenericCard';
 import GenericButton from '@/components/GenericButton';
 import Footer from '@/components/Footer';
@@ -9,7 +8,54 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { parse as parseCookie } from 'cookie';
 import jwt from 'jsonwebtoken';
-import { Card, CardContent, Grid, LinearProgress, Stack } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Grid,
+  LinearProgress,
+  Stack,
+  Typography,
+} from '@mui/material';
+
+// --- Block Party surfaces (all values resolved from theme tokens) ---
+
+// Top bar: cream slab with a chunky ink rule underneath, matching Navbar.
+const appBarSx = (theme) => ({
+  backgroundColor: theme.custom.cream,
+  color: theme.palette.text.primary,
+  borderBottom: theme.custom.surfaceBorder,
+});
+
+// Every panel on this page is a sticker: white surface, chunky ink border,
+// hard offset shadow, 14px radius.
+const stickerCardSx = (theme) => ({
+  height: '100%',
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: `${theme.shape.borderRadius}px`,
+  border: theme.custom.surfaceBorder,
+  boxShadow: theme.custom.stickerShadow,
+  backgroundImage: 'none',
+});
+
+// Section headings get the hand-drawn honey swipe used in HeroSection.
+const sectionHeadingSx = (theme) => ({
+  position: 'relative',
+  display: 'inline-block',
+  // `isolation` makes this heading its own stacking context, so the z-index:-1
+  // swipe paints behind the glyphs but still above any ancestor background.
+  isolation: 'isolate',
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 2,
+    height: 8,
+    borderRadius: 999,
+    backgroundColor: theme.palette.warning.main,
+    zIndex: -1,
+  },
+});
 
 const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
   const router = useRouter();
@@ -44,10 +90,7 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
   return (
     <>
       <Box>
-        <AppBar
-          position="static"
-          sx={{ backgroundColor: '#F5F3F3', color: '#080808' }}
-        >
+        <AppBar position="static" elevation={0} sx={appBarSx}>
           <Box sx={{ display: 'flex', alignItems: 'center', padding: 1 }}>
             <GenericButton
               variant="secondary"
@@ -56,7 +99,7 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
             />
             <Typography
               variant="h5"
-              component="div"
+              component="h1"
               sx={{ flexGrow: 1, textAlign: 'center', padding: 2 }}
             >
               GATHERHUB - My Events
@@ -66,36 +109,42 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
 
         {/* Profile summary */}
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h6">My Profile</Typography>
+          <Typography variant="h6" component="h2" sx={sectionHeadingSx}>
+            My Profile
+          </Typography>
           {user?.email && (
-            <Typography sx={{ marginTop: 1 }}>
+            <Typography sx={{ marginTop: 1 }} color="text.secondary">
               Logged in as: {user.email}
             </Typography>
           )}
-          <Typography sx={{ marginTop: 1 }}>
+          <Typography sx={{ marginTop: 1 }} color="text.secondary">
             Total RSVP&apos;d events: {events.length}
           </Typography>
         </Box>
 
         {/* Analytics */}
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h4">Event Analytics</Typography>
+          <Typography variant="h4" component="h2" sx={sectionHeadingSx}>
+            Event Analytics
+          </Typography>
           {analytics?.summary ? (
             <Grid container spacing={3} sx={{ mt: 2 }}>
               <Grid item xs={12} md={4}>
-                <Card sx={{ height: '100%' }}>
+                <Card elevation={0} sx={stickerCardSx}>
                   <CardContent>
-                    <Typography variant="h6">Organizer Summary</Typography>
+                    <Typography variant="h6" component="h3">
+                      Organizer Summary
+                    </Typography>
                     <Stack spacing={1.5} sx={{ mt: 2 }}>
                       {summaryMetrics.map((metric) => (
                         <Box
                           key={metric.label}
                           sx={{ display: 'flex', justifyContent: 'space-between' }}
                         >
-                          <Typography sx={{ color: '#6A6A6A' }}>
+                          <Typography color="text.secondary">
                             {metric.label}
                           </Typography>
-                          <Typography fontWeight={600}>
+                          <Typography sx={{ fontWeight: 700 }}>
                             {metric.value}
                           </Typography>
                         </Box>
@@ -106,11 +155,13 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
               </Grid>
 
               <Grid item xs={12} md={8}>
-                <Card sx={{ height: '100%' }}>
+                <Card elevation={0} sx={stickerCardSx}>
                   <CardContent>
-                    <Typography variant="h6">Category Popularity</Typography>
+                    <Typography variant="h6" component="h3">
+                      Category Popularity
+                    </Typography>
                     {categoryData.length === 0 ? (
-                      <Typography sx={{ mt: 2 }}>
+                      <Typography sx={{ mt: 2 }} color="text.secondary">
                         You haven&apos;t published any events yet.
                       </Typography>
                     ) : (
@@ -124,17 +175,32 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
                                 alignItems: 'center',
                               }}
                             >
-                              <Typography>{category.category}</Typography>
-                              <Typography variant="body2" sx={{ color: '#6A6A6A' }}>
+                              <Typography sx={{ fontWeight: 600 }}>
+                                {category.category}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
                                 {category.totalEvents} events
                               </Typography>
                             </Box>
+                            {/* Chunky ink-bordered meter with a brand-orange fill.
+                                Decorative fill only — the count is stated in text. */}
                             <LinearProgress
                               variant="determinate"
                               value={
                                 (category.totalEvents / maxCategoryEvents) * 100
                               }
-                              sx={{ height: 8, borderRadius: 2, mt: 0.5 }}
+                              aria-label={`${category.category} share of published events`}
+                              sx={(theme) => ({
+                                height: 12,
+                                borderRadius: 999,
+                                mt: 0.75,
+                                border: theme.custom.surfaceBorder,
+                                backgroundColor: theme.custom.cream,
+                                '& .MuiLinearProgress-bar': {
+                                  backgroundColor: theme.palette.primary.main,
+                                  borderRadius: 999,
+                                },
+                              })}
                             />
                           </Box>
                         ))}
@@ -145,27 +211,34 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <Card>
+                <Card elevation={0} sx={stickerCardSx}>
                   <CardContent>
-                    <Typography variant="h6">Attendance Trends</Typography>
+                    <Typography variant="h6" component="h3">
+                      Attendance Trends
+                    </Typography>
                     {analytics.attendanceTrends?.length ? (
                       <Grid container spacing={2} sx={{ mt: 2 }}>
                         {analytics.attendanceTrends.map((trend) => (
                           <Grid key={trend.period} item xs={12} sm={6} md={4}>
+                            {/* Mini sticker tile, cream fill so it reads as a
+                                nested surface against the white card. */}
                             <Box
-                              sx={{
-                                border: '1px solid #E0E0E0',
-                                borderRadius: 2,
+                              sx={(theme) => ({
+                                height: '100%',
+                                border: theme.custom.surfaceBorder,
+                                borderRadius: `${theme.shape.borderRadius}px`,
+                                boxShadow: theme.custom.stickerShadow,
+                                backgroundColor: theme.custom.cream,
                                 p: 2,
-                              }}
+                              })}
                             >
-                              <Typography fontWeight={600}>
+                              <Typography sx={{ fontWeight: 700 }}>
                                 {trend.period}
                               </Typography>
-                              <Typography variant="body2" sx={{ color: '#6A6A6A' }}>
+                              <Typography variant="body2" color="text.secondary">
                                 Events: {trend.totalEvents}
                               </Typography>
-                              <Typography variant="body2" sx={{ color: '#6A6A6A' }}>
+                              <Typography variant="body2" color="text.secondary">
                                 Attendees: {trend.totalAttendees}
                               </Typography>
                             </Box>
@@ -173,7 +246,7 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
                         ))}
                       </Grid>
                     ) : (
-                      <Typography sx={{ mt: 2 }}>
+                      <Typography sx={{ mt: 2 }} color="text.secondary">
                         Publish events to start tracking attendance over time.
                       </Typography>
                     )}
@@ -182,7 +255,7 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
               </Grid>
             </Grid>
           ) : (
-            <Typography sx={{ mt: 2 }}>
+            <Typography sx={{ mt: 2 }} color="text.secondary">
               We couldn&apos;t load your analytics yet. Create events to see
               organizer insights here.
             </Typography>
@@ -191,9 +264,11 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
 
         {/* Published events */}
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h4">Events I&apos;ve Published</Typography>
+          <Typography variant="h4" component="h2" sx={sectionHeadingSx}>
+            Events I&apos;ve Published
+          </Typography>
           {publishedEvents.length === 0 ? (
-            <Typography sx={{ mt: 2 }}>
+            <Typography sx={{ mt: 2 }} color="text.secondary">
               You haven&apos;t published any events yet. Use the Events page to
               create your first gathering.
             </Typography>
@@ -227,9 +302,11 @@ const Profile = ({ events, user, analytics, publishedEvents = [] }) => {
 
         {/* Events list */}
         <Box sx={{ padding: 3 }}>
-          <Typography variant="h4">Events I&apos;ve RSVP&apos;d</Typography>
+          <Typography variant="h4" component="h2" sx={sectionHeadingSx}>
+            Events I&apos;ve RSVP&apos;d
+          </Typography>
           {events.length === 0 ? (
-            <Typography sx={{ mt: 2 }}>
+            <Typography sx={{ mt: 2 }} color="text.secondary">
               You haven&apos;t RSVP&apos;d for any events yet.
             </Typography>
           ) : (
