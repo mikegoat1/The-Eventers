@@ -8,11 +8,82 @@ import axios from '../../lib/axios';
 import GenericButton from '@/components/GenericButton';
 import InputBase from '@mui/material/InputBase';
 import Footer from '@/components/Footer';
-import Card from '@mui/joy/Card';
+import Card from '@mui/material/Card';
 import Alert from '@mui/material/Alert';
 
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+
+// --- Block Party auth surfaces (all values resolved from theme tokens) ---
+
+// Top bar: cream slab with a chunky ink rule underneath, matching Navbar.
+const appBarSx = (theme) => ({
+  backgroundColor: theme.custom.cream,
+  color: theme.palette.text.primary,
+  borderBottom: theme.custom.surfaceBorder,
+});
+
+// The auth card reads as a sticker pinned to a corkboard: white surface,
+// chunky ink border, hard offset shadow, and a hair of rotation.
+const stickerCardSx = (theme) => ({
+  position: 'relative',
+  overflow: 'visible',
+  width: 400,
+  maxWidth: '92vw',
+  padding: 3,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 2,
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: `${theme.shape.borderRadius}px`,
+  border: theme.custom.surfaceBorder,
+  boxShadow: theme.custom.stickerShadow,
+  transform: 'rotate(0.75deg)',
+  // The honey "pin" that tacks the sticker down. Decorative only.
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: -10,
+    left: '50%',
+    marginLeft: -10,
+    width: 20,
+    height: 20,
+    borderRadius: '50%',
+    backgroundColor: theme.palette.warning.main,
+    border: theme.custom.surfaceBorder,
+  },
+});
+
+// Chunky bordered field. Focus is expressed with an accent border plus a
+// hard offset ring so the indicator survives Windows high-contrast mode.
+const fieldSx = (theme) => ({
+  border: theme.custom.surfaceBorder,
+  padding: 1,
+  borderRadius: `${theme.shape.borderRadius}px`,
+  width: '300px',
+  maxWidth: '100%',
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
+  transition: theme.transitions.create(['box-shadow', 'border-color'], {
+    duration: 150,
+  }),
+  '& input::placeholder': {
+    color: theme.palette.text.secondary,
+    opacity: 1,
+  },
+  '&:focus-within': {
+    borderColor: theme.palette.primary.main,
+    boxShadow: theme.custom.stickerShadow,
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+  },
+});
+
+// Validation copy: bold body text in the theme's error role (never a raw hex).
+const errorTextSx = { fontWeight: 700, alignSelf: 'flex-start' };
+
 const validationSchema = yup.object({
   username: yup
     .string()
@@ -70,10 +141,7 @@ const Register = () => {
   return (
     <>
       <Box>
-        <AppBar
-          position="static"
-          sx={{ backgroundColor: '#F5F3F3', color: '#080808' }}
-        >
+        <AppBar position="static" elevation={0} sx={appBarSx}>
           <Box
             sx={{
               display: 'flex',
@@ -90,7 +158,7 @@ const Register = () => {
             />
             <Typography
               variant="h5"
-              component="div"
+              component="h1"
               sx={{ flexGrow: 1, textAlign: 'center', padding: 2 }}
             >
               GATHERHUB
@@ -124,18 +192,7 @@ const Register = () => {
             zIndex: 1,
           }}
         >
-          <Card
-            sx={{
-              width: 400,
-              padding: 3,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 2,
-              backgroundColor: '#F5F3F3',
-              borderRadius: 2,
-            }}
-          >
+          <Card elevation={0} sx={stickerCardSx}>
             <Image
               src="/Assets/Logo1.png"
               style={{ alignSelf: 'start' }}
@@ -143,17 +200,26 @@ const Register = () => {
               height={80}
               alt="GatherHub logo"
             />
-            <Typography sx={{ alignSelf: 'start' }} variant="h4">
+            <Typography sx={{ alignSelf: 'start' }} variant="h4" component="h2">
               Welcome!
             </Typography>
             <Typography
-              sx={{ alignSelf: 'start', marginBottom: '30%' }}
-              variant="h4"
+              sx={{ alignSelf: 'start', marginBottom: 2 }}
+              variant="subtitle1"
+              component="p"
+              color="text.secondary"
             >
               Whats your Email?
             </Typography>
             {submitError && (
-              <Alert severity="error" sx={{ width: '100%' }}>
+              <Alert
+                severity="error"
+                sx={(theme) => ({
+                  width: '100%',
+                  borderRadius: `${theme.shape.borderRadius}px`,
+                  border: theme.custom.surfaceBorder,
+                })}
+              >
                 {submitError}
               </Alert>
             )}
@@ -165,16 +231,10 @@ const Register = () => {
                   placeholder="Email or Username"
                   onChange={formik.handleChange}
                   value={formik.values.username}
-                  sx={{
-                    border: '2px solid #A1A0A0',
-                    padding: 1,
-                    borderRadius: 1,
-                    width: '300px',
-                    backgroundColor: '#F5F3F3',
-                  }}
+                  sx={fieldSx}
                 />
                 {formik.errors.username && (
-                  <Typography color="error">
+                  <Typography color="error" role="alert" sx={errorTextSx}>
                     {formik.errors.username}
                   </Typography>
                 )}
@@ -186,20 +246,10 @@ const Register = () => {
                       placeholder="Password"
                       onChange={formik.handleChange}
                       value={formik.values.password}
-                      sx={{
-                        border: '2px solid #A1A0A0',
-                        padding: 1,
-                        borderRadius: 1,
-                        width: '300px',
-                        backgroundColor: '#F5F3F3',
-                        '&:focus': {
-                          border: '2px solid #616060',
-                          backgroundColor: '#616060',
-                        },
-                      }}
+                      sx={fieldSx}
                     />
                     {formik.errors.password && (
-                      <Typography color="error">
+                      <Typography color="error" role="alert" sx={errorTextSx}>
                         {formik.errors.password}
                       </Typography>
                     )}

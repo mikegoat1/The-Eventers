@@ -31,11 +31,11 @@ import Image from 'next/image';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha('#FBEAEA', 0.15),
-  border: '1px solid #BDBDBD',
+  backgroundColor: alpha(theme.custom.peach, 0.35),
+  border: `2px solid ${theme.custom.surfaceBorderColor}`,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-    border: '2px solid #FF5722',
+    backgroundColor: theme.palette.background.paper,
+    borderColor: theme.palette.primary.main,
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -57,7 +57,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: '#0D0D0D',
+  color: theme.palette.text.primary,
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -201,12 +201,16 @@ const Navbar = ({ title, user = null }) => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{ borderBottom: (t) => t.custom.surfaceBorder }}
+        >
           <Toolbar
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              backgroundColor: '#F5F3F3',
+              backgroundColor: (t) => t.custom.cream,
             }}
           >
             <IconButton
@@ -221,7 +225,7 @@ const Navbar = ({ title, user = null }) => {
                 aria-controls={open ? 'mobile-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                sx={{ color: '#FF5722' }}
+                sx={{ color: 'primary.main' }}
               />
             </IconButton>
             <Menu
@@ -230,19 +234,22 @@ const Navbar = ({ title, user = null }) => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem sx={{ color: '#000' }} onClick={loginOnClick}>
+              <MenuItem sx={{ color: 'text.primary' }} onClick={loginOnClick}>
                 Login
               </MenuItem>
-              <MenuItem sx={{ color: '#000' }} onClick={registerOnClick}>
+              <MenuItem
+                sx={{ color: 'text.primary' }}
+                onClick={registerOnClick}
+              >
                 Register
               </MenuItem>
-              <MenuItem sx={{ color: '#000' }} onClick={goHome}>
+              <MenuItem sx={{ color: 'text.primary' }} onClick={goHome}>
                 Home
               </MenuItem>
-              <MenuItem sx={{ color: '#000' }} onClick={goToEvents}>
+              <MenuItem sx={{ color: 'text.primary' }} onClick={goToEvents}>
                 Events
               </MenuItem>
-              <MenuItem sx={{ color: '#000' }} onClick={goToCalendar}>
+              <MenuItem sx={{ color: 'text.primary' }} onClick={goToCalendar}>
                 Calendar
               </MenuItem>
             </Menu>
@@ -254,7 +261,7 @@ const Navbar = ({ title, user = null }) => {
                 component="div"
                 sx={{
                   display: { xs: 'none', sm: 'block' },
-                  color: '#080808',
+                  color: 'text.primary',
                   fontWeight: 'medium',
                   lineHeight: '18px',
                   letterSpacing: '0.5%',
@@ -270,9 +277,9 @@ const Navbar = ({ title, user = null }) => {
               />
             </Box>
             <Box sx={{ display: { xs: 'block', md: 'block' } }}>
-              <Search sx={{ backgroundColor: '#F8F7F7' }}>
+              <Search sx={{ backgroundColor: 'background.paper' }}>
                 <SearchIconWrapper>
-                  <SearchIcon sx={{ color: '#0D0D0D' }} />
+                  <SearchIcon sx={{ color: 'text.primary' }} />
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Search Event..."
@@ -290,9 +297,9 @@ const Navbar = ({ title, user = null }) => {
                         borderRadius: '2%',
                         width: '100%',
                         position: 'absolute',
-                        backgroundColor: '#F8F7F7',
-                        border: '1px solid #BDBDBD',
-                        color: '#080808',
+                        backgroundColor: 'background.paper',
+                        border: (t) => t.custom.surfaceBorder,
+                        color: 'text.primary',
                         fontWeight: 'medium',
                         lineHeight: '18px',
                         letterSpacing: '0.5%',
@@ -328,13 +335,13 @@ const Navbar = ({ title, user = null }) => {
                 mr: 2,
               }}
             >
-              <Button onClick={goHome} sx={{ color: '#000' }}>
+              <Button onClick={goHome} sx={{ color: 'text.primary' }}>
                 Home
               </Button>
-              <Button onClick={goToEvents} sx={{ color: '#000' }}>
+              <Button onClick={goToEvents} sx={{ color: 'text.primary' }}>
                 Events
               </Button>
-              <Button onClick={goToCalendar} sx={{ color: '#000' }}>
+              <Button onClick={goToCalendar} sx={{ color: 'text.primary' }}>
                 Calendar
               </Button>
             </Box>
@@ -372,10 +379,10 @@ const Navbar = ({ title, user = null }) => {
                           color="error"
                           overlap="circular"
                         >
-                          <NotificationsIcon sx={{ color: '#000' }} />
+                          <NotificationsIcon sx={{ color: 'text.primary' }} />
                         </Badge>
                       ) : (
-                        <NotificationsIcon sx={{ color: '#000' }} />
+                        <NotificationsIcon sx={{ color: 'text.primary' }} />
                       )}
                     </IconButton>
                   </Tooltip>
@@ -450,7 +457,9 @@ const Navbar = ({ title, user = null }) => {
                   onClick={handleProfileMenuOpen}
                   color="inherit"
                 >
-                  <Avatar sx={{ bgcolor: '#FF5722' }}>
+                  <Avatar
+                    sx={{ bgcolor: 'primary.main', color: 'text.primary' }}
+                  >
                     {user.username?.[0] || 'U'}
                   </Avatar>
                 </IconButton>

@@ -1,9 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { useFormik } from 'formik';
@@ -12,7 +8,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import axios from '../../lib/axios';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import {
   Alert,
   Box,
@@ -32,6 +27,45 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+
+// Block Party sticker surface: white fill, chunky ink border, hard offset shadow.
+const stickerSurface = (theme) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: `${theme.shape.borderRadius}px`,
+  border: theme.custom.surfaceBorder,
+  boxShadow: theme.custom.stickerShadow,
+});
+
+// Pill-shaped action that matches GenericButton's sticker language.
+const stickerPillButton = (theme) => ({
+  borderRadius: '999px',
+  border: theme.custom.surfaceBorder,
+  boxShadow: `3px 3px 0 ${theme.custom.surfaceBorderColor}`,
+  backgroundColor: theme.custom.cream,
+  color: theme.palette.text.primary,
+  fontWeight: 700,
+  px: 2.5,
+  transition: theme.transitions.create(['transform', 'box-shadow'], {
+    duration: 180,
+    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  }),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.warning.main, 0.25),
+    border: theme.custom.surfaceBorder,
+    transform: 'translate(-1px, -2px)',
+    boxShadow: `5px 6px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '&:active': {
+    transform: 'translate(2px, 2px)',
+    boxShadow: `1px 1px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': { transform: 'none' },
+    '&:active': { transform: 'none' },
+  },
+});
 
 const EVENT_CATEGORIES = [
   'Music',
@@ -91,7 +125,6 @@ const formatEventDate = (value) => {
 };
 
 const EventsManager = ({ user }) => {
-  const router = useRouter();
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [fetchError, setFetchError] = useState('');
@@ -123,14 +156,11 @@ const EventsManager = ({ user }) => {
   const displayedEvents = useMemo(() => {
     return events.filter((event) => {
       const matchesCategory =
-        selectedCategory === 'All' ||
-        event.category === selectedCategory;
+        selectedCategory === 'All' || event.category === selectedCategory;
       const matchesSearch =
         !searchQuery ||
         event.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.description
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase());
+        event.description?.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [events, selectedCategory, searchQuery]);
@@ -175,38 +205,39 @@ const EventsManager = ({ user }) => {
     <>
       <Navbar title="GATHERHUB" user={user} />
       <Box
-        sx={{
+        sx={(theme) => ({
           minHeight: '100vh',
-          background: 'linear-gradient(120deg, #FDF6ED, #ECE7E1, #B1A79E)',
+          background: theme.custom.peachGradient,
           py: 6,
           px: { xs: 2, md: 6 },
-        }}
+        })}
       >
         <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
-          <Typography variant="h3" fontWeight="600" textAlign="center">
+          <Typography variant="h3" textAlign="center">
             Event Management Hub
           </Typography>
           <Typography
             variant="subtitle1"
             textAlign="center"
-            sx={{ color: '#4E4E4E', mt: 1 }}
+            sx={{ color: 'text.secondary', mt: 1 }}
           >
-            Browse your events, review attendance, and publish new
-            experiences in one place.
+            Browse your events, review attendance, and publish new experiences
+            in one place.
           </Typography>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            sx={{ mt: 2 }}
-          >
-            <Button component={Link} href="/events/calendar" variant="outlined">
+          <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
+            <Button
+              component={Link}
+              href="/events/calendar"
+              variant="outlined"
+              sx={stickerPillButton}
+            >
               Open calendar view
             </Button>
           </Stack>
 
           <Grid container spacing={4} sx={{ mt: 3 }}>
             <Grid item xs={12} md={8}>
-              <Card sx={{ p: 2, backgroundColor: '#FFFBF5' }}>
+              <Card sx={(theme) => ({ p: 2, ...stickerSurface(theme) })}>
                 <Stack
                   direction={{ xs: 'column', md: 'row' }}
                   spacing={2}
@@ -216,15 +247,11 @@ const EventsManager = ({ user }) => {
                     label="Search by name or description"
                     placeholder="Search events..."
                     value={searchQuery}
-                    onChange={(event) =>
-                      setSearchQuery(event.target.value)
-                    }
+                    onChange={(event) => setSearchQuery(event.target.value)}
                     fullWidth
                   />
                   <FormControl sx={{ minWidth: 200 }}>
-                    <InputLabel id="category-filter-label">
-                      Category
-                    </InputLabel>
+                    <InputLabel id="category-filter-label">Category</InputLabel>
                     <Select
                       labelId="category-filter-label"
                       label="Category"
@@ -262,9 +289,7 @@ const EventsManager = ({ user }) => {
                 ) : (
                   <Stack spacing={2}>
                     {displayedEvents.map((event) => {
-                      const attendeeCount = Array.isArray(
-                        event.attendees
-                      )
+                      const attendeeCount = Array.isArray(event.attendees)
                         ? event.attendees.length
                         : 0;
                       const attendeePreview =
@@ -283,10 +308,39 @@ const EventsManager = ({ user }) => {
                       return (
                         <Card
                           key={event._id || event.name}
-                          sx={{ backgroundColor: '#FFF', cursor: 'pointer' }}
-                          onClick={() =>
-                            router.push(`/events/${event._id}`)
-                          }
+                          component={Link}
+                          href={`/events/${event._id}`}
+                          aria-label={`View details for ${event.name}`}
+                          sx={(theme) => ({
+                            display: 'block',
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            cursor: 'pointer',
+                            backgroundColor: theme.custom.cream,
+                            borderRadius: `${theme.shape.borderRadius}px`,
+                            border: theme.custom.surfaceBorder,
+                            boxShadow: theme.custom.stickerShadow,
+                            transition: theme.transitions.create(
+                              ['transform', 'box-shadow'],
+                              {
+                                duration: 180,
+                                easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                              }
+                            ),
+                            '&:hover': {
+                              transform: 'translate(-1px, -2px)',
+                              boxShadow: `6px 7px 0 ${theme.custom.surfaceBorderColor}`,
+                            },
+                            '&:active': {
+                              transform: 'translate(2px, 2px)',
+                              boxShadow: `1px 1px 0 ${theme.custom.surfaceBorderColor}`,
+                            },
+                            '@media (prefers-reduced-motion: reduce)': {
+                              transition: 'none',
+                              '&:hover': { transform: 'none' },
+                              '&:active': { transform: 'none' },
+                            },
+                          })}
                         >
                           <CardContent>
                             <Stack
@@ -296,13 +350,19 @@ const EventsManager = ({ user }) => {
                               gap={1}
                               mb={1}
                             >
-                              <Typography variant="h6">
-                                {event.name}
-                              </Typography>
+                              <Typography variant="h6">{event.name}</Typography>
                               <Chip
                                 label={event.category || 'Uncategorized'}
                                 color="warning"
                                 size="small"
+                                sx={(theme) => ({
+                                  borderRadius: '999px',
+                                  border: theme.custom.surfaceBorder,
+                                  boxShadow: `2px 2px 0 ${theme.custom.surfaceBorderColor}`,
+                                  fontWeight: 800,
+                                  letterSpacing: '0.02em',
+                                  textTransform: 'uppercase',
+                                })}
                               />
                             </Stack>
 
@@ -314,13 +374,21 @@ const EventsManager = ({ user }) => {
                             </Typography>
                             <Typography
                               variant="body2"
-                              sx={{ mt: 1, color: '#4E4E4E' }}
+                              sx={{ mt: 1, color: 'text.secondary' }}
                             >
                               {event.description ||
                                 'No description was provided for this event.'}
                             </Typography>
 
-                            <Divider sx={{ my: 2 }} />
+                            <Divider
+                              sx={(theme) => ({
+                                my: 2,
+                                borderColor: alpha(
+                                  theme.custom.surfaceBorderColor,
+                                  0.25
+                                ),
+                              })}
+                            />
 
                             <Stack
                               direction={{ xs: 'column', sm: 'row' }}
@@ -328,12 +396,12 @@ const EventsManager = ({ user }) => {
                               alignItems={{ xs: 'flex-start', sm: 'center' }}
                               justifyContent="space-between"
                             >
-                              <Typography variant="body2" fontWeight={600}>
+                              <Typography variant="body2" fontWeight={700}>
                                 Attendees ({attendeeCount})
                               </Typography>
                               <Typography
                                 variant="body2"
-                                sx={{ color: '#6A6A6A' }}
+                                sx={{ color: 'text.secondary' }}
                               >
                                 {attendeePreview}
                                 {Array.isArray(event.attendees) &&
@@ -351,13 +419,22 @@ const EventsManager = ({ user }) => {
             </Grid>
 
             <Grid item xs={12} md={4}>
-              <Card sx={{ p: 3, backgroundColor: '#FFF8E6' }}>
+              <Card
+                sx={(theme) => ({
+                  p: 3,
+                  ...stickerSurface(theme),
+                  backgroundColor: theme.custom.peach,
+                })}
+              >
                 <Typography variant="h6" mb={1}>
                   Create a New Event
                 </Typography>
-                <Typography variant="body2" sx={{ mb: 2, color: '#6A6A6A' }}>
-                  Use the form below to publish an event complete with
-                  category tags and attendee tracking.
+                <Typography
+                  variant="body2"
+                  sx={{ mb: 2, color: 'text.secondary' }}
+                >
+                  Use the form below to publish an event complete with category
+                  tags and attendee tracking.
                 </Typography>
 
                 {formStatus && (
@@ -371,7 +448,15 @@ const EventsManager = ({ user }) => {
                 )}
 
                 <form onSubmit={formik.handleSubmit} noValidate>
-                  <Stack spacing={2}>
+                  <Stack
+                    spacing={2}
+                    sx={(theme) => ({
+                      // White input wells so fields read as inset cards on peach.
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: theme.palette.background.paper,
+                      },
+                    })}
+                  >
                     <TextField
                       name="name"
                       label="Event name"
@@ -379,12 +464,8 @@ const EventsManager = ({ user }) => {
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.name && Boolean(formik.errors.name)
-                      }
-                      helperText={
-                        formik.touched.name && formik.errors.name
-                      }
+                      error={formik.touched.name && Boolean(formik.errors.name)}
+                      helperText={formik.touched.name && formik.errors.name}
                       fullWidth
                     />
                     <TextField
@@ -395,12 +476,8 @@ const EventsManager = ({ user }) => {
                       value={formik.values.date}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.date && Boolean(formik.errors.date)
-                      }
-                      helperText={
-                        formik.touched.date && formik.errors.date
-                      }
+                      error={formik.touched.date && Boolean(formik.errors.date)}
+                      helperText={formik.touched.date && formik.errors.date}
                       fullWidth
                     />
                     <TextField
@@ -415,8 +492,7 @@ const EventsManager = ({ user }) => {
                         Boolean(formik.errors.location)
                       }
                       helperText={
-                        formik.touched.location &&
-                        formik.errors.location
+                        formik.touched.location && formik.errors.location
                       }
                       fullWidth
                     />
@@ -444,12 +520,11 @@ const EventsManager = ({ user }) => {
                           </MenuItem>
                         ))}
                       </Select>
-                      {formik.touched.category &&
-                        formik.errors.category && (
-                          <FormHelperText>
-                            {formik.errors.category}
-                          </FormHelperText>
-                        )}
+                      {formik.touched.category && formik.errors.category && (
+                        <FormHelperText>
+                          {formik.errors.category}
+                        </FormHelperText>
+                      )}
                     </FormControl>
                     <TextField
                       name="description"
@@ -465,8 +540,7 @@ const EventsManager = ({ user }) => {
                         Boolean(formik.errors.description)
                       }
                       helperText={
-                        formik.touched.description &&
-                        formik.errors.description
+                        formik.touched.description && formik.errors.description
                       }
                       fullWidth
                     />
@@ -475,6 +549,15 @@ const EventsManager = ({ user }) => {
                       variant="contained"
                       size="large"
                       disabled={formik.isSubmitting}
+                      sx={(theme) => ({
+                        ...stickerPillButton(theme),
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.primary.contrastText,
+                        '&:hover': {
+                          ...stickerPillButton(theme)['&:hover'],
+                          backgroundColor: theme.palette.primary.main,
+                        },
+                      })}
                     >
                       {formik.isSubmitting ? 'Saving...' : 'Publish event'}
                     </Button>
@@ -488,6 +571,13 @@ const EventsManager = ({ user }) => {
       <Footer />
     </>
   );
+};
+
+EventsManager.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
 };
 
 export default EventsManager;

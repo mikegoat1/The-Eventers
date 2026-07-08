@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import * as cookie from 'cookie';
 import jwt from 'jsonwebtoken';
@@ -22,11 +23,139 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import GenericButton from '@/components/GenericButton';
 import { useRouter } from 'next/router';
 
 const FullCalendar = dynamic(() => import('@fullcalendar/react'), {
   ssr: false,
+});
+
+// Block Party sticker surface: white fill, chunky ink border, hard offset shadow.
+const stickerSurface = (theme) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: `${theme.shape.borderRadius}px`,
+  border: theme.custom.surfaceBorder,
+  boxShadow: theme.custom.stickerShadow,
+});
+
+// Pill-shaped outlined action that matches GenericButton's sticker language.
+const stickerPillButton = (theme) => ({
+  borderRadius: '999px',
+  border: theme.custom.surfaceBorder,
+  boxShadow: `3px 3px 0 ${theme.custom.surfaceBorderColor}`,
+  backgroundColor: theme.custom.cream,
+  color: theme.palette.text.primary,
+  fontWeight: 700,
+  px: 2.5,
+  transition: theme.transitions.create(['transform', 'box-shadow'], {
+    duration: 180,
+    easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  }),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.warning.main, 0.25),
+    border: theme.custom.surfaceBorder,
+    transform: 'translate(-1px, -2px)',
+    boxShadow: `5px 6px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '&:active': {
+    transform: 'translate(2px, 2px)',
+    boxShadow: `1px 1px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': { transform: 'none' },
+    '&:active': { transform: 'none' },
+  },
+});
+
+// FullCalendar v6 is themed through its own CSS custom properties, so every
+// color below still resolves from a theme token (zero hardcoded hex).
+const fullCalendarSx = (theme) => ({
+  '& .fc': {
+    '--fc-border-color': alpha(theme.custom.surfaceBorderColor, 0.22),
+    '--fc-page-bg-color': theme.palette.background.paper,
+    '--fc-neutral-bg-color': theme.custom.cream,
+    '--fc-today-bg-color': alpha(theme.palette.warning.main, 0.18),
+    '--fc-event-bg-color': theme.palette.primary.main,
+    '--fc-event-border-color': theme.custom.surfaceBorderColor,
+    '--fc-event-text-color': theme.palette.primary.contrastText,
+    fontFamily: theme.typography.fontFamily,
+  },
+  '& .fc .fc-toolbar-title': {
+    fontFamily: theme.typography.h5.fontFamily,
+    fontWeight: 800,
+    fontSize: '1.35rem',
+    color: theme.palette.text.primary,
+  },
+  '& .fc .fc-button': {
+    backgroundColor: theme.custom.cream,
+    color: theme.palette.text.primary,
+    border: theme.custom.surfaceBorder,
+    borderRadius: '999px',
+    boxShadow: `2px 2px 0 ${theme.custom.surfaceBorderColor}`,
+    fontWeight: 700,
+    textTransform: 'none',
+    padding: '5px 14px',
+    transition: theme.transitions.create(['transform', 'box-shadow'], {
+      duration: 160,
+      easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    }),
+  },
+  // FullCalendar's own group rules (0,4,0) collapse the pills together and
+  // pull them into an overlap; these selectors out-specify them.
+  '& .fc .fc-button-group': { gap: '6px' },
+  '& .fc .fc-button-group > .fc-button:not(:first-child)': { marginLeft: 0 },
+  '& .fc .fc-button:hover': {
+    backgroundColor: alpha(theme.palette.warning.main, 0.3),
+    color: theme.palette.text.primary,
+    transform: 'translate(-1px, -1px)',
+    boxShadow: `3px 3px 0 ${theme.custom.surfaceBorderColor}`,
+  },
+  '& .fc .fc-button:focus-visible': {
+    outline: `2px solid ${theme.palette.primary.main}`,
+    outlineOffset: '2px',
+  },
+  // Active / pressed view toggle: brand orange behind dark ink (4.70:1).
+  '& .fc .fc-button-primary:not(:disabled).fc-button-active, & .fc .fc-button-primary:not(:disabled):active':
+    {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      borderColor: theme.custom.surfaceBorderColor,
+      transform: 'translate(1px, 1px)',
+      boxShadow: `1px 1px 0 ${theme.custom.surfaceBorderColor}`,
+    },
+  '& .fc .fc-button-primary:disabled': {
+    backgroundColor: theme.palette.action.disabledBackground,
+    color: theme.palette.text.secondary,
+    borderColor: theme.palette.text.secondary,
+    boxShadow: 'none',
+    opacity: 1,
+  },
+  '& .fc .fc-event': {
+    borderRadius: '8px',
+    border: `2px solid ${theme.custom.surfaceBorderColor}`,
+    fontWeight: 600,
+    padding: '1px 4px',
+    cursor: 'pointer',
+  },
+  '& .fc .fc-col-header-cell-cushion': {
+    color: theme.palette.text.primary,
+    fontWeight: 700,
+    textDecoration: 'none',
+  },
+  '& .fc .fc-daygrid-day-number': {
+    color: theme.palette.text.secondary,
+    fontWeight: 600,
+    textDecoration: 'none',
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    '& .fc .fc-button': { transition: 'none' },
+    '& .fc .fc-button:hover': { transform: 'none' },
+    '& .fc .fc-button-primary:not(:disabled).fc-button-active': {
+      transform: 'none',
+    },
+  },
 });
 
 export async function getServerSideProps(context) {
@@ -130,12 +259,12 @@ const CalendarPage = ({ user }) => {
     <>
       <Navbar title="GATHERHUB" user={user} />
       <Box
-        sx={{
+        sx={(theme) => ({
           minHeight: '100vh',
-          background: 'linear-gradient(120deg, #FDF6ED, #ECE7E1, #B1A79E)',
+          background: theme.custom.peachGradient,
           py: 4,
           px: { xs: 2, md: 6 },
-        }}
+        })}
       >
         <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
           <Stack
@@ -146,27 +275,39 @@ const CalendarPage = ({ user }) => {
             mb={3}
           >
             <Box>
-              <GenericButton
-                variant="secondary"
-                text="Back"
-                type="button"
-                onClick={handleBack}
-                sx={{ mb: 1 }}
-              />
-              <Typography variant="h3" fontWeight="600">
-                Event Calendar
-              </Typography>
-              <Typography variant="body1" sx={{ color: '#4E4E4E' }}>
-                Drag through the month/week views to see where your events
-                land and schedule reminders in one click.
+              <Box sx={{ mb: 1 }}>
+                <GenericButton
+                  variant="secondary"
+                  text="Back"
+                  type="button"
+                  onClick={handleBack}
+                />
+              </Box>
+              <Typography variant="h3">Event Calendar</Typography>
+              <Typography
+                variant="body1"
+                sx={{ color: 'text.secondary', maxWidth: 560 }}
+              >
+                Drag through the month/week views to see where your events land
+                and schedule reminders in one click.
               </Typography>
             </Box>
-            <Button variant="outlined" onClick={fetchEvents}>
+            <Button
+              variant="outlined"
+              onClick={fetchEvents}
+              sx={stickerPillButton}
+            >
               Refresh events
             </Button>
           </Stack>
 
-          <Card sx={{ p: 2, backgroundColor: '#FFFBF5' }}>
+          <Card
+            sx={(theme) => ({
+              p: 2,
+              ...stickerSurface(theme),
+              ...fullCalendarSx(theme),
+            })}
+          >
             {loading ? (
               <Box
                 sx={{
@@ -204,24 +345,64 @@ const CalendarPage = ({ user }) => {
         onClose={() => setSelectedEvent(null)}
         fullWidth
         maxWidth="sm"
+        slotProps={{
+          paper: {
+            sx: (theme) => ({
+              ...stickerSurface(theme),
+              backgroundImage: 'none',
+            }),
+          },
+        }}
       >
         {selectedEvent && (
           <>
-            <DialogTitle>{selectedEvent.title}</DialogTitle>
-            <DialogContent dividers>
+            <DialogTitle
+              sx={(theme) => ({
+                fontFamily: theme.typography.h5.fontFamily,
+                fontWeight: 800,
+              })}
+            >
+              {selectedEvent.title}
+            </DialogTitle>
+            <DialogContent
+              dividers
+              sx={(theme) => ({
+                borderColor: alpha(theme.custom.surfaceBorderColor, 0.25),
+              })}
+            >
               <Typography variant="subtitle2">
                 When: {new Date(selectedEvent.start).toLocaleString()}
               </Typography>
               <Typography variant="subtitle2" sx={{ mt: 1 }}>
                 Where: {selectedEvent.location || 'TBD'}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 2, color: '#4E4E4E' }}>
+              <Typography
+                variant="body2"
+                sx={{ mt: 2, color: 'text.secondary' }}
+              >
                 {selectedEvent.description || 'No description provided.'}
               </Typography>
               {selectedEvent.category && (
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  Category: {selectedEvent.category}
-                </Typography>
+                <Box
+                  aria-label={`Category: ${selectedEvent.category}`}
+                  sx={(theme) => ({
+                    display: 'inline-block',
+                    mt: 1.5,
+                    px: 1.25,
+                    py: 0.25,
+                    borderRadius: '999px',
+                    backgroundColor: theme.palette.warning.main,
+                    border: theme.custom.surfaceBorder,
+                    boxShadow: `2px 2px 0 ${theme.custom.surfaceBorderColor}`,
+                    color: theme.palette.warning.contrastText,
+                    fontWeight: 800,
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.02em',
+                    textTransform: 'uppercase',
+                  })}
+                >
+                  {selectedEvent.category}
+                </Box>
               )}
 
               {reminderStatus && (
@@ -231,8 +412,15 @@ const CalendarPage = ({ user }) => {
               )}
 
               {user ? (
-                <Box component="form" onSubmit={handleReminderSubmit} sx={{ mt: 3 }}>
-                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                <Box
+                  component="form"
+                  onSubmit={handleReminderSubmit}
+                  sx={{ mt: 3 }}
+                >
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ mb: 1, fontWeight: 700 }}
+                  >
                     Schedule a Reminder
                   </Typography>
                   <TextField
@@ -247,8 +435,17 @@ const CalendarPage = ({ user }) => {
                   <Button
                     type="submit"
                     variant="contained"
-                    sx={{ mt: 2 }}
                     disabled={!reminderTime}
+                    sx={(theme) => ({
+                      ...stickerPillButton(theme),
+                      mt: 2,
+                      backgroundColor: theme.palette.primary.main,
+                      color: theme.palette.primary.contrastText,
+                      '&:hover': {
+                        ...stickerPillButton(theme)['&:hover'],
+                        backgroundColor: theme.palette.primary.main,
+                      },
+                    })}
                   >
                     Save reminder
                   </Button>
@@ -259,14 +456,26 @@ const CalendarPage = ({ user }) => {
                 </Alert>
               )}
             </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setSelectedEvent(null)}>Close</Button>
+            <DialogActions sx={{ p: 2 }}>
+              <Button
+                onClick={() => setSelectedEvent(null)}
+                sx={stickerPillButton}
+              >
+                Close
+              </Button>
             </DialogActions>
           </>
         )}
       </Dialog>
     </>
   );
+};
+
+CalendarPage.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    email: PropTypes.string,
+  }),
 };
 
 export default CalendarPage;
