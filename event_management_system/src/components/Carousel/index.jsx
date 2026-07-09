@@ -34,6 +34,8 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
   const heading =
     title || (filterCategory ? `${filterCategory} Events` : 'Upcoming Events');
 
+  const hasEvents = Array.isArray(carouselEvents) && carouselEvents.length > 0;
+
   const settings = {
     dots: true,
     infinite: true,
@@ -86,9 +88,17 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
       >
         {heading}
       </Typography>
-      <Slider {...settings}>
-        {Array.isArray(carouselEvents) && carouselEvents.length > 0 ? (
-          carouselEvents.map((event) => {
+      {!hasEvents ? (
+        // Rendered outside <Slider>: react-slick clones its children to fill
+        // slidesToShow, which would repeat the empty state once per slide.
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="body1">
+            No events available at the moment.
+          </Typography>
+        </Box>
+      ) : (
+        <Slider {...settings}>
+          {carouselEvents.map((event) => {
             const stickerColor = categoryFill(event.category, theme);
             return (
               <Box key={event._id || event.name} sx={{ px: 1, py: 1 }}>
@@ -195,15 +205,9 @@ const EventCarousel = ({ user, filterCategory, maxItems, title }) => {
                 </Card>
               </Box>
             );
-          })
-        ) : (
-          <Box sx={{ textAlign: 'center', py: 4 }}>
-            <Typography variant="body1">
-              No events available at the moment.
-            </Typography>
-          </Box>
-        )}
-      </Slider>
+          })}
+        </Slider>
+      )}
     </Box>
   );
 };
